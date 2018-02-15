@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import SectionItem from './Components/SectionItem'
-import clock from './clock.svg';
+import SectionItem from './Components/SectionItem';
 import './Clock.css';
 
 class Clock extends Component {
@@ -17,8 +16,16 @@ class Clock extends Component {
         }
         return (
             <div className="Clock">
-                <img src={clock} className="Clock" alt="clock" />
-            
+                {/* <img src={clock} className="Clock" alt="clock" /> */}
+                <svg xmlns="http://www.w3.org/2000/svg" id="clock" viewBox="0 0 100 100">
+	                <circle id="face" cx="50" cy="50" r="45"/>
+	                <g id="hands">
+		                <rect id="hour" x="48.5" y="12.5" width="5" height="40" rx="2.5" ry="2.55" fill="red" />
+		                <rect id="min" x="48" y="12.5" width="3" height="40" rx="2" ry="2" fill="blue"/>
+		                <line id="sec" x1="50" y1="50" x2="50" y2="16" stroke="white"/>
+	                </g>
+                    <circle id="midpoint" cx="50" cy="50" r="3"/>
+                </svg>
             <div>
                 {/* {this.props.el}
                 <br/>
@@ -29,7 +36,7 @@ class Clock extends Component {
             </div>
         )
     }
-
+/*
     setInterval(el,deg){
         function r(el, deg) {
             el.setAttribute('transform', 'rotate('+ deg +' 50 50)')
@@ -40,5 +47,6 @@ class Clock extends Component {
         r(clock.hour, 30*(d.getHours()%12) + d.getMinutes()/2)
     
     }
+    */
 }
 export default Clock;
