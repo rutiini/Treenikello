@@ -1,0 +1,17 @@
+#face {
+	stroke-width: 2px; stroke: #ffffff; fill: gray;
+}
+#hour, #min, #sec {
+	stroke-width: 1px; fill: #333; stroke: #555;
+}
+#sec { stroke: #f55; }
+
+#midpoint{
+    fill: white;
+}
+#majors{
+    fill: grey;
+}
+#minors{
+    fill: #3f3f3f;
+}
