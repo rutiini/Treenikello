@@ -18,17 +18,20 @@ class Clock extends Component {
         var minRotation = 6*d.getMinutes();
         var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
 
+        var timerEnabled = false;
+
         this.state = {
             secPosition : secRotation,
             minPosition : minRotation,
             hourPosition : hourRotation,
-            timerSecPosition :  0
+            timerSecPosition :  0,
+            timerHandVisible : "hidden"
         }
         
         this.rotateHand = function(el, deg) {
             el.setAttribute('transform', 'rotate('+ deg +' 50 50)')
-            //return el;
         }
+
         // get stuff from sub function
         this.createMarker = function(id,length,className){
             
@@ -60,9 +63,37 @@ class Clock extends Component {
             this.rotateHand(this.hourHand,this.state.hourPosition)
         }
         
-        //separately timed stopclock
-        this.timerHand = <line id="timer" x1="50" y1="50" x2="50" y2="12" stroke="yellow" />
+        var timerEnabled = false;
+
+        this.cycleTimerFunctions = function(){
+            // case hidden set to visible
+
+            // case visible and stopped start timer
+            
+            // case visible and stated stop timer
+
+            // case visible and stopped (and used) set to hidden
+        }
+        this.enableTimerHand = function(){
+            // read if this is ok to do..
+            //alert("click!")
+            //this.setState({timerHandVisible: "visible"} )
+            //timerHandVisibility = "visible";
+            timerEnabled = true;
+        }
         
+        this.disableTimerHand = function(){
+            // read if this is ok to do..
+            //this.setState({timerHandVisible: "hidden"} )
+            //timerHandVisibility = "hidden";
+            timerEnabled = false;
+        }
+        
+        // static elements -> timerhand should be created on-demand!
+        
+        //separately timed stopclock
+        this.timerHand = <line id="timer" x1="50" y1="50" x2="50" y2="12" stroke="yellow" visibility={this.state.timerHandVisible} />
+
         // static clock elements for the object
         this.hourHand = <rect id="hour" x="47.5" y="22.5" width="5" height="30" rx="2.5" ry="2.55" fill="red" />
         this.minHand = <rect id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
@@ -110,7 +141,7 @@ class Clock extends Component {
             
         }
         return (
-            <div className="Clock"> 
+            <div className="Clock" onClick={this.enableTimerHand} onTap={this.enableTimerHand}> 
             {/* render relative to windowsize also vertically */}   
              <svg id="clock" viewBox="0 0 100 100"> 
                <circle id="face" cx="50" cy="50" r="45"/>
@@ -150,11 +181,13 @@ class Clock extends Component {
                     hourPosition: hourRotation
                 }
             )
+
             this.rotateHand(document.getElementById('secHand'),this.state.secPosition)
             this.rotateHand(document.getElementById('min'),this.state.minPosition)
             this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
             // this.rotateHand(document.getElementById('timer'),this.state.secPosition - 5)
         },1000)
+
     }
 
 }

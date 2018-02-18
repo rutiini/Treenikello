@@ -12,6 +12,8 @@ class App extends Component {
     }
   }
   componentWillMount(){
+    
+    // defaults -> populate from props provided by the separate editor..
     this.setState({sections: [
       {
         name: 'Alkulämmittely',
@@ -52,7 +54,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">React-treenikello</h1>
         </header>
         <Clock secHand="90"  sectionItems={this.state.sections}/>
       </div>
