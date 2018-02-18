@@ -1,17 +1,40 @@
-#face {
-	stroke-width: 2px; stroke: #ffffff; fill: #000000;
+#clock{ 
+    width: 75%; height: 75%
 }
-#hour, #min, #sec {
-	stroke-width: 1px; fill: #333; stroke: #555;
-}
-#sec { stroke: #f55; }
 
-#midpoint{
+#face {
+	stroke-width: 2px; stroke: #bebebe; fill: #000000;
+}
+#hour, #min {
+	stroke-width: 1px; fill: #333; stroke: #ffffff;
+}
+#sec { 
+    stroke: #ffffff; 
+}
+#sectip {
+    stroke: #ff2600;
+}
+#midPoint{
     fill: white;
 }
-#majors{
-    fill: grey;
+.bigHourMarker{
+    stroke: #ffffff;
+    stroke-width: 2px;
 }
-#minors{
+
+.hourMarker{
+    stroke: #ffffff;
+    stroke-width: 1px;
+}
+
+.minuteMarker{
+    stroke: #ffffff;
+    stroke-width: 1px;
+}
+#minor{
     fill: #3f3f3f;
+}
+#timer{
+    transition-duration: 1s;
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1)
 }

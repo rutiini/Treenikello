@@ -8,39 +8,43 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-      sections: [
-        {
-          name: 'Alkulämmittely',
-          duration: 10,
-          position: 1,
-          description: '-'
-        },
-        {
-          name: 'Alkuvenyttely',
-          duration: 5,
-          position: 2,
-          description: '--'
-        },
-        {
-          name: 'Tengi',
-          duration: 10,
-          position: 3,
-          description: '---'
-        },
-        {
-          name: 'Päivän aihe',
-          duration: 50,
-          position: 4,
-          description: '----'
-        },
-        {
-          name: 'Loppujumppa',
-          duration: 15,
-          position: 5,
-          description: '-----'
-        },
-      ]
+      sections: []
     }
+  }
+  componentWillMount(){
+    this.setState({sections: [
+      {
+        name: 'Alkulämmittely',
+        duration: 10,
+        position: 1,
+        description: '-'
+      },
+      {
+        name: 'Alkuvenyttely',
+        duration: 5,
+        position: 2,
+        description: '--'
+      },
+      {
+        name: 'Tengi',
+        duration: 10,
+        position: 3,
+        description: '---'
+      },
+      {
+        name: 'Päivän aihe',
+        duration: 50,
+        position: 4,
+        description: '----'
+      },
+      {
+        name: 'Loppujumppa',
+        duration: 15,
+        position: 5,
+        description: '-----'
+      },
+    
+    ]})
   }
 
   render() {
@@ -50,7 +54,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <Clock el="1" deg="1" sectionItems={this.state.sections}/>
+        <Clock secHand="90"  sectionItems={this.state.sections}/>
       </div>
     );
   }
