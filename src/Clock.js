@@ -114,6 +114,9 @@ class Clock extends Component {
             {/* render relative to windowsize also vertically */}   
              <svg id="clock" viewBox="0 0 100 100"> 
                <circle id="face" cx="50" cy="50" r="45"/>
+                    {/* <g id="sections">
+                    arc secotors here 
+                    </g> */}
                     <g id="minuteMarkers">
                     {this.Majors}
                     </g>
