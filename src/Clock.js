@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SectionItem from './Components/SectionItem';
+import StopWatchHand from './Components/StopWatchHand';
 import './Clock.css';
 
 class Clock extends Component {
@@ -7,7 +8,7 @@ class Clock extends Component {
     constructor(props){
         super(props);
         
-        // move all the generally used stuff to vars to make modding easier. -> recalculate from props?
+        // move all the generally used stuff to vars to make modding easier. -> recalculate from props.
         var canvasSide = 100;
         var viewBox = "'0 0 " + canvasSide + " " + canvasSide + "'";
         var centerCoordinate = canvasSide/2;
@@ -18,6 +19,7 @@ class Clock extends Component {
         var minRotation = 6*d.getMinutes();
         var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
 
+        this.timerHand = null;
         var timerEnabled = false;
 
         this.state = {
@@ -62,7 +64,7 @@ class Clock extends Component {
             this.rotateHand(this.minHand,this.state.minPosition)
             this.rotateHand(this.hourHand,this.state.hourPosition)
         }
-        
+
         var timerEnabled = false;
         var timerStarted = false;
         var timerFinished = false;
@@ -71,6 +73,18 @@ class Clock extends Component {
         // dont bind to wrong "this"!
         var enableTimerHand = function(){
             // set rotation to 0
+            var props = {
+                x:"50",
+                length:"38",
+                y:"50"
+            }
+
+            // this.setState({
+            //     timerHand: <StopWatchHand x1="50" x2="50" y1="50" y2="12" color="yellow"/> 
+            //     //new StopWatchHand(props)
+            //     //<StopWatchHand x="50" length="38" />;
+            //     //<line id="timer" x1="50" y1="50" x2="50" y2="12" stroke="yellow" />
+            // })
             document.getElementById("timer").setAttribute("visibility","visible")
             timerEnabled = true;
         }
@@ -78,7 +92,9 @@ class Clock extends Component {
         var disableTimerHand = function(){
             // read if this is ok to do..
             var hand = document.getElementById("timer")
-            hand.setAttribute("visibility","hidden")
+            //hand.setAttribute("visibility","hidden")
+            // remove and create hand instead of manipulating it
+            hand.remove();
             stopWatchSeconds = 0;
             rotateHand(hand,0)
             timerEnabled = false;
@@ -86,7 +102,8 @@ class Clock extends Component {
 
         var rotateHand = function(el, seconds) {
             // make the stopwatch run with smooth movement
-            el.setAttribute('transform', 'rotate('+ seconds*6 +' 50 50)')
+            // interval is 0,5s to support more "instant" stopping
+            el.setAttribute('transform', 'rotate('+ seconds*3 +' 50 50)')
         }
         
         var updateStopwatch = function(){
@@ -108,7 +125,7 @@ class Clock extends Component {
                 // startTimer
                 stopWatchSeconds = 1
                 rotateHand(document.getElementById("timer"),stopWatchSeconds)
-                stopWatchInterval = setInterval(updateStopwatch,1000);
+                stopWatchInterval = setInterval(updateStopwatch,500);
                 timerStarted = true;
             }
             // case visible and stated stop timer
@@ -130,7 +147,8 @@ class Clock extends Component {
         // static elements -> timerhand should be created on-demand!
         
         //separately timed stopclock
-        this.timerHand = <line id="timer" x1="50" y1="50" x2="50" y2="12" stroke="yellow" />
+        ////this.timerHand = <StopWatchHand x="50" y="50" length="38" />
+        //this.timerHand = <line id="timer" x1="50" y1="50" x2="50" y2="12" stroke="yellow" />
 
         // static clock elements for the object
         this.hourHand = <rect id="hour" x="47.5" y="22.5" width="5" height="30" rx="2.5" ry="2.55" fill="red" />
@@ -179,10 +197,15 @@ class Clock extends Component {
             
         }
         return (
-            <div className="Clock" onClick={this.cycleTimerFunctions} onTap={this.cycleTimerFunctions}> 
-            {/* render relative to windowsize also vertically */}   
+            // <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
+            <div className="Clock" onClick={this.enableTimerHand}>
              <svg id="clock" viewBox="0 0 100 100"> 
                <circle id="face" cx="50" cy="50" r="45"/>
+               <SectionItem cx="50" cy="50" radius="38" start_angle="0" end_angle="60" thickness="5" color="lightblue"/>
+               <SectionItem cx="50" cy="50" radius="38" start_angle="60" end_angle="90" thickness="5" color="lightgreen"/>
+               <SectionItem cx="50" cy="50" radius="38" start_angle="90" end_angle="300" thickness="5" color="orange"/>
+               <SectionItem cx="50" cy="50" radius="38" start_angle="300" end_angle="345" thickness="5" color="lightblue"/>
+               <SectionItem cx="50" cy="50" radius="38" start_angle="345" end_angle="360" thickness="5" color="lightgreen"/>
                     {/* <g id="sections">
                     arc secotors here 
                     </g> */}
@@ -192,7 +215,8 @@ class Clock extends Component {
                     <g id="hands">
                        {this.hourHand}
                        {this.minHand}
-                       {this.timerHand}
+                       <StopWatchHand x1="50" y1="50" x2="50" y2="12" color="yellow"/>
+                       {/* {this.state.timerHand} */}
                        {this.secHand}
                     </g>
                <circle id="midPoint" cx="50" cy="50" r="3"/>
@@ -225,8 +249,8 @@ class Clock extends Component {
             this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
         },1000)
 
-        var timerHand = document.getElementById("timer");
-        timerHand.setAttribute("visibility","hidden");
+        // var timerHand = document.getElementById("timer");
+        // timerHand.setAttribute("visibility","hidden");
 
     }
 

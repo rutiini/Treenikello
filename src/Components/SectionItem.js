@@ -3,78 +3,66 @@ import './Sectionitem.css'
 
 class SectionItem extends Component {
     
-    constructor(){
-        super()
+    // this should be a pure component probably since not much is going on in here, we just need to optimize rendering to handle the component alone.
+    
+    polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+        var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
         
-        // all of this needs to be scaled by the clock face!
-
-        // drawing an arc.
-        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-            var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-        
-            return {
-                x: centerX + (radius * Math.cos(angleInRadians)),
-                y: centerY + (radius * Math.sin(angleInRadians))
-            };
-        }
-
-        // arc
-        var opts = {
-        	cx: 200,
-        	cy: 200,
-        	radius: 200,
-        	start_angle: 0,
-        	end_angle: 120,
-        	thickness: 30
+        return {
+            x: Number(centerX) + (radius * Math.cos(angleInRadians)),
+            y: Number(centerY) + (radius * Math.sin(angleInRadians))
         };
+    }
 
-        var start = polarToCartesian(opts.cx, opts.cy, opts.radius, opts.end_angle);
-        var end = polarToCartesian(opts.cx, opts.cy, opts.radius, opts.start_angle);
-        var largeArcFlag = opts.end_angle - opts.start_angle <= 180 ? "0" : "1";
-
-        var cutout_radius = opts.radius - opts.thickness,
-        		start2 = polarToCartesian(opts.cx, opts.cy, cutout_radius, opts.end_angle),
-        		end2 = polarToCartesian(opts.cx, opts.cy, cutout_radius, opts.start_angle),
-
-
+    getPath(){
+        // arc -> these are the props required.
+        console.log(this.props.cx + " " + this.props.cy + " " +  this.props.radius + " " +  this.props.end_angle + " " + this.props.start_angle + " " + this.props.thickness)
+        var start = this.polarToCartesian( this.props.cx,  this.props.cy,  this.props.radius,  this.props.end_angle);
+        var end = this.polarToCartesian( this.props.cx,  this.props.cy,  this.props.radius,  this.props.start_angle);
+        var largeArcFlag =  this.props.end_angle -  this.props.start_angle <= 180 ? "0" : "1";
+        console.log(start.x + " " + start.y + " " + end.x + " " + end.y)
+        var cutout_radius =  this.props.radius -  this.props.thickness,
+        		start2 = this.polarToCartesian( this.props.cx, this.props.cy, cutout_radius,  this.props.end_angle),
+        		end2 = this.polarToCartesian( this.props.cx,  this.props.cy, cutout_radius,  this.props.start_angle),
 
         d = [
         	"M", start.x, start.y,
-        	"A", opts.radius, opts.radius, 0, largeArcFlag, 0, end.x, end.y,
-        	"L", opts.cx, opts.cy,
+        	"A",  this.props.radius,  this.props.radius, 0, largeArcFlag, 0, end.x, end.y,
+        	"L",  this.props.cx,  this.props.cy,
         	"Z",
-        
         	"M", start2.x, start2.y,
         	"A", cutout_radius, cutout_radius, 0, largeArcFlag, 0, end2.x, end2.y,
-        	"L", opts.cx, opts.cy,
+        	"L",  this.props.cx,  this.props.cy,
         	"Z"
         ].join(" ");
 
-        document.getElementById("arc").setAttribute("d", d);
-        document.getElementById("arc_d_attr").innerHTML = d;
+        console.log(start2.x + " " + start2.y + " " + end2.x + " " + end2.y)
 
+        console.log(this.props.cx + " " + this.props.cy + " " +  this.props.radius + " " +  this.props.end_angle + " " + this.props.start_angle + " " + this.props.thickness)
+        console.log(d)
+        console.log("M 95 50 A 45 45 0 0 0 50 5 L 50 50 Z M 85 50 A 35 35 0 0 0 50 15 L 50 50 Z")
 
-        this.drawSector = function(){
-            // sectors are drawn at base position and the clock face needs to figure out stacking and rotation
-            // according to the order etc.
-            <path id="arc" fill="orange" stroke="none" fill-rule="evenodd" />
-        }
+        return d;
     }
 
 
     render() {
         return (
-            <div className="SectionItem">
-                {this.props.section.position} ->
-                {this.props.section.name} 
-                {this.props.section.duration} min
-                {this.props.section.description}
-            </div>
+            // <div className="SectionItem">
+            <path id="arc" fill={this.props.color} stroke="none" fillRule="evenodd" d={this.d}/>
+            //<path id="arc" fill="lightblue" stroke="none" fill-rule="evenodd" d="M 95 50 A 45 45 0 0 0 50 5 L 50 50 Z M 85 50 A 35 35 0 0 0 50 15 L 50 50 Z"/>
+            // "M 5045 500 A 45 45 0 0 0 502.7554552980815448e-15 50-45 L 50 50 Z M 5035 500 A 35 35 0 0 0 502.1431318985078682e-15 50-35 L 50 50 Z"
+                // { {this.props.section.position} ->
+                // {this.props.section.name} 
+                // {this.props.section.duration} min
+                // {this.props.section.description} }
+            // </div>
         )   
     }
 
     componentDidMount(){
         // here we draw it..
+        this.d = this.getPath()
     }
 }
 export default SectionItem;
