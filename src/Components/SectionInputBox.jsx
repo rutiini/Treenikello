@@ -1,23 +1,47 @@
 import React, {Component} from 'react';
+import '../App.css';
 
 class SectionInputBox extends Component {
 
-  constructor(){
-    super();
+  // const stuff can be declared here?
+  colorOptions = [
+    {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
+    {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
+    {"colorName":"dark green","colorValue":"#559e83"}, //-> dark green
+    {"colorName":"dark red","colorValue":"#ae5a41"}, //-> dark red
+    {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
+    {"colorName":"none","colorValue":"none"}
+  ]
+
+  constructor(props){
+    super(props);
     this.state = {
       
     }
-    // var colorOptions = [
-    //   {"dark blue":"#1b85b8"}, //-> dark blue
-    //   {"dark grey":"#5a5255"}, //-> dark grey
-    //   {"dark green":"#559e83"}, //-> dark green
-    //   {"dark red":"#ae5a41"}, //-> dark red
-    //   {"olive green":"#c3cb71"}, //-> olive green
-    //   {"none":"none"}
-    // ]
 
   }
-
+  
+  nameChanged(el){
+    this.setState({
+      position: el.value
+    })
+  }
+  descriptionChanged(el){
+    this.setState({
+      description: el.value
+    })
+  }
+  positionChanged(el){
+    this.setState({
+      position: el.value
+    })
+  }
+  durationChanged(el){
+    this.setState({
+      duration: el.value
+    })
+  }
+  // use this for customized color options?
   getColorOptions(){
     
     var colorOptions = [
@@ -28,34 +52,34 @@ class SectionInputBox extends Component {
       {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
       {"colorName":"none","colorValue":"none"}
     ]
-
-    // let colorArrLen = colorOptions.len;
-    // let options = [];
-    // for(let i=0; i< colorArrLen; i++){
-    //   let colorCode = colorOptions[i].value;
-    //   let colorName = colorOptions[i].key;
-    //   options[i] = <option value={colorCode}>colorName</option>
-    // }
-    // console.log("created " + options.len +" options")
     return colorOptions;
   }
 
+  getSelections(){
+    var section = {
+      position: document.getElementById("position"),
+      name: "name",
+      description: "asd",
+      duration: 10
+    }
+    return section;
+  }
 
   render(){
 
-    let options = this.getColorOptions().map(optionItem => {
+    let options = this.colorOptions.map(optionItem => {
       let colorCode = optionItem.colorValue;
       let colorName = optionItem.colorName;
-      let bgColor = "background-color="+{colorCode};
       return <option value={colorCode}><span style={{backgroundColor: colorCode}}> {colorName} </span></option>;
     })
 
     return(
-      <div width="100px" height="100px" style={{backgrounColor: this.props.color}}>
-        <textbox height="10px" value={this.props.name}/>
-        <textarea height="10px" value={this.props.description}/>
-        <textbox height="10px" value={this.props.position}/>
-        <select>
+      <div className="SectionItemBox" style={{backgroundColor: this.props.color}}>
+        <input className="PositionSelector" type="number" height="10px" value={this.props.position}></input>
+        <textbox className="NameInputBox"/>{this.props.name}<br/>
+        <textarea className="DescriptionBox" height="10px" width="90%" onChange={this.descriptionChanged.bind(this)} value={this.props.description}/><br/>
+        <input className="DurationSelector" type="number" height="10px" value={this.props.duration}/><br/>
+        <select className="ColorSelector">
         {options}
         </select>
       </div>

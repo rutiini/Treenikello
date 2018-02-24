@@ -4,34 +4,43 @@ import StopWatchHand from './StopWatchHand';
 import './Clock.css';
 
 class Clock extends Component {
-    
+
+    // basic parameters for drawing
+    canvasSide = 100;
+    centerCoordinate = 100/2;
+    faceRadius = 100/2 - (100/20);
+
+
     constructor(props){
         super(props);
-        
-        // the scaling of this component is based on the amount of content, manual rescaling
-        // does not seem necessary.
-        
-        var canvasSide = 100;
-        var centerCoordinate = canvasSide/2;
-        var faceRadius = canvasSide/2 - (canvasSide/20);
-        
+
+        // custom canvasside given.
+        if(this.props.canvasSide){
+
+            this.canvasSide = this.props.canvasSide;
+            this.centerCoordinate = this.canvasSide/2;
+            this.faceRadius =  this.canvasSide/2 - (this.canvasSide/20)
+        }
+
+
         this.rotateHand = function(el, deg) {
             el.setAttribute('transform', 'rotate('+ deg +' 50 50)')
+            // el.setAttribute('transform', {rotate: deg + '50 50'})
         }
-        
+
         // get stuff from sub function
         this.createMarker = function(id,length,className){
-            
+
             // lets not render too many objects here
             if(id >= 60){
                 throw new DOMException("too many minutemarkers for this clock");
             }
             let idTag = "marker"+i;
-            let y1 = canvasSide/2 - faceRadius + length;
+            let y1 = this.canvasSide/2 - this.faceRadius + length;
             let rotation = 'rotate('+ i*6 +' 50 50)';
             return (<line key={idTag} id={idTag} className={className} x1="50" y1={y1} x2="50" y2="6" transform={rotation}/>)
         }
-        
+
         this.updateTime = function() {
             var d = new Date()
             var secRotation = 6*d.getSeconds();
@@ -49,12 +58,12 @@ class Clock extends Component {
             this.rotateHand(this.minHand,this.state.minPosition)
             this.rotateHand(this.hourHand,this.state.hourPosition)
         }
-        
+
         var timerEnabled = false;
         var timerStarted = false;
         var timerFinished = false;
         var stopWatchSeconds = 0;
-        
+
         // dont bind to wrong "this"!
         var enableTimerHand = function(){
             // set rotation to 0
@@ -63,12 +72,10 @@ class Clock extends Component {
                 length:"38",
                 y:"50"
             }
-            // how to add components?
-            // let handGroup = document.getElementById("hands")
-            // let sHand = <StopWatchHand x1="50" y1="50" x2="50" y2="14" y3="12" color="green" tipColor="red"/>
-            // handGroup.innerHTML.appendChild(sHand)
+
             let hand = document.getElementById("timerHand")
             hand.setAttribute("visibility","visible")
+            
             // toggle classes to enable and disable?
             // if(hand.classList.contains("timerOff")){
             //     hand.classList.remove("timerOff")
@@ -78,14 +85,14 @@ class Clock extends Component {
             // }
             timerEnabled = true;
         }
-        
+
         var disableTimerHand = function(){
             // read if this is ok to do..
             var hand = document.getElementById("timerHand")
-            
+
             // remove and create hand instead of manipulating it?
             //hand.remove();
-            
+
             stopWatchSeconds = 0;
             // hand.setAttribute('transition','none')
             hand.setAttribute("visibility","hidden")
@@ -98,19 +105,19 @@ class Clock extends Component {
             rotateHand(hand,0)
             timerEnabled = false;
         }
-        
+
         var rotateHand = function(el, seconds) {
             // make the stopwatch run with smooth movement
             // interval is 0,5s to support more "instant" stopping
             el.setAttribute('transform', 'rotate('+ seconds*3 +' 50 50)')
         }
-        
+
         var updateStopwatch = function(){
             var hand = document.getElementById("timerHand")
             stopWatchSeconds++;
             rotateHand(hand,stopWatchSeconds)
         }
-        
+
         var stopWatchInterval;
         // cycle on tap -> make visible -> start -> stop -> hide and reset
         this.cycleTimerFunctions = function(){
@@ -142,9 +149,9 @@ class Clock extends Component {
                 timerFinished = false;
             }
         }
-        
+
         // static elements -> timerhand should be created on-demand!
-        
+
         // static clock elements for the object
         this.hourHand = <rect id="hour" x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
         this.minHand = <rect id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
@@ -152,7 +159,7 @@ class Clock extends Component {
         <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
         {/* <line id="sectip" x1="50" y1="9" x2="50" y2="16" stroke="red" /> */}
         </g>
-        
+
         // draw hours and minutes to the clock face
         var majors = [];
         for(var i = 0; i<60; i++){
@@ -170,17 +177,17 @@ class Clock extends Component {
             }
         }
         this.Majors = majors;
-        
+
     }
-    
+
     componentWillMount(){
-        
+
         // put the hands in correct time for initial render
         var d = new Date()
         var secRotation = 6*d.getSeconds();
         var minRotation = 6*d.getMinutes();
         var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
-        
+
         this.setState(
             {
                 date: d.toLocaleString("fi") ,
@@ -190,28 +197,28 @@ class Clock extends Component {
                 timerEnabled: "hidden"
             }
         )
-        
+
         // this.rotateHand(document.getElementById('secHand'),this.state.secPosition)
         // this.rotateHand(document.getElementById('min'),this.state.minPosition)
         // this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
-        
+
         this.timerHand = null;
         var timerEnabled = false;
     }
-    
+
     render() {
-        
+
         let sectionItems;
         let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
         let startTimeAngle = this.props.startTime.getMinutes()*6;
         if(this.props.sectionItems){
             var angle = startTimeAngle; // calculate from start time.
             sectionItems = this.props.sectionItems.map(sectionItem => {
-                
+
                 if(angle === fullCicrcle + startTimeAngle){
                     return null;
                 }
-                
+
                 let startAngle = angle;
                 angle += sectionItem.duration*6; // transform minutes to degrees
                 // we reach full circle and stop rendering
@@ -247,15 +254,15 @@ class Clock extends Component {
             </div>
             </div>
         )}
-        
+
         componentDidMount(){
-            
+
             this._interval = setInterval(() => {
                 var d = new Date()
                 var secRotation = 6*d.getSeconds();
                 var minRotation = 6*d.getMinutes();
                 var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
-                
+
                 this.setState(
                     {
                         date: d.toLocaleString("fi") ,
@@ -264,17 +271,17 @@ class Clock extends Component {
                         hourPosition: hourRotation
                     }
                 )
-                
+
                 this.rotateHand(document.getElementById('secHand'),this.state.secPosition)
                 this.rotateHand(document.getElementById('min'),this.state.minPosition)
                 this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
             },1000)
-            
+
             var timerHand = document.getElementById("timerHand");
             timerHand.setAttribute("visibility","hidden");
-            
+
         }
-        
+
     }
-    
+
     export default Clock;

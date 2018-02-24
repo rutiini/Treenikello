@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Clock from './Components/Clock';
 import SectionInputBox from './Components/SectionInputBox';
@@ -21,7 +20,7 @@ class App extends Component {
     let customStartDate = new Date(2018,2,24,12,30)
     console.log("applying settings: " + customStartDate)
     //localStorage()
-    if(sections != ""){
+    if(sections !== ""){
       this.setState({
           sections: [sections]
       })
@@ -31,6 +30,10 @@ class App extends Component {
         startTime: customStartDate
     })
     }
+  }
+
+  addSection(){
+    console.log("adding new section: "+ (this.state.sections.length + 1))
   }
 
   componentWillMount(){
@@ -92,7 +95,11 @@ class App extends Component {
 
   render() {
     
-    let sampleSection = this.state.sections[1];
+    let currentSections = this.state.sections.map(sectionItem => {
+      
+      return <SectionInputBox name={sectionItem.name} description={sectionItem.description} duration={sectionItem.duration} position={sectionItem.position} color={sectionItem.color}/>
+    })
+    // let sampleSection = this.state.sections[1];
     
     return (
       <div className="App">
@@ -101,17 +108,19 @@ class App extends Component {
           <h1 className="App-title">React-treenikello</h1>
         </header> */}
         <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime}/>
-        <div id="App-configbox">
-        <textarea id="sectionConfig" type="textarea" name="sections" height="300" overflow="auto" wrap="soft" placeholder="add sections separated by commas: {
+        <div ClassName="ConfigBox" id="App-configbox">
+        <textarea id="SectionConfig" type="textarea" name="sections" height="300" overflow="auto" wrap="soft" placeholder="add sections separated by commas: {
         name: 'Alkulämmittely',
         duration: 10,
         position: 1,
         color: '#1b85b8',
         description: '-'
       }"/>
-        <input id="customStart" type="time" name="start-time"/>
-        <input type="submit" value="apply" onClick={this.applySettings.bind(this)}/>
+        <input ClassName="ConfigBox" id="CustomStart" type="time" name="start-time"/>
+        <input ClassName="ConfigBtn" type="Submit" value="apply" onClick={this.applySettings.bind(this)}/>
         {/* <SectionInputBox name={sampleSection.name} description={sampleSection.description} duration={sampleSection.duration} position={sampleSection.position} color={sampleSection.color}/> */}
+        {currentSections}
+        <button ClassName="ConfigBtn" id="AddSectionBtn" name="Add section" onClick={this.addSection.bind(this)}>Add Section</button>
         </div>
       </div>
     );
