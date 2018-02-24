@@ -38,13 +38,6 @@
 #minor{
     fill: #3f3f3f;
 }
-#timer{
-    /* transition: linear;
-    transition-duration: 500ms;
-    -webkit-transition: linear;
-    -webkit-transition-duration: 500ms; */
-}
-
 .timerOn{
     transition: linear;
     transition-duration: 500ms;

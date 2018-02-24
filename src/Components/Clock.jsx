@@ -66,16 +66,10 @@ class Clock extends Component {
 
         // dont bind to wrong "this"!
         var enableTimerHand = function(){
-            // set rotation to 0
-            var props = {
-                x:"50",
-                length:"38",
-                y:"50"
-            }
 
             let hand = document.getElementById("timerHand")
             hand.setAttribute("visibility","visible")
-            
+
             // toggle classes to enable and disable?
             // if(hand.classList.contains("timerOff")){
             //     hand.classList.remove("timerOff")
@@ -203,7 +197,7 @@ class Clock extends Component {
         // this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
 
         this.timerHand = null;
-        var timerEnabled = false;
+        // var timerEnabled = false;
     }
 
     render() {
@@ -229,7 +223,7 @@ class Clock extends Component {
                     <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionItem.name} color={sectionItem.color} section={sectionItem} />
                 );
             });
-            let initialRotation = 'rotate: '+ this.state.minRotation +'deg 50 50';
+            // let initialRotation = 'rotate: '+ this.state.minRotation +'deg 50 50';
         }
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>

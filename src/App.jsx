@@ -14,39 +14,53 @@ class App extends Component {
 
   applySettings(){
 
-    let sections = document.getElementById("sectionConfig").value;
-    let customStart = document.getElementById("customStart").value;
+     let customHour = document.getElementById("HourPicker").value;
+     let customMin = document.getElementById("MinutePicker").value;
     // let customStartHours = 
-    let customStartDate = new Date(2018,2,24,12,30)
+    let customStartDate = new Date(2018,2,24,customHour,customMin)
     console.log("applying settings: " + customStartDate)
     //localStorage()
-    if(sections !== ""){
-      this.setState({
-          sections: [sections]
-      })
-    }
-    if(customStart){
+    
       this.setState({
         startTime: customStartDate
     })
-    }
   }
 
+  timeChanged(){
+    console.log("time changed")
+  }
+  // section manipulation
   addSection(){
     console.log("adding new section: "+ (this.state.sections.length + 1))
+    let section = {
+      name: 'new',
+        duration: 5,
+        position: this.state.sections.length + 1,
+        color: "#1b85b8",
+        description: 'new'
+    }
+    let newSections = this.state.sections;
+    newSections.push(section);
+    this.setState({
+      sections: newSections
+    })
+  }
+  removeSection(el){
+    // --> remove the element that sends this request
+    console.log("removing section")
+    let newSections = this.state.sections;
+    // remove the section from state..
+    newSections.findIndex()
+  }
+
+  findBySectionByPosition(element,position){
+    if(element.position === position){
+      return element;
+    }
   }
 
   componentWillMount(){
     
-    /*
-    basic pastel colors:
-    #1b85b8 -> dark blue
-    #5a5255 -> dark grey
-    #559e83 -> dark green
-    #ae5a41 -> dark red
-    #c3cb71 -> olive green
-    */
-
     // defaults -> populate from props provided by the separate editor..
     let date = new Date();
     date.setHours(18);
@@ -77,7 +91,7 @@ class App extends Component {
       },
       {
         name: 'Päivän aihe',
-        duration: 50,
+        duration: 10,
         position: 4,
         color: "#c3cb71",
         description: '----'
@@ -97,30 +111,21 @@ class App extends Component {
     
     let currentSections = this.state.sections.map(sectionItem => {
       
-      return <SectionInputBox name={sectionItem.name} description={sectionItem.description} duration={sectionItem.duration} position={sectionItem.position} color={sectionItem.color}/>
+      return <SectionInputBox key={sectionItem.position} name={sectionItem.name} description={sectionItem.description} duration={sectionItem.duration} position={sectionItem.position} color={sectionItem.color} remove={this.removeSection}/>
     })
     // let sampleSection = this.state.sections[1];
     
     return (
       <div className="App">
-        {/* <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">React-treenikello</h1>
-        </header> */}
         <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime}/>
-        <div ClassName="ConfigBox" id="App-configbox">
-        <textarea id="SectionConfig" type="textarea" name="sections" height="300" overflow="auto" wrap="soft" placeholder="add sections separated by commas: {
-        name: 'Alkulämmittely',
-        duration: 10,
-        position: 1,
-        color: '#1b85b8',
-        description: '-'
-      }"/>
-        <input ClassName="ConfigBox" id="CustomStart" type="time" name="start-time"/>
-        <input ClassName="ConfigBtn" type="Submit" value="apply" onClick={this.applySettings.bind(this)}/>
-        {/* <SectionInputBox name={sampleSection.name} description={sampleSection.description} duration={sampleSection.duration} position={sampleSection.position} color={sampleSection.color}/> */}
+        <div className="ConfigBox" id="App-configbox">
+        <div className="StartPickerContainer">
+        <h3>aloitusaika</h3>
+        <input className="TimePickerBox" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="TimePickerBox" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
+        <button id="ApplyBtn" value="apply" onClick={this.applySettings.bind(this)}>Apply</button>
+        </div>
         {currentSections}
-        <button ClassName="ConfigBtn" id="AddSectionBtn" name="Add section" onClick={this.addSection.bind(this)}>Add Section</button>
+        <button className="ConfigBtn" id="AddSectionBtn" name="Add section" onClick={this.addSection.bind(this)}>Add Section</button>
         </div>
       </div>
     );

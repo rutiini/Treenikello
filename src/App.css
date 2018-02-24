@@ -28,30 +28,52 @@
   border-width: 2px;
   border-radius: 2em;
 }
-
-.ConfigBox{
+.StartPickerContainer{
+  border: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 2em;
   min-height: 100px;
+  background-color: dimgray;
 }
-.ConfigBtn{
-  padding: 30px;
+#CustomStart{
+  margin: 1em
 }
 .PositionSelector{
   width:2em;
   text-align: center;
-  text-justify: auto;
   margin: 0.5em;
 }
 .NameInputBox{
   font-weight: bold;
+  width:10em;
+  height: 1.2em;
+  text-align: center;
+  margin: 0.5em;
+  resize: none;
 }
 .DescriptionBox{
   margin: 0.5em;
+  width: 80%;
+  height: 20%;
+  resize: none;
+  text-align: center;
+  overflow: auto;
 }
 .DurationSelector{
   margin: 0.5em;
+  width: 3em;
 }
 .ColorSelector{
   margin: 0.5em;
+}
+.TimePickerBox{
+  margin: 0.5em;
+  width: 3em;
+  height: 1em;
+}
+.HeaderContainer{
+  font-weight: bold; 
 }
 
 #App-configbox{
@@ -72,9 +94,32 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+/* transform layout to work on portrait mode */
+@media only screen and (max-width: 800px){
+  
+  .App {
+    text-align: center;
+  }
+  #clock{
+    max-width: 100%;
+  }
+  #App-configbox{
+    align-content: center;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    padding-right: 10px;
+    grid-gap: 10px;
+    height: 100%;
+    max-width: 100%;
+  }
+  #CustomStart{
+    min-height: 10em;
+  }
+}
 
 /* transform layout to work side-by side in landscape mode */
-@media only screen and (max-height: 500px){
+@media only screen and (max-height: 600px){
   
   .App {
     text-align: center;
@@ -91,6 +136,8 @@
     padding-right: 10px;
     grid-gap: 10px;
     height: 100%;
+    max-height: 300px;
+    overflow: auto;
     width: 50%;
   }
   #CustomStart{
