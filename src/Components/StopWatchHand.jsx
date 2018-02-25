@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './StopWatchHand.css'
 
 class StopWatchHand extends Component {
   

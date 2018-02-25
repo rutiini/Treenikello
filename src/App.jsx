@@ -42,7 +42,7 @@ class App extends Component {
         sections: newSections
       }
     )
-
+    console.log("section " + targetSectionIndex + "updated: " + section.name)
   }
 
   // modify to use a better, unique identifier
@@ -144,7 +144,7 @@ class App extends Component {
           
           // Just pass the sectionitem, no point in givin all the props separately!
 
-          return <SectionInputBox key={sectionItem.position} name={sectionItem.name} section={sectionItem} remove= {this.deleteSection.bind(this)}/>
+          return <SectionInputBox key={sectionItem.position} name={sectionItem.name} section={sectionItem} remove= {this.deleteSection.bind(this)} update={this.updateSection.bind(this)}/>
         })
         
         return (
