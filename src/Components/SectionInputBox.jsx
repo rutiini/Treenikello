@@ -21,12 +21,21 @@ class SectionInputBox extends Component {
     
   }
   
+  // call the parent remove function with current objects position
+  // replace position with unique id for future purpose
+  removeSelf(){
+    console.log("removing section " + this.props.section.position)
+      // remove the section from state..
+    this.props.remove(this.props.section.position)
+  }
+
   nameChanged(el){
     this.setState({
       position: el.value
     })
   }
   descriptionChanged(el){
+    let newValue = el.value;
     this.setState({
       description: el.value
     })
@@ -75,15 +84,15 @@ class SectionInputBox extends Component {
     })
     
     return(
-      <div className="SectionItemBox" onChange={this.descriptionChanged.bind(this)} style={{backgroundColor: this.props.color}}>
+      <div className="SectionItemBox" onChange={this.descriptionChanged.bind(this)} style={{backgroundColor: this.props.section.color}}>
       <div className="HeaderContainer">
-      <input className="PositionSelector" defaultValue={this.props.position} onChange={this.descriptionChanged.bind(this)} type="number"></input>
-      <textarea className="NameInputBox" defaultValue={this.props.name}></textarea>
-      <div height="2em" width="2em" onClick={this.props.remove.bind(this)}>X</div>
+      <input className="PositionSelector" defaultValue={this.props.section.position} onChange={this.descriptionChanged.bind(this)} type="number"></input>
+      <textarea className="NameInputBox" defaultValue={this.props.section.name}></textarea>
+      <div height="2em" width="2em" onClick={this.removeSelf.bind(this)}>X</div>
       </div>
-      <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.description}/><br/>
-      <input className="DurationSelector" onChange={this.descriptionChanged.bind(this)} type="number" defaultValue={this.props.duration}/><br/>
-      <select className="ColorSelector" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.color}>
+      <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.section.description}/><br/>
+      <input className="DurationSelector" onChange={this.descriptionChanged.bind(this)} type="number" defaultValue={this.props.section.duration}/><br/>
+      <select className="ColorSelector" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.section.color}>
       {options}
       </select>
       </div>
