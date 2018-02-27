@@ -16,39 +16,66 @@ class SectionInputBox extends Component {
   constructor(props){
     super(props);
     this.state = {
-      
+      color: this.props.section.color,
+      name: this.props.section.name,
+      description: this.props.section.description,
+      duration: this.props.section.duration,
+      position: this.props.section.position
     }
     
   }
   
+  // call the parents update function
+  updateSectionState(){
+    let stateSection = {
+      key: this.props.id,
+      color: this.state.color,
+      name: this.state.name,
+      description: this.state.description,
+      duration: this.state.duration,
+      position: this.state.position
+    }
+    this.props.update(stateSection)
+  }
+
   // call the parent remove function with current objects position
   // replace position with unique id for future purpose
   removeSelf(){
-    console.log("removing section " + this.props.section.position)
-    // remove the section from state..
-    this.props.remove(this.props.section.position)
+    this.props.remove(this.props.section.key)
   }
   
-  nameChanged(el){
-    let newState = this.props.section;
-    newState.name = this.
-    this.props.update(newState);
-  }
-  descriptionChanged(el){
-    let newState = this.props.section;
-    newState.description = el.value;
-    this.props.update(newState);
-  }
-  positionChanged(el){
+  nameChanged(e){
     this.setState({
-      position: el.value
+      name: e.target.value
+    })
+    this.updateSectionState();
+  }
+  descriptionChanged(e){
+    this.setState({
+      description: e.target.value
+    })
+    this.updateSectionState();
+  }
+  positionChanged(e){
+    this.setState({
+      position: e.target.value
     })
   }
-  durationChanged(el){
+  durationChanged(e){
     this.setState({
-      duration: el.value
+      duration: e.target.value
     })
+    this.updateSectionState();
   }
+
+  colorChanged(e){
+    this.setState({
+     color: e.target.value 
+    })
+    console.log(this.props.id + " color changed to " + this.state.color)
+    this.updateSectionState();
+  }
+
   // use this for customized color options?
   getColorOptions(){
     
@@ -85,17 +112,17 @@ class SectionInputBox extends Component {
   
   render(){
     
-    
     return(
-      <div className="SectionItemBox" onChange={this.descriptionChanged.bind(this)} style={{backgroundColor: this.props.section.color}}>
+      <div className="SectionItemBox" style={{backgroundColor: this.state.color}}>
       <div className="HeaderContainer">
-      <input className="PositionSelector" defaultValue={this.props.section.position} onChange={this.descriptionChanged.bind(this)} type="number"></input>
-      <textarea id="SectionName" className="NameInputBox" defaultValue={this.props.section.name} onChange={this.nameChanged.bind(this)}></textarea>
+      <input className="PositionSelector" value={this.state.position} onChange={this.positionChanged.bind(this)} type="number"></input>
+      <textarea id="SectionName" className="NameInputBox" value={this.state.name} onChange={this.nameChanged.bind(this)} ></textarea>
       <div height="2em" width="2em" onClick={this.removeSelf.bind(this)}>X</div>
       </div>
-      <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.section.description}/><br/>
-      <input className="DurationSelector" onChange={this.descriptionChanged.bind(this)} type="number" defaultValue={this.props.section.duration}/><br/>
-      <select className="ColorSelector" onChange={this.descriptionChanged.bind(this)} defaultValue={this.props.section.color}>
+      <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} value={this.state.description}/><br/>
+      <input className="DurationSelector" onChange={this.durationChanged.bind(this)} type="number" value={this.state.duration}/><br/>
+      <select className="ColorSelector" onChange={this.colorChanged.bind(this)} value={this.state.color}>
+      {/* <select className="ColorSelector" onChange={this.colorChanged.bind(this)} defaultValue={this.props.section.color} value={this.state.color}> */}
       {this.options}
       </select>
       </div>

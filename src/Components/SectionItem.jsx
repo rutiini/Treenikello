@@ -14,6 +14,10 @@ class SectionItem extends Component {
         };
     }
 
+    componentWillReceiveProps(){
+        console.log("sectionItem angle: " + this.props.start_angle)
+    }
+
     // arc -> these are the props required.
     getPath(){
         
@@ -42,6 +46,7 @@ class SectionItem extends Component {
     }
 
     render() {
+        //console.log("drawing arc: " + this.props.start_angle + " -> " + this.props.end_angle)
         return (
             <path id="arc" fill={this.props.color} fillRule="evenodd" d={this.d}/>
         )   

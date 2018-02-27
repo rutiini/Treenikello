@@ -200,6 +200,14 @@ class Clock extends Component {
         // var timerEnabled = false;
     }
 
+    componentWillReceiveProps(){
+        // fires when component is recieving new props
+        console.log("Clock: ComponentWillRecieveProps triggered")
+    }
+    componentWillUpdate(){
+        // fires before rendering with new props or state
+        console.log("Clock: ComponentWillUpdate triggered")
+    }
     render() {
 
         let sectionItems;
@@ -207,6 +215,7 @@ class Clock extends Component {
         let startTimeAngle = this.props.startTime.getMinutes()*6;
         if(this.props.sectionItems){
             var angle = startTimeAngle; // calculate from start time.
+            //console.log("section start angle set to: " + startTimeAngle)
             sectionItems = this.props.sectionItems.map(sectionItem => {
 
                 if(angle === fullCicrcle + startTimeAngle){
@@ -219,11 +228,12 @@ class Clock extends Component {
                 if(angle > fullCicrcle + startTimeAngle){
                     angle = fullCicrcle + startTimeAngle;
                 }
+                // this hack forces redrawing
+                let sectionArcKey = "Arc-" + this.props.startTime.getMinutes() + sectionItem.key;
                 return(
-                    <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionItem.name} color={sectionItem.color} section={sectionItem} />
+                    <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
                 );
             });
-            // let initialRotation = 'rotate: '+ this.state.minRotation +'deg 50 50';
         }
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
