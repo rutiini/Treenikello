@@ -158,7 +158,7 @@
   } */
 }
 
-@media only screen and (max-width: 400px){
+@media only screen and (max-width: 520px){
   #App-configbox{
     align-content: top;
     display: grid;
@@ -168,41 +168,57 @@
     grid-gap: 10px;
     height: 100%;
     max-width: 100%;
+  }
+  .GeneralSettingsContainer{
+    margin: 0.5em;
+    justify-content: center;
+    line-height: 2em;
+    padding: 1em;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+  .TimePickerBox{
+    margin: 0.2em;
+    width: 3em;
+    height: 1em;
+  }
+  #ApplyBtn{
+    margin: 0.2em;
+    height: 2em;
   }
 }
 /* transform layout to work side-by side in landscape mode */
-@media only screen and (max-height: 600px){
-  
-  .App {
-    text-align: center;
-  }
-  #clock{
-    width: 800px;
-    float: left;
-  }
+@media screen and (max-width: 1280px) and (max-height: 720px){
   #SettingsContainer{
     float: right;
+    width: 65%;
+  }
+  #clock{
+    width: 35%;
+    float: left;
   }
   #App-configbox{
     align-content: top;
-    float: right;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto;
     padding-right: 10px;
     grid-gap: 10px;
     height: 100%;
-    max-height: 300px;
-    overflow: auto;
-    width: 100%;
-  }
-  #CustomStart{
-    min-height: 10em;
+    max-width: 100%;
   }
 }
 
-/* small width and height.. */
-@media only screen and (max-height: 600px) and (max-width: 400px){
+@media screen and (max-width: 900px) and (max-height: 720px){
+  #SettingsContainer{
+    float: right;
+    width: 40%;
+    min-width: 230px;
+  }
+  #clock{
+    width: 35%;
+    float: left;
+  }
   #App-configbox{
     align-content: top;
     display: grid;
@@ -212,9 +228,17 @@
     grid-gap: 10px;
     height: 100%;
     max-width: 100%;
+    overflow: auto;
   }
-  #CustomStart{
-    min-height: 10em;
+  .GeneralSettingsContainer{
+    margin: 0.5em;
+    justify-content: center;
+    line-height: 2em;
+    padding: 1em;
+    font-weight: bold;
+    font-size: 0.9em;
+    display: inline-block;
+    display: -webkit-inline-box; 
   }
 }
 
