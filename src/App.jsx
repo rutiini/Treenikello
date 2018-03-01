@@ -41,12 +41,12 @@ class App extends Component {
       color: "#5a5255",
       description: '-----'
     }]
-
+    
     sumAngle = 0;
-
-
-    constructor(){
-      super();
+    
+    
+    constructor(props){
+      super(props);
       this.state = {
         sections: []
       }
@@ -66,7 +66,7 @@ class App extends Component {
       })
     }
     
-     getLastSectionStopAngle(){
+    getLastSectionStopAngle(){
       let angle = 0;
       if(this.sections){
         
@@ -81,7 +81,7 @@ class App extends Component {
     createSection(name, description, duration,position,color){
       
       this.sumAngle = this.sumAngle + duration*6;
-
+      
       let key = "section-" + this.sumAngle;
       let section = {
         key: key,
@@ -103,6 +103,7 @@ class App extends Component {
       
       let targetSectionIndex = this.getSectionIndex(this.state.sections,section.position);
       let newSections = this.state.sections;
+      
       newSections[targetSectionIndex] = section;
       
       this.setState(
@@ -110,7 +111,7 @@ class App extends Component {
           sections: newSections
         }
       )
-      console.log("section: " + section.key + " found at: " + targetSectionIndex + " updated -> name:" + section.name + " Description: " + section.description + " color: " + section.color + " duration: " + section.duration)
+      // console.log("section: " + section.key + " found at: " + targetSectionIndex + " updated -> name:" + section.name + " Description: " + section.description + " color: " + section.color + " duration: " + section.duration)
     }
     
     // modify to use a better, unique identifier
@@ -122,7 +123,7 @@ class App extends Component {
       }
       
       addSection(){
-
+        
         let section = this.createSection('new','section',5,this.state.sections.length + 1,"#1b85b8")
         let newSections = this.state.sections;
         newSections.push(section);
@@ -152,12 +153,12 @@ class App extends Component {
         }
         
         componentWillMount(){
-          console.log("App ComponentWillMount triggered")
+          //console.log("App ComponentWillMount triggered")
           // defaults -> populate from props provided by the separate editor..
           let date = new Date();
           date.setHours(18);
           date.setMinutes(30);
-
+          
           let sectionsWithKeys = this.defaultSections.map(sectionItem => {
             return this.createSection(sectionItem.name,sectionItem.description,sectionItem.duration,sectionItem.position,sectionItem.color);
           })
@@ -168,7 +169,6 @@ class App extends Component {
           }
           
           render() {
-            let angle = 0;
             let currentSections = this.state.sections.map(sectionItem => {
               
               // Just pass the sectionitem, no point in givin all the props separately!
@@ -180,15 +180,15 @@ class App extends Component {
             return (
               <div className="App">
               <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime}/>
-              {/* <Clock id="clock" sectionItems={currentSections} startTime={this.state.startTime}/> */}
-              <div className="ConfigBox" id="App-configbox">
-              <div className="StartPickerContainer">
-              <h3>aloitusaika</h3>
+              <div id="SettingsContainer">
+              <div className="GeneralSettingsContainer"><span>aloitusaika:</span> 
               <input className="TimePickerBox" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="TimePickerBox" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
               <button id="ApplyBtn" value="apply" onClick={this.applySettings.bind(this)}>Apply</button>
               </div>
+              <div className="ConfigBox" id="App-configbox">
               {currentSections}
-              <button className="ConfigBtn" id="AddSectionBtn" name="Add section" onClick={this.addSection.bind(this)}>Add Section</button>
+              <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div></div>
+              </div>
               </div>
               </div>
             );

@@ -35,9 +35,10 @@ class SectionInputBox extends Component {
       duration: this.state.duration,
       position: this.state.position
     }
+    console.log("sending updated section to app: " + stateSection.color)
     this.props.update(stateSection)
   }
-
+  
   // call the parent remove function with current objects position
   // replace position with unique id for future purpose
   removeSelf(){
@@ -47,87 +48,91 @@ class SectionInputBox extends Component {
   nameChanged(e){
     this.setState({
       name: e.target.value
-    })
-    this.updateSectionState();
-  }
-  descriptionChanged(e){
-    this.setState({
-      description: e.target.value
-    })
-    this.updateSectionState();
-  }
-  positionChanged(e){
-    this.setState({
-      position: e.target.value
-    })
-  }
-  durationChanged(e){
-    this.setState({
-      duration: e.target.value
-    })
-    this.updateSectionState();
-  }
+    }, () => 
+    this.updateSectionState()
+  )
+}
+descriptionChanged(e){
+  this.setState({
+    description: e.target.value
+  }, () => 
+  this.updateSectionState()
+  )
+}
+positionChanged(e){
+  this.setState({
+    position: e.target.value
+  }, () => 
+  this.updateSectionState()
+  )
+}
+durationChanged(e){
+  this.setState({
+    duration: e.target.value
+  }, () => 
+  this.updateSectionState()
+  )
+}
+colorChanged(e){
+  this.setState({
+    color: e.target.value 
+  }, () =>
+  // run the call on parent update as a callback
+  this.updateSectionState()
+  )
+}
 
-  colorChanged(e){
-    this.setState({
-     color: e.target.value 
-    })
-    console.log(this.props.id + " color changed to " + this.state.color)
-    this.updateSectionState();
-  }
-
-  // use this for customized color options?
-  getColorOptions(){
-    
-    var colorOptions = [
-      {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
-      {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
-      {"colorName":"dark green","colorValue":"#559e83"}, //-> dark green
-      {"colorName":"dark red","colorValue":"#ae5a41"}, //-> dark red
-      {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
-      {"colorName":"none","colorValue":"none"}
-    ]
-    return colorOptions;
-  }
-
-  // use for updating?
-  getSelections(){
-    var section = {
-      position: document.getElementById("position"),
-      name: "name",
-      description: "asd",
-      duration: 10
-    }
-    return section;
-  }
-
-  componentWillMount(){  
-    this.options = this.colorOptions.map(optionItem => {
-      let colorCode = optionItem.colorValue;
-      let colorName = optionItem.colorName;
-      
-      return <option key={colorName} value={colorCode}>{colorName}</option>;
-    })
-  }
+// use this for customized color options?
+getColorOptions(){
   
-  render(){
-    
-    return(
-      <div className="SectionItemBox" style={{backgroundColor: this.state.color}}>
-      <div className="HeaderContainer">
-      <input className="PositionSelector" value={this.state.position} onChange={this.positionChanged.bind(this)} type="number"></input>
-      <textarea id="SectionName" className="NameInputBox" value={this.state.name} onChange={this.nameChanged.bind(this)} ></textarea>
-      <div height="2em" width="2em" onClick={this.removeSelf.bind(this)}>X</div>
-      </div>
-      <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} value={this.state.description}/><br/>
-      <input className="DurationSelector" onChange={this.durationChanged.bind(this)} type="number" value={this.state.duration}/><br/>
-      <select className="ColorSelector" onChange={this.colorChanged.bind(this)} value={this.state.color}>
-      {/* <select className="ColorSelector" onChange={this.colorChanged.bind(this)} defaultValue={this.props.section.color} value={this.state.color}> */}
-      {this.options}
-      </select>
-      </div>
-    )
+  var colorOptions = [
+    {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
+    {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
+    {"colorName":"dark green","colorValue":"#559e83"}, //-> dark green
+    {"colorName":"dark red","colorValue":"#ae5a41"}, //-> dark red
+    {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
+    {"colorName":"none","colorValue":"none"}
+  ]
+  return colorOptions;
+}
+
+// use for updating?
+getSelections(){
+  var section = {
+    position: document.getElementById("position"),
+    name: "name",
+    description: "asd",
+    duration: 10
   }
+  return section;
+}
+
+componentWillMount(){  
+  this.options = this.colorOptions.map(optionItem => {
+    let colorCode = optionItem.colorValue;
+    let colorName = optionItem.colorName;
+    
+    return <option key={colorName} value={colorCode}>{colorName}</option>;
+  })
+}
+
+render(){
+  
+  return(
+    <div className="SectionItemBox" style={{backgroundColor: this.state.color}}>
+    <div className="HeaderContainer">
+    <div className="DeleteSectionBtn" onClick={this.removeSelf.bind(this)}>X</div>
+    <input className="PositionSelector" value={this.state.position} onChange={this.positionChanged.bind(this)} type="number"></input>
+    <textarea id="SectionName" className="NameInputBox" value={this.state.name} onChange={this.nameChanged.bind(this)} ></textarea>
+    </div>
+    <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} value={this.state.description}/><br/>
+    <input className="DurationSelector" onChange={this.durationChanged.bind(this)} type="number" value={this.state.duration}/><br/>
+    <select className="ColorSelector" onChange={this.colorChanged.bind(this)} value={this.state.color}>
+    {this.options}
+    </select>
+    </div>
+  )
+}
 }
 
 export default SectionInputBox;

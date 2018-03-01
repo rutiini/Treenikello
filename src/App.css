@@ -28,14 +28,33 @@
   border-width: 2px;
   border-radius: 2em;
   min-height: 200px;
+  min-width: 230px;
 }
-.StartPickerContainer{
+.GeneralSettingsContainer{
   border: black;
   border-style: solid;
   border-width: 2px;
   border-radius: 2em;
-  min-height: 100px;
-  background-color: dimgray;
+  background-color: #b6b6b6;
+  margin: 1em;
+  justify-content: center;
+  line-height: 3em;
+  display: flex;
+  padding: 1em;
+  font-weight: bold;
+  font-size: 1em;
+}
+.GeneralSettingsContainer > button{
+  margin: 1em;
+  height: 1.5em;
+}
+.GeneralSettingsContainer > span{
+  height: 2em;
+}
+.TimePickerBox{
+  margin: 1em;
+  width: 3em;
+  height: 1em;
 }
 #CustomStart{
   margin: 1em
@@ -43,15 +62,18 @@
 .PositionSelector{
   width:2em;
   text-align: center;
-  margin: 0.5em;
+  margin-left: 1em;
 }
 .NameInputBox{
   font-weight: bold;
-  width:10em;
+  width: 9em;
   height: 1.2em;
   text-align: center;
-  margin: 0.5em;
+  margin-left: 0.5em;
   resize: none;
+}
+.DeleteSectionBtn{
+  font-size: 1.2em;
 }
 .DescriptionBox{
   margin: 0.5em;
@@ -68,23 +90,37 @@
 .ColorSelector{
   margin: 0.5em;
 }
-.TimePickerBox{
-  margin: 0.5em;
-  width: 3em;
-  height: 1em;
-}
 .HeaderContainer{
   font-weight: bold; 
+  display: flex;
+  padding-inline-start: 1em;
+  margin-top: 1em;
+  justify-content: center;
 }
-
+#SettingsContainer{
+  vertical-align: middle; 
+}
 #App-configbox{
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
   grid-gap: 10px;
   height: 300px;
   padding-right: 1em;
   padding-left: 1em;
+}
+#AddSection{
+  border: black;
+  border-style: dashed;
+  border-width: 2px;
+  border-radius: 2em;
+  min-height: 200px;
+  
+}
+.NewSectionContent{
+  line-height: 4em;
+  vertical-align: middle;
+  font-size: 3em;
 }
 
 #customStart{
@@ -102,13 +138,13 @@
     text-align: center;
   }
   #clock{
-    max-width: 100%;
+    max-width: 50%;
   }
   #App-configbox{
-    align-content: center;
+    align-content: top;
     display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
     padding-right: 10px;
     grid-gap: 10px;
     height: 100%;
@@ -117,8 +153,23 @@
   #CustomStart{
     min-height: 10em;
   }
+  /* #SettingsContainer{
+    float: left;
+  } */
 }
 
+@media only screen and (max-width: 400px){
+  #App-configbox{
+    align-content: top;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    padding-right: 10px;
+    grid-gap: 10px;
+    height: 100%;
+    max-width: 100%;
+  }
+}
 /* transform layout to work side-by side in landscape mode */
 @media only screen and (max-height: 600px){
   
@@ -129,22 +180,44 @@
     width: 800px;
     float: left;
   }
+  #SettingsContainer{
+    float: right;
+  }
   #App-configbox{
+    align-content: top;
     float: right;
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
     padding-right: 10px;
     grid-gap: 10px;
     height: 100%;
     max-height: 300px;
     overflow: auto;
-    width: 50%;
+    width: 100%;
   }
   #CustomStart{
     min-height: 10em;
   }
 }
+
+/* small width and height.. */
+@media only screen and (max-height: 600px) and (max-width: 400px){
+  #App-configbox{
+    align-content: top;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    padding-right: 10px;
+    grid-gap: 10px;
+    height: 100%;
+    max-width: 100%;
+  }
+  #CustomStart{
+    min-height: 10em;
+  }
+}
+
 /* orientation based approach */
 @media screen and (orientation:landscape)
 {

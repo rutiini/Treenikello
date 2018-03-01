@@ -200,13 +200,13 @@ class Clock extends Component {
         // var timerEnabled = false;
     }
 
-    componentWillReceiveProps(){
+    componentWillReceiveProps(nextProps){
         // fires when component is recieving new props
-        console.log("Clock: ComponentWillRecieveProps triggered")
+        // console.log("Clock: ComponentWillRecieveProps triggered")
     }
     componentWillUpdate(){
         // fires before rendering with new props or state
-        console.log("Clock: ComponentWillUpdate triggered")
+        //console.log("Clock: ComponentWillUpdate triggered")
     }
     render() {
 
@@ -237,9 +237,10 @@ class Clock extends Component {
         }
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
-            <div id="stringDateContainer">
+            <div id="StringDateContainer">
             {this.state.date}<br/>
             </div>
+            {/* current section indicator (color coded box with name and description) */}
             <svg id="clock" viewBox="0 0 100 100">
             <circle id="face" cx="50" cy="50" r="45"/>
             {sectionItems}
