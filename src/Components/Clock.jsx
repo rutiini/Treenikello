@@ -37,8 +37,10 @@ class Clock extends Component {
             }
             let idTag = "marker"+i;
             let y1 = this.canvasSide/2 - this.faceRadius + length;
+            let y2 = this.canvasSide/2 - this.faceRadius + 0.9; // slight overlap (0.1) and stroke width..
+            let centerCoordinate = this.canvasSide/2;
             let rotation = 'rotate('+ i*6 +' 50 50)';
-            return (<line key={idTag} id={idTag} className={className} x1="50" y1={y1} x2="50" y2="6" transform={rotation}/>)
+            return (<line key={idTag} id={idTag} className={className} x1={centerCoordinate} y1={y1} x2={centerCoordinate} y2={y2} transform={rotation}/>)
         }
 
         this.updateTime = function() {
@@ -70,13 +72,6 @@ class Clock extends Component {
             let hand = document.getElementById("timerHand")
             hand.setAttribute("visibility","visible")
 
-            // toggle classes to enable and disable?
-            // if(hand.classList.contains("timerOff")){
-            //     hand.classList.remove("timerOff")
-            // }
-            // if(!hand.classList.contains("timerOn")){
-            //     hand.classList.add("timerOn")
-            // }
             timerEnabled = true;
         }
 
@@ -174,6 +169,55 @@ class Clock extends Component {
 
     }
 
+    updateFaceElements(){
+         // consider the current position of minute hand compared to always show upcoming sections and current section, "old" sections can be left out. Hour comes to play when the exercise is over an hour and we need to know which cycle we are on. -> calculate minute hand position relative to the start time.
+        // need for good ol' math with modulo stuff probably.
+        let d = new Date();
+        let currentMinutePosition = d.getMinutes()*6;
+        let sectionItems;
+        let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
+        let activeSet = this.props.activeSection;
+        let startTimeAngle = this.props.startTime.getMinutes()*6;
+        if(this.props.sectionItems){
+            // calculate from start time
+            var angle = startTimeAngle;
+
+            sectionItems = this.props.sectionItems.map(sectionItem => {
+
+                if(angle === fullCicrcle + startTimeAngle){
+                    return null;
+                }
+
+                let startAngle = angle
+                angle += sectionItem.duration*6; // transform minutes to degrees
+
+                // if the section ends before starting angle dont draw it..
+                if(angle <= currentMinutePosition){
+                    // "extend" full circle by new minutes
+                    fullCicrcle = fullCicrcle + currentMinutePosition;
+                    return null;
+                }
+                // if current angle is between current sector and section does not match currently applied section set new section!
+                /* // not functional yet..
+                else if(activeSet != null && activeSet.name !== sectionItem.name && startAngle <= currentMinutePosition <= angle){
+                    this.props.setActive(sectionItem);
+                }*/
+
+                // we reach full circle and stop rendering
+                if(angle > fullCicrcle + startTimeAngle){
+                    angle = fullCicrcle + startTimeAngle;
+                }
+                // set the detected section to the info block? -> info block is at app though?
+                // this hack forces redrawing
+                let sectionArcKey = "Arc-" + this.props.startTime.getMinutes() + sectionItem.key;
+                return(
+                    <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
+                );
+            });
+        }
+        return sectionItems;
+    }
+
     componentWillMount(){
 
         // put the hands in correct time for initial render
@@ -209,44 +253,9 @@ class Clock extends Component {
         //console.log("Clock: ComponentWillUpdate triggered")
     }
     render() {
-        // consider the current position of minute hand compared to always show upcoming sections and current section, "old" sections can be left out. Hour comes to play when the exercise is over an hour and we need to know which cycle we are on. -> calculate minute hand position relative to the start time.
-        // need for good ol' math with modulo stuff probably.
-        let d = new Date();
-        let currentMinutePosition = d.getMinutes()*6;
-        let sectionItems;
-        let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
-        let startTimeAngle = this.props.startTime.getMinutes()*6;
-        if(this.props.sectionItems){
-            // calculate from start time
-            var angle = startTimeAngle;
+        // moved functionality to keep render method clearer
+        let sectionItems = this.updateFaceElements()
 
-            sectionItems = this.props.sectionItems.map(sectionItem => {
-
-                if(angle === fullCicrcle + startTimeAngle){
-                    return null;
-                }
-
-                let startAngle = angle
-                angle += sectionItem.duration*6; // transform minutes to degrees
-
-                // if the section ends before starting angle dont draw it..
-                if(angle <= currentMinutePosition){
-                    // "extend" full circle by new minutes
-                    fullCicrcle = fullCicrcle + currentMinutePosition;
-                    return null;
-                }
-
-                // we reach full circle and stop rendering
-                if(angle > fullCicrcle + startTimeAngle){
-                    angle = fullCicrcle + startTimeAngle;
-                }
-                // this hack forces redrawing
-                let sectionArcKey = "Arc-" + this.props.startTime.getMinutes() + sectionItem.key;
-                return(
-                    <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
-                );
-            });
-        }
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
             <div id="StringDateContainer">

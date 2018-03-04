@@ -15,6 +15,9 @@
 #sec { 
     stroke: #ffffff; 
 }
+#timerHand{
+    transition: visibility 0s linear, rotation 500ms linear;
+}
 #sectip {
     stroke: #ff2600;
 }
@@ -25,12 +28,10 @@
     stroke: #ffffff;
     stroke-width: 2px;
 }
-
 .hourMarker{
     stroke: #ffffff;
     stroke-width: 1px;
 }
-
 .minuteMarker{
     stroke: #ffffff;
     stroke-width: 1px;

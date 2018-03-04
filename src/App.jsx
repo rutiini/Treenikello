@@ -76,6 +76,13 @@ class App extends Component {
         return angle;
       }
     }
+    setActiveSection(sectionItem){
+      // this.setState({
+      //   activeSection: sectionItem
+      // });
+
+      console.log("Currently active section: " + sectionItem.name);
+    }
     
     // returns a section with generated key.
     createSection(name, description, duration,position,color){
@@ -179,7 +186,7 @@ class App extends Component {
             
             return (
               <div className="App">
-              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100"/>
+              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100" setActive={this.setActiveSection.bind(this)}/>
               <div id="SettingsContainer">
               <div className="GeneralSettingsContainer"><span>aloitusaika:</span> 
               <input className="SettingsControl" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="SettingsControl" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
