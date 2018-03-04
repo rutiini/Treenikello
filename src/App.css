@@ -1,27 +1,16 @@
 .App {
   text-align: center;
+  height: 100%;
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.Clock{
+  height: 60%;
 }
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+#clock{
+  max-height: 1000px;
 }
-
-.App-title {
-  font-size: 1.5em;
+#SettingsContainer{
+  height: 40%;
 }
-
-.App-intro {
-  font-size: large;
-}
-
 .SectionItemBox{
   border: black;
   border-style: solid;
@@ -29,32 +18,7 @@
   border-radius: 2em;
   min-height: 200px;
   min-width: 230px;
-}
-.GeneralSettingsContainer{
-  border: black;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 2em;
-  background-color: #b6b6b6;
-  margin: 1em;
-  justify-content: center;
-  line-height: 3em;
-  display: flex;
-  padding: 1em;
-  font-weight: bold;
-  font-size: 1em;
-}
-.GeneralSettingsContainer > button{
-  margin: 1em;
-  height: 1.5em;
-}
-.GeneralSettingsContainer > span{
-  height: 2em;
-}
-.TimePickerBox{
-  margin: 1em;
-  width: 3em;
-  height: 1em;
+  cursor: move;
 }
 #CustomStart{
   margin: 1em
@@ -98,16 +62,18 @@
   justify-content: center;
 }
 #SettingsContainer{
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 #App-configbox{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
   grid-gap: 10px;
-  height: 300px;
   padding-right: 1em;
   padding-left: 1em;
+  padding-bottom: 1em;
+  overflow: auto;
+  height: 100%;
 }
 #AddSection{
   border: black;
@@ -126,6 +92,47 @@
 #customStart{
   resize: none;
 }
+.GeneralSettingsContainer{
+  border: black;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 2em;
+  background-color: #b6b6b6;
+  margin: 1em;
+  justify-content: center;
+  line-height: 3em;
+  vertical-align: middle;
+  display: flex;
+  padding: 1em;
+  font-weight: bold;
+  font-size: 1em;
+}
+.GeneralSettingsContainer > input{
+  height: 2em;
+  font-weight: bold;
+  font-size: 1em;
+}
+.SettingsControl{
+  line-height: 1em;
+  text-align: center;
+  border-style: solid;
+  background-color: #dbdbdb;
+  padding: 1em;
+  margin-left: 1em;
+  border-radius: 1em;
+  border-color: black;
+}
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
@@ -135,20 +142,20 @@
 @media only screen and (max-width: 800px){
   
   .App {
-    text-align: center;
+    height: 95%;
   }
-  #clock{
-    max-width: 50%;
+  .Clock{
+    height: 60%;
+  }
+  #SettingsContainer{
+    height: 40%;
   }
   #App-configbox{
-    align-content: top;
-    display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
-    padding-right: 10px;
     grid-gap: 10px;
-    height: 100%;
-    max-width: 100%;
+    height: 330px;
+    overflow: auto;
   }
   #CustomStart{
     min-height: 10em;
@@ -159,76 +166,19 @@
 }
 
 @media only screen and (max-width: 520px){
+  .App {
+    height: 95%;
+  }
+  .Clock{
+    height: 60%;
+  }
+  #SettingsContainer{
+    height: 40%;
+  }
   #App-configbox{
-    align-content: top;
-    display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
-    padding-right: 10px;
-    grid-gap: 10px;
-    height: 100%;
-    max-width: 100%;
-  }
-  .GeneralSettingsContainer{
-    margin: 0.5em;
-    justify-content: center;
-    line-height: 2em;
-    padding: 1em;
-    font-weight: bold;
-    font-size: 0.9em;
-  }
-  .TimePickerBox{
-    margin: 0.2em;
-    width: 3em;
-    height: 1em;
-  }
-  #ApplyBtn{
-    margin: 0.2em;
-    height: 2em;
-  }
-}
-
-/* transform layout to work side-by side in landscape mode */
-/* @media screen and (min-width: 1280px) and (min-height: 720px){
-  #SettingsContainer{
-    float: right;
-    width: 65%;
-  }
-  #clock{
-    width: 35%;
-    float: left;
-  }
-  #App-configbox{
-    align-content: top;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    padding-right: 10px;
-    grid-gap: 10px;
-    height: 100%;
-    max-width: 100%;
-  }
-}
-
-@media screen and (min-width: 900px) and (min-height: 720px){
-  #SettingsContainer{
-    float: right;
-    width: 40%;
-    min-width: 230px;
-  }
-  #clock{
-    width: 35%;
-    float: left;
-  }
-  #App-configbox{
-    align-content: top;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    padding-right: 10px;
-    grid-gap: 10px;
-    height: 100%;
-    max-width: 100%;
+    height: 330px;
     overflow: auto;
   }
   .GeneralSettingsContainer{
@@ -237,17 +187,51 @@
     line-height: 2em;
     padding: 1em;
     font-weight: bold;
-    font-size: 0.9em;
-    display: inline-block;
-    display: -webkit-inline-box; 
+    font-size: 0.8em;
   }
-} */
+  .GeneralSettingsContainer > input{
+    height: 2em;
+    font-weight: bold;
+    font-size: 1em;
+  }
+  .SettingsControl{
+    line-height: 1em;
+    text-align: center;
+    border-style: solid;
+    background-color: #dbdbdb;
+    padding: 1em;
+    margin-left: 1em;
+    border-radius: 1em;
+    border-color: black;
+  }
+}
+
+/* transform layout to work side-by side in landscape mode */
 
 /* orientation based approach */
 @media screen and (orientation:landscape)
 {
-  /* body
-  {
-    background: red;
-  } */
+  .Clock{
+    float:left;
+    width: 60%;
+    height: 100%;
+  }
+  #clock{
+    max-width: 1000px;
+  }
+  #SettingsContainer{
+    height: 80%;
+    width: 35%;
+    float: right;
+  }
+  #App-configbox{
+    grid-template-columns: 1fr;
+    height: 90%;
+  }
+  .GeneralSettingsContainer{
+    display: inline-block;
+  }
+  .SettingsControl{
+    margin-top: 1em;
+  }
 }

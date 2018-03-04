@@ -119,7 +119,7 @@ componentWillMount(){
 render(){
   
   return(
-    <div className="SectionItemBox" style={{backgroundColor: this.state.color}}>
+    <div className="SectionItemBox" draggable="true" style={{backgroundColor: this.state.color}}>
     <div className="HeaderContainer">
     <div className="DeleteSectionBtn" onClick={this.removeSelf.bind(this)}>X</div>
     <input className="PositionSelector" value={this.state.position} onChange={this.positionChanged.bind(this)} type="number"></input>

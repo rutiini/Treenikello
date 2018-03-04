@@ -179,11 +179,12 @@ class App extends Component {
             
             return (
               <div className="App">
-              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime}/>
+              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100"/>
               <div id="SettingsContainer">
               <div className="GeneralSettingsContainer"><span>aloitusaika:</span> 
-              <input className="TimePickerBox" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="TimePickerBox" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
-              <button id="ApplyBtn" value="apply" onClick={this.applySettings.bind(this)}>Apply</button>
+              <input className="SettingsControl" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="SettingsControl" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
+              <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div>
+              <div id="QuickStartBtn" className="SettingsControl" onClick={() => this.setState({startTime: new Date()})}><span>Aloita nyt</span></div>
               </div>
               <div className="ConfigBox" id="App-configbox">
               {currentSections}

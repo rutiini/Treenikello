@@ -177,10 +177,10 @@ class Clock extends Component {
     componentWillMount(){
 
         // put the hands in correct time for initial render
-        var d = new Date()
-        var secRotation = 6*d.getSeconds();
-        var minRotation = 6*d.getMinutes();
-        var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
+        let d = new Date()
+        let secRotation = 6*d.getSeconds();
+        let minRotation = 6*d.getMinutes();
+        let hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
 
         this.setState(
             {
@@ -209,21 +209,33 @@ class Clock extends Component {
         //console.log("Clock: ComponentWillUpdate triggered")
     }
     render() {
-
+        // consider the current position of minute hand compared to always show upcoming sections and current section, "old" sections can be left out. Hour comes to play when the exercise is over an hour and we need to know which cycle we are on. -> calculate minute hand position relative to the start time.
+        // need for good ol' math with modulo stuff probably.
+        let d = new Date();
+        let currentMinutePosition = d.getMinutes()*6;
         let sectionItems;
         let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
         let startTimeAngle = this.props.startTime.getMinutes()*6;
         if(this.props.sectionItems){
-            var angle = startTimeAngle; // calculate from start time.
-            //console.log("section start angle set to: " + startTimeAngle)
+            // calculate from start time
+            var angle = startTimeAngle;
+
             sectionItems = this.props.sectionItems.map(sectionItem => {
 
                 if(angle === fullCicrcle + startTimeAngle){
                     return null;
                 }
 
-                let startAngle = angle;
+                let startAngle = angle
                 angle += sectionItem.duration*6; // transform minutes to degrees
+
+                // if the section ends before starting angle dont draw it..
+                if(angle <= currentMinutePosition){
+                    // "extend" full circle by new minutes
+                    fullCicrcle = fullCicrcle + currentMinutePosition;
+                    return null;
+                }
+
                 // we reach full circle and stop rendering
                 if(angle > fullCicrcle + startTimeAngle){
                     angle = fullCicrcle + startTimeAngle;
