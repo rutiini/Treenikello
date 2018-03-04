@@ -62,9 +62,6 @@
   margin-top: 1em;
   justify-content: center;
 }
-#SettingsContainer{
-  vertical-align: middle;
-}
 #App-configbox{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -101,8 +98,6 @@
   background-color: #b6b6b6;
   margin: 1em;
   justify-content: center;
-  line-height: 3em;
-  vertical-align: middle;
   display: flex;
   padding: 1em;
   font-weight: bold;
@@ -113,16 +108,36 @@
   font-weight: bold;
   font-size: 1em;
 }
+.GeneralSettingsContainer > span{
+  /* fix this issue. */
+  padding-top: 1.5em;
+  vertical-align: center;
+}
 .SettingsControl{
-  line-height: 1em;
-  text-align: center;
+  display: block;
+  height: 2em;
+  width: 4em;
   border-style: solid;
   background-color: #dbdbdb;
   padding: 1em;
   margin-left: 1em;
-  border-radius: 1em;
+  border-radius: 2em;
   border-color: black;
   cursor: pointer;
+}
+#QuickStartBtn{
+  background: linear-gradient(to top, #34696f, #2f5f63);
+  box-shadow: 0 8px 0 #1b383b;
+  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);
+}
+#ApplyBtn{
+  background: linear-gradient(to top, #34696f, #2f5f63);
+  box-shadow: 0 8px 0 #1b383b;
+  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2); 
+}
+#SectionInfo{
+  display: block;
+  font-size: 2.5em;
 }
 
 /* Prevent the text contents of draggable elements from being selectable. */

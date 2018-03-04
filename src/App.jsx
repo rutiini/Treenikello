@@ -11,37 +11,82 @@ class App extends Component {
       duration: 10,
       position: 1,
       color: "#1b85b8",
-      description: '-'
+      description: 'nilkat lämpimiksi, käsipallo'
     },
     {
       name: 'Alkuvenyttely',
       duration: 5,
       position: 2,
       color: "#559e83",
-      description: '--'
+      description: 'erityisesti jalat vetreiksi'
     },
     {
       name: 'Tengi',
       duration: 10,
       position: 3,
       color: "#ae5a41",
-      description: '---'
+      description: 'kokeilkaa uutta korkeaa'
     },
     {
       name: 'Päivän aihe',
-      duration: 10,
+      duration: 20,
       position: 4,
       color: "#c3cb71",
-      description: '----'
+      description: 'perustekniikkaa'
     },
     {
       name: 'Loppujumppa',
       duration: 15,
       position: 5,
       color: "#5a5255",
-      description: '-----'
+      description: 'intervallit mitseihin täysillä'
     }]
     
+    defaultSections2 = [
+      {
+        name: 'Sarja',
+        duration: 5,
+        position: 1,
+        color: "#ae5a41",
+        description: 'kyykyt'
+      },
+      {
+        name: 'tauko',
+        duration: 5,
+        position: 2,
+        color: "#559e83",
+        description: 'lepoa'
+      },
+      {
+        name: 'Sarja',
+        duration: 5,
+        position: 3,
+        color: "#ae5a41",
+        description: 'vatsat'
+      },
+      {
+        name: 'tauko',
+        duration: 5,
+        position: 4,
+        color: "#559e83",
+        description: 'lepoa'
+      },
+      {
+        name: 'Sarja',
+        duration: 5,
+        position: 5,
+        color: "#ae5a41",
+        description: 'punnerrukset'
+      },
+      {
+        name: 'tauko',
+        duration: 5,
+        position: 6,
+        color: "#559e83",
+        description: 'lepoa'
+      },
+    ]
+
     sumAngle = 0;
     
     
@@ -76,12 +121,14 @@ class App extends Component {
         return angle;
       }
     }
-    setActiveSection(sectionItem){
-      // this.setState({
-      //   activeSection: sectionItem
-      // });
 
-      console.log("Currently active section: " + sectionItem.name);
+    setActiveSection(sectionItem){
+      this.setState({
+        activeSection: sectionItem
+      },() =>{
+        console.log("Currently active section: " + sectionItem.name);
+      });
+
     }
     
     // returns a section with generated key.
@@ -182,13 +229,20 @@ class App extends Component {
               // let inputBoxKey = "input-"+sectionItem.key;´
               let inputBoxKey = sectionItem.key;
               return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove= {this.deleteSection.bind(this)} update={this.updateSection.bind(this)}/>
+
             })
+            let activeName = "";
+            if(this.state.activeSection != null){
+              activeName = "nyt menossa " + this.state.activeSection.name + ": " +this.state.activeSection.description;
+            }
             
             return (
               <div className="App">
-              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100" setActive={this.setActiveSection.bind(this)}/>
+              <div id="SectionInfo">{activeName}</div>
+              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100" activeSection={this.state.activeSection} setActive={this.setActiveSection.bind(this)}/>
               <div id="SettingsContainer">
-              <div className="GeneralSettingsContainer"><span>aloitusaika:</span> 
+              <div className="GeneralSettingsContainer">
+              <span>aloitusaika:</span> 
               <input className="SettingsControl" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="SettingsControl" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
               <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div>
               <div id="QuickStartBtn" className="SettingsControl" onClick={() => this.setState({startTime: new Date()})}><span>Aloita nyt</span></div>

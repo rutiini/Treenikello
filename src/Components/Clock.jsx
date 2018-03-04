@@ -149,6 +149,8 @@ class Clock extends Component {
         {/* <line id="sectip" x1="50" y1="9" x2="50" y2="16" stroke="red" /> */}
         </g>
 
+        this.sectionItems = null;
+
         // draw hours and minutes to the clock face
         var majors = [];
         for(var i = 0; i<60; i++){
@@ -197,11 +199,14 @@ class Clock extends Component {
                     fullCicrcle = fullCicrcle + currentMinutePosition;
                     return null;
                 }
-                // if current angle is between current sector and section does not match currently applied section set new section!
-                /* // not functional yet..
-                else if(activeSet != null && activeSet.name !== sectionItem.name && startAngle <= currentMinutePosition <= angle){
-                    this.props.setActive(sectionItem);
-                }*/
+                // should not be done during render since it updates state.
+                else if(startAngle <= currentMinutePosition && currentMinutePosition < angle){
+                    if(activeSet == null){
+                        this.props.setActive(sectionItem);
+                    }else if(activeSet.name !== sectionItem.name){
+                        this.props.setActive(sectionItem);
+                    }
+                }
 
                 // we reach full circle and stop rendering
                 if(angle > fullCicrcle + startTimeAngle){
@@ -250,11 +255,9 @@ class Clock extends Component {
     }
     componentWillUpdate(){
         // fires before rendering with new props or state
-        //console.log("Clock: ComponentWillUpdate triggered")
+        this.sectionItems = this.updateFaceElements();
     }
     render() {
-        // moved functionality to keep render method clearer
-        let sectionItems = this.updateFaceElements()
 
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
@@ -264,7 +267,7 @@ class Clock extends Component {
             {/* current section indicator (color coded box with name and description) */}
             <svg id="clock" viewBox="0 0 100 100">
             <circle id="face" cx="50" cy="50" r="45"/>
-            {sectionItems}
+            {this.sectionItems}
             <g id="minuteMarkers">
             {this.Majors}
             </g>
