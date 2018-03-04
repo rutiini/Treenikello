@@ -120,7 +120,7 @@
   border-style: solid;
   background-color: #dbdbdb;
   padding: 1em;
-  margin-left: 1em;
+  margin-left: 3%;
   border-radius: 2em;
   border-color: black;
   cursor: pointer;
@@ -216,8 +216,8 @@
     text-align: center;
     border-style: solid;
     background-color: #dbdbdb;
+    margin-left: 1%;
     padding: 1em;
-    margin-left: 1em;
     border-radius: 1em;
     border-color: black;
   }
