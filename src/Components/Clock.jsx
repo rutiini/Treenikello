@@ -172,8 +172,8 @@ class Clock extends Component {
     }
 
     updateFaceElements(){
-         // consider the current position of minute hand compared to always show upcoming sections and current section, "old" sections can be left out. Hour comes to play when the exercise is over an hour and we need to know which cycle we are on. -> calculate minute hand position relative to the start time.
-        // need for good ol' math with modulo stuff probably.
+        // in order to enable full lenght that exceeds hour we need to track the hour as well.
+
         let d = new Date();
         let currentMinutePosition = d.getMinutes()*6;
         let sectionItems;
@@ -184,7 +184,7 @@ class Clock extends Component {
             // calculate from start time
             var angle = startTimeAngle;
 
-            sectionItems = this.props.sectionItems.map(sectionItem => {
+            sectionItems = this.props.sectionItems.map((sectionItem,index) => {
 
                 if(angle === fullCicrcle + startTimeAngle){
                     return null;
@@ -214,11 +214,13 @@ class Clock extends Component {
                 }
                 // set the detected section to the info block? -> info block is at app though?
                 // this hack forces redrawing
-                let sectionArcKey = "Arc-" + this.props.startTime.getMinutes() + sectionItem.key;
+                let sectionArcKey = "Arc-" + index + angle;
                 return(
                     <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
                 );
             });
+        }else if(this.props.sectionItems.length == 0){
+            this.props.setActive(null);
         }
         return sectionItems;
     }
@@ -251,7 +253,7 @@ class Clock extends Component {
 
     componentWillReceiveProps(nextProps){
         // fires when component is recieving new props
-        // console.log("Clock: ComponentWillRecieveProps triggered")
+         console.log("Clock: ComponentWillRecieveProps triggered")
     }
     componentWillUpdate(){
         // fires before rendering with new props or state
@@ -261,10 +263,9 @@ class Clock extends Component {
 
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
-            <div id="StringDateContainer">
+            {/* <div id="StringDateContainer">
             {this.state.date}<br/>
-            </div>
-            {/* current section indicator (color coded box with name and description) */}
+            </div> */}
             <svg id="clock" viewBox="0 0 100 100">
             <circle id="face" cx="50" cy="50" r="45"/>
             {this.sectionItems}

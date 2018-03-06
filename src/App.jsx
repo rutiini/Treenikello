@@ -2,48 +2,65 @@ import React, { Component } from 'react';
 import './App.css';
 import Clock from './Components/Clock';
 import SectionInputBox from './Components/SectionInputBox';
+import SectionInfo from './Components/SectionInfo';
+import {enableUniqueIds} from 'react-html-id';
 
 class App extends Component {
   
-  defaultSections = [
-    {
-      name: 'Alkulämmittely',
-      duration: 10,
-      position: 1,
-      color: "#1b85b8",
-      description: 'nilkat lämpimiksi, käsipallo'
-    },
-    {
-      name: 'Alkuvenyttely',
-      duration: 5,
-      position: 2,
-      color: "#559e83",
-      description: 'erityisesti jalat vetreiksi'
-    },
-    {
-      name: 'Tengi',
-      duration: 10,
-      position: 3,
-      color: "#ae5a41",
-      description: 'kokeilkaa uutta korkeaa'
-    },
-    {
-      name: 'Päivän aihe',
-      duration: 20,
-      position: 4,
-      color: "#c3cb71",
-      description: 'perustekniikkaa'
-    },
-    {
-      name: 'Loppujumppa',
-      duration: 15,
-      position: 5,
-      color: "#5a5255",
-      description: 'intervallit mitseihin täysillä'
-    }]
-    
-    defaultSections2 = [
+  // add name. for saving and drop list selecting
+  
+  excercise1 = {
+    name: "Taidotreenit",
+    startTime: new Date(2018,1,1,18,30),
+    defaultSections: [
       {
+        key: 'Alkulämmittely',
+        name: 'Alkulämmittely',
+        duration: 10,
+        position: 1,
+        color: "#1b85b8",
+        description: 'nilkat lämpimiksi, käsipallo'
+      },
+      {
+        key: '1Alkuvenyttely',
+        name: 'Alkuvenyttely',
+        duration: 5,
+        position: 2,
+        color: "#559e83",
+        description: 'erityisesti jalat vetreiksi'
+      },
+      {
+        key: '2Tengi',
+        name: 'Tengi',
+        duration: 10,
+        position: 3,
+        color: "#ae5a41",
+        description: 'kokeilkaa uutta korkeaa'
+      },
+      {
+        key: '3Päivän aihe',
+        name: 'Päivän aihe',
+        duration: 20,
+        position: 4,
+        color: "#c3cb71",
+        description: 'perustekniikkaa'
+      },
+      {
+        key: '4Loppujumppa',
+        name: 'Loppujumppa',
+        duration: 15,
+        position: 5,
+        color: "#5a5255",
+        description: 'intervallit mitseihin täysillä'
+      }
+    ]  
+  }
+  excercise2 = {
+    name: "Intervallitreeni",
+    startTime: new Date(2018,1,1,17,30),
+    defaultSections: [
+      {
+        key: '0Sarja',
         name: 'Sarja',
         duration: 5,
         position: 1,
@@ -51,6 +68,7 @@ class App extends Component {
         description: 'kyykyt'
       },
       {
+        key: '1tauko',
         name: 'tauko',
         duration: 5,
         position: 2,
@@ -58,6 +76,7 @@ class App extends Component {
         description: 'lepoa'
       },
       {
+        key: '2Sarja',
         name: 'Sarja',
         duration: 5,
         position: 3,
@@ -65,6 +84,7 @@ class App extends Component {
         description: 'vatsat'
       },
       {
+        key: '3tauko',
         name: 'tauko',
         duration: 5,
         position: 4,
@@ -72,6 +92,7 @@ class App extends Component {
         description: 'lepoa'
       },
       {
+        key: '4Sarja',
         name: 'Sarja',
         duration: 5,
         position: 5,
@@ -79,6 +100,7 @@ class App extends Component {
         description: 'punnerrukset'
       },
       {
+        key: '5tauko',
         name: 'tauko',
         duration: 5,
         position: 6,
@@ -86,176 +108,260 @@ class App extends Component {
         description: 'lepoa'
       },
     ]
-
-    sumAngle = 0;
-    
-    
-    constructor(props){
-      super(props);
-      this.state = {
-        sections: []
-      }
+  }
+  
+  sumAngle = 0;
+  
+  
+  constructor(props){
+    super(props);
+    // modify exercises with new unique ids
+    // let newExcercise1 = this.getUniqueSectionIDs(this.excercise1)
+    // let newExcercise2 = this.getUniqueSectionIDs(this.excercise2)
+    this.state = {
+      excercises: [this.excercise1,this.excercise2],
+      selectedExercise: this.excercise1
     }
-    
-    applySettings(){
-      
-      let customHour = document.getElementById("HourPicker").value;
-      let customMin = document.getElementById("MinutePicker").value;
-      // let customStartHours = 
-      let customStartDate = new Date(2018,2,24,customHour,customMin)
-      console.log("applying settings: " + customStartDate)
-      //localStorage()
-      
-      this.setState({
-        startTime: customStartDate
-      })
-    }
-    
-    getLastSectionStopAngle(){
-      let angle = 0;
-      if(this.sections){
-        
-        for(let i  = 0; i < this.sections.lenght; i++ ){
-          angle = angle + this.sections[i].duration*6;
-        }
-        return angle;
-      }
-    }
-
-    setActiveSection(sectionItem){
-      this.setState({
-        activeSection: sectionItem
-      },() =>{
-        console.log("Currently active section: " + sectionItem.name);
-      });
-
-    }
-    
-    // returns a section with generated key.
-    createSection(name, description, duration,position,color){
-      
-      this.sumAngle = this.sumAngle + duration*6;
-      
-      let key = "section-" + this.sumAngle;
-      let section = {
-        key: key,
-        name: name,
-        duration: duration,
-        position: position,
-        color: color,
-        description: description
-      }
-      return section;
-    }
-    
-    timeChanged(){
-      console.log("time changed")
-    }
-    // section manipulation
-    
-    updateSection(section){
-      
-      let targetSectionIndex = this.getSectionIndex(this.state.sections,section.position);
-      let newSections = this.state.sections;
-      
-      newSections[targetSectionIndex] = section;
-      
-      this.setState(
-        {
-          sections: newSections
-        }
-      )
-      // console.log("section: " + section.key + " found at: " + targetSectionIndex + " updated -> name:" + section.name + " Description: " + section.description + " color: " + section.color + " duration: " + section.duration)
-    }
-    
-    // modify to use a better, unique identifier
-    getSectionIndex(sections,identifier){
-      return sections.map(
-        function(x){ 
-          return x.position 
-        }).indexOf(identifier);
-      }
-      
-      addSection(){
-        
-        let section = this.createSection('new','section',5,this.state.sections.length + 1,"#1b85b8")
-        let newSections = this.state.sections;
-        newSections.push(section);
-        this.setState({
-          sections: newSections
+    enableUniqueIds(this);
+  }
+  
+  getUniqueSectionIDs = (exercise) => {
+      if(exercise){
+        let newSections = exercise.defaultSections;
+        newSections.map(section => {
+          section.key = this.nextUniqueId();
         })
+        exercise.defaultSections = newSections;
       }
-      
-      deleteSection(key){
-        
-        let newSections = this.state.sections; // parent sections?
-        var removeSectionIndex = newSections.map(
-          function(x){
-            return x.key;
-          }).indexOf(key);
-          
-          if(removeSectionIndex > -1){
-            
-            newSections.splice(removeSectionIndex,1)
-            
-            this.setState(
-              {
-                sections: newSections
-              }
-            )
-          }
-        }
-        
-        componentWillMount(){
-          //console.log("App ComponentWillMount triggered")
-          // defaults -> populate from props provided by the separate editor..
-          let date = new Date();
-          date.setHours(18);
-          date.setMinutes(30);
-          
-          let sectionsWithKeys = this.defaultSections.map(sectionItem => {
-            return this.createSection(sectionItem.name,sectionItem.description,sectionItem.duration,sectionItem.position,sectionItem.color);
-          })
-          // stop angle is a good unique identifier for these objects
-          this.setState({
-            startTime: date,
-            sections: sectionsWithKeys})
-          }
-          
-          render() {
-            let currentSections = this.state.sections.map(sectionItem => {
-              
-              // Just pass the sectionitem, no point in givin all the props separately!
-              // let inputBoxKey = "input-"+sectionItem.key;´
-              let inputBoxKey = sectionItem.key;
-              return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove= {this.deleteSection.bind(this)} update={this.updateSection.bind(this)}/>
+      return exercise;
+  }
 
-            })
-            let activeName = "";
-            if(this.state.activeSection != null){
-              activeName = "nyt menossa " + this.state.activeSection.name + ": " +this.state.activeSection.description;
-            }
-            
-            return (
-              <div className="App">
-              <div id="SectionInfo">{activeName}</div>
-              <Clock id="clock" sectionItems={this.state.sections} startTime={this.state.startTime} canvasSide="100" activeSection={this.state.activeSection} setActive={this.setActiveSection.bind(this)}/>
-              <div id="SettingsContainer">
-              <div className="GeneralSettingsContainer">
-              <span>aloitusaika:</span> 
-              <input className="SettingsControl" id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/><input className="SettingsControl" id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/><br/>
-              <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div>
-              <div id="QuickStartBtn" className="SettingsControl" onClick={() => this.setState({startTime: new Date()})}><span>Aloita nyt</span></div>
-              </div>
-              <div className="ConfigBox" id="App-configbox">
-              {currentSections}
-              <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div></div>
-              </div>
-              </div>
-              </div>
-            );
-          }
-        }
-        
-        export default App;
-        
+  applySettings(){
+    
+    let customHour = document.getElementById("HourPicker").value;
+    let customMin = document.getElementById("MinutePicker").value;
+    // let customStartHours = 
+    let customStartDate = new Date(2018,2,24,customHour,customMin)
+    console.log("applying settings: " + customStartDate)
+    //localStorage()
+    let newExcercise = this.state.selectedExercise
+    newExcercise.startTime = customStartDate;
+    this.setState({
+      selectedExercise: newExcercise
+    })
+  }
+  
+  getLastSectionStopAngle(){
+    let angle = 0;
+    if(this.state.selectedExercise.defaultSections){
+      
+      for(let i  = 0; i < this.state.selectedExercise.defaultSections; i++ ){
+        angle = angle + this.state.selectedExercise.defaultSections[i].duration*6;
+      }
+      return angle;
+    }
+  }
+  
+  setActiveSection(sectionItem){
+    this.setState({
+      activeSection: sectionItem
+    },() =>{
+      console.log("Currently active section: " + sectionItem.name);
+    });
+    
+  }
+  
+  // returns a section with generated key.
+  createSection(name, description, duration,position,color){
+    
+    this.sumAngle = this.sumAngle + duration*6;
+    
+    let key = position + name;
+    let section = {
+      key: key,
+      name: name,
+      duration: duration,
+      position: position,
+      color: color,
+      description: description
+    }
+    return section;
+  }
+  
+  updateSection(section){
+    console.log("updating section: " + section.name)
+    let targetSectionIndex = this.getSectionIndex(this.state.selectedExercise.defaultSections,section.position);
+    let newSections = this.state.selectedExercise.defaultSections;
+    let newExercise = this.state.selectedExercise;
+    
+    newSections[targetSectionIndex] = section;
+    newExercise.defaultSections = newSections;
+    
+    this.setState(
+      {
+        selectedExercise: newExercise
+      }
+    )
+  }
+  
+  addSection(){
+    // cant use section.length for position? -> deprecate position and use the json ordering.
+    let section = this.createSection('nimi','sisältö',5,this.state.selectedExercise.defaultSections.length + 1,"lightblue")
+    let newSections = this.state.selectedExercise.defaultSections;
+    let newExercise = this.state.selectedExercise;
+    
+    newSections.push(section);
+    newExercise.defaultSections = newSections;
+    
+    this.setState({
+      selectedExercise: newExercise
+    },this.updateSectionInputBoxes())
+  }
+  
+  deleteSection(key){
+    console.log("deleting " + key)
+    let newSections = this.state.selectedExercise.defaultSections;
+    
+    var removeSectionIndex = newSections.map(
+      function(x){ 
+        return x.key 
+      }
+    ).indexOf(key);
+    
+    if(removeSectionIndex > -1){
+      
+      newSections.splice(removeSectionIndex,1)
+      let newExercise = this.state.selectedExercise;
+      newExercise.defaultSections = newSections;
+      
+      this.setState({
+        selectedExercise: newExercise
+      }),this.updateSectionInputBoxes()
+    }
+  }
+  
+  applyCurrentTime = () => {
+    let newExercise = this.state.selectedExercise;
+    newExercise.startTime = new Date();
+    this.setState({
+      selectedExercise: newExercise
+    }) // update clock face?
+  }
+  
+  timeChanged(){
+    console.log("time changed")
+  }
+  
+  // modify to use a better, unique identifier
+  getSectionIndex(sections,identifier){
+    return sections.map(
+      function(x){ 
+        return x.position 
+      }
+    ).indexOf(identifier);
+  }
+  
+  getExerciseIndex(sections,identifier){
+    return sections.map(
+      function(x){ 
+        return x.name 
+      }
+    ).indexOf(identifier);
+  }
+  
+  // do a general id/key getter
+  getArrayElementIndex(array,id){
+    return array.map(
+      function(x){ 
+        return x.id 
+      }
+    ).indexOf(id);
+  }
+  
+  moveSectionUp(){
+    // implement
+  }
+  moveSectionDown(){
+    // implement
+  }
+  
+  selectExercise = (e) =>{
+    // combobox selection should update state with new exercise
+    let arrayIndex = this.getExerciseIndex(this.state.excercises,e.target.value)
+    let exName = this.state.excercises[arrayIndex].name;
+    
+    this.setState({
+      selectedExercise: this.state.excercises[arrayIndex]
+    }, () => {
+      this.updateSectionInputBoxes();
+    })
+  }
+  
+  // use as callback for setState
+  updateSectionItemsForClock = () => {
+    // unimplemented.
+  }
+  // use as callback for setState
+  updateSectionInputBoxes = () => {
+    this.currentSections = this.state.selectedExercise.defaultSections.map((sectionItem,index) => {
+      let inputBoxKey = index + sectionItem.name;
+      console.log("input key:" + inputBoxKey)
+      return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
+      
+    })
+    this.forceUpdate() // TODO: handle the state change better to avoid using this?
+  }
+  updateExercisePresets = () => {
+    this.exercisePresets = this.state.excercises.map((excercise,index) => {
+      return <option key={index} value={excercise.name}>{excercise.name}</option>
+    })
+  }
+  
+  componentWillMount(){
+    // have a state container which handles all the available saved presets
+    
+    this.updateSectionInputBoxes();
+    
+    this.exercisePresets = this.state.excercises.map((excercise,index) => {
+      return <option key={index} value={excercise.name}>{excercise.name}</option>
+    })
+  }
+  
+  componentWillUpdate(){
+    console.log("App: componentWillUpdate ran");
+    
+  }
+  
+  render() {
+    // move to componentWillUpdate or componentWillrecieveprops?
+    //console.log("rerendering app")
+    
+    return (
+      <div className="App">
+      <SectionInfo activeSection={this.state.activeSection}/>
+      <Clock id="clock" sectionItems={this.state.selectedExercise.defaultSections} startTime={this.state.selectedExercise.startTime} canvasSide="100" activeSection={this.state.activeSection} setActive={this.setActiveSection.bind(this)}/>
+      <div id="SettingsContainer">
+      <div className="GeneralSettingsContainer">
+      <span>aloitusaika:</span>
+      <div id="StartTimePicker" className="SettingsControlTime">
+      <input id="HourPicker" type="number" defaultValue="18" min="0" max="23" onChange={this.timeChanged}/>:
+      <input id="MinutePicker" type="number" defaultValue="30" min="0" max="59" onChange={this.timeChanged}/>
+      </div>
+      <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div>
+      <div id="QuickStartBtn" className="SettingsControl" onClick={this.applyCurrentTime}><span>Aloita nyt</span></div>
+      <span>valmiit:</span>
+      <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" id="Selector" value={this.state.selectedExercise.name} onChange={this.selectExercise}>
+      {this.exercisePresets}
+      </select>
+      </div>
+      <div className="ConfigBox" id="App-configbox">
+      {this.currentSections}
+      <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div></div>
+      </div>
+      </div>
+      </div>
+    );
+  }
+}
+
+export default App;

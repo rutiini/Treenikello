@@ -42,7 +42,7 @@ class SectionInputBox extends Component {
   // call the parent remove function with current objects position
   // replace position with unique id for future purpose
   removeSelf(){
-    this.props.remove(this.props.section.key)
+    this.props.remove(this.props.id)
   }
   
   nameChanged(e){
@@ -57,21 +57,21 @@ descriptionChanged(e){
     description: e.target.value
   }, () => 
   this.updateSectionState()
-  )
+)
 }
 positionChanged(e){
   this.setState({
     position: e.target.value
   }, () => 
   this.updateSectionState()
-  )
+)
 }
 durationChanged(e){
   this.setState({
     duration: e.target.value
   }, () => 
   this.updateSectionState()
-  )
+)
 }
 colorChanged(e){
   this.setState({
@@ -79,7 +79,7 @@ colorChanged(e){
   }, () =>
   // run the call on parent update as a callback
   this.updateSectionState()
-  )
+)
 }
 
 // use this for customized color options?
