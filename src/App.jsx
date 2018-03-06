@@ -14,7 +14,7 @@ class App extends Component {
     startTime: new Date(2018,1,1,18,30),
     defaultSections: [
       {
-        key: 'Alkulämmittely',
+        key: '0Alkulämmittely',
         name: 'Alkulämmittely',
         duration: 10,
         position: 1,
@@ -304,7 +304,7 @@ class App extends Component {
   // use as callback for setState
   updateSectionInputBoxes = () => {
     this.currentSections = this.state.selectedExercise.defaultSections.map((sectionItem,index) => {
-      let inputBoxKey = index + sectionItem.name;
+      let inputBoxKey = sectionItem.key;
       console.log("input key:" + inputBoxKey)
       return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
       
