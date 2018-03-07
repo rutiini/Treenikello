@@ -219,7 +219,7 @@ class Clock extends Component {
                     <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
                 );
             });
-        }else if(this.props.sectionItems.length == 0){
+        }else if(this.props.sectionItems.length === 0){
             this.props.setActive(null);
         }
         return sectionItems;

@@ -3,139 +3,127 @@ import './App.css';
 import Clock from './Components/Clock';
 import SectionInputBox from './Components/SectionInputBox';
 import SectionInfo from './Components/SectionInfo';
-import {enableUniqueIds} from 'react-html-id';
+import UniqueId from 'react-html-id';
 
 class App extends Component {
   
-  // add name. for saving and drop list selecting
-  
-  excercise1 = {
-    name: "Taidotreenit",
-    startTime: new Date(2018,1,1,18,30),
-    defaultSections: [
-      {
-        key: '0Alkulämmittely',
-        name: 'Alkulämmittely',
-        duration: 10,
-        position: 1,
-        color: "#1b85b8",
-        description: 'nilkat lämpimiksi, käsipallo'
-      },
-      {
-        key: '1Alkuvenyttely',
-        name: 'Alkuvenyttely',
-        duration: 5,
-        position: 2,
-        color: "#559e83",
-        description: 'erityisesti jalat vetreiksi'
-      },
-      {
-        key: '2Tengi',
-        name: 'Tengi',
-        duration: 10,
-        position: 3,
-        color: "#ae5a41",
-        description: 'kokeilkaa uutta korkeaa'
-      },
-      {
-        key: '3Päivän aihe',
-        name: 'Päivän aihe',
-        duration: 20,
-        position: 4,
-        color: "#c3cb71",
-        description: 'perustekniikkaa'
-      },
-      {
-        key: '4Loppujumppa',
-        name: 'Loppujumppa',
-        duration: 15,
-        position: 5,
-        color: "#5a5255",
-        description: 'intervallit mitseihin täysillä'
-      }
-    ]  
-  }
-  excercise2 = {
-    name: "Intervallitreeni",
-    startTime: new Date(2018,1,1,17,30),
-    defaultSections: [
-      {
-        key: '0Sarja',
-        name: 'Sarja',
-        duration: 5,
-        position: 1,
-        color: "#ae5a41",
-        description: 'kyykyt'
-      },
-      {
-        key: '1tauko',
-        name: 'tauko',
-        duration: 5,
-        position: 2,
-        color: "#559e83",
-        description: 'lepoa'
-      },
-      {
-        key: '2Sarja',
-        name: 'Sarja',
-        duration: 5,
-        position: 3,
-        color: "#ae5a41",
-        description: 'vatsat'
-      },
-      {
-        key: '3tauko',
-        name: 'tauko',
-        duration: 5,
-        position: 4,
-        color: "#559e83",
-        description: 'lepoa'
-      },
-      {
-        key: '4Sarja',
-        name: 'Sarja',
-        duration: 5,
-        position: 5,
-        color: "#ae5a41",
-        description: 'punnerrukset'
-      },
-      {
-        key: '5tauko',
-        name: 'tauko',
-        duration: 5,
-        position: 6,
-        color: "#559e83",
-        description: 'lepoa'
-      },
-    ]
-  }
-  
   sumAngle = 0;
-  
   
   constructor(props){
     super(props);
     // modify exercises with new unique ids
-    // let newExcercise1 = this.getUniqueSectionIDs(this.excercise1)
-    // let newExcercise2 = this.getUniqueSectionIDs(this.excercise2)
-    this.state = {
-      excercises: [this.excercise1,this.excercise2],
-      selectedExercise: this.excercise1
+    UniqueId.enableUniqueIds(this);
+    
+    this.nextID = () => this.nextUniqueId();
+
+    const excercise1 = {
+      name: "Taidotreenit",
+      startTime: new Date(2018,1,1,18,30),
+      defaultSections: [
+        {
+          key: this.nextUniqueId(),
+          name: 'Alkulämmittely',
+          duration: 10,
+          position: 1,
+          color: "#1b85b8",
+          description: 'nilkat lämpimiksi, käsipallo'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Alkuvenyttely',
+          duration: 5,
+          position: 2,
+          color: "#559e83",
+          description: 'erityisesti jalat vetreiksi'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Tengi',
+          duration: 10,
+          position: 3,
+          color: "#ae5a41",
+          description: 'kokeilkaa uutta korkeaa'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Päivän aihe',
+          duration: 20,
+          position: 4,
+          color: "#c3cb71",
+          description: 'perustekniikkaa'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Loppujumppa',
+          duration: 15,
+          position: 5,
+          color: "#5a5255",
+          description: 'intervallit mitseihin täysillä'
+        }
+      ]  
     }
-    enableUniqueIds(this);
+    
+    const excercise2 = {
+      name: "Intervallitreeni",
+      startTime: new Date(2018,1,1,17,30),
+      defaultSections: [
+        {
+          key: this.nextUniqueId(),
+          name: 'Sarja',
+          duration: 5,
+          position: 1,
+          color: "#ae5a41",
+          description: 'kyykyt'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'tauko',
+          duration: 5,
+          position: 2,
+          color: "#559e83",
+          description: 'lepoa'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Sarja',
+          duration: 5,
+          position: 3,
+          color: "#ae5a41",
+          description: 'vatsat'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'tauko',
+          duration: 5,
+          position: 4,
+          color: "#559e83",
+          description: 'lepoa'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'Sarja',
+          duration: 5,
+          position: 5,
+          color: "#ae5a41",
+          description: 'punnerrukset'
+        },
+        {
+          key: this.nextUniqueId(),
+          name: 'tauko',
+          duration: 5,
+          position: 6,
+          color: "#559e83",
+          description: 'lepoa'
+        },
+      ]
+    }
+
+    this.state = {
+      excercises: [excercise1,excercise2],
+      selectedExercise: excercise1
+    }
   }
   
-  getUniqueSectionIDs = (exercise) => {
-      if(exercise){
-        let newSections = exercise.defaultSections;
-        newSections.map(section => {
-          section.key = this.nextUniqueId();
-        })
-        exercise.defaultSections = newSections;
-      }
-      return exercise;
-  }
-
   applySettings(){
     
     let customHour = document.getElementById("HourPicker").value;
@@ -175,8 +163,7 @@ class App extends Component {
   createSection(name, description, duration,position,color){
     
     this.sumAngle = this.sumAngle + duration*6;
-    
-    let key = position + name;
+    let key = "new"; // TODO: here we need to get a new globally unique key --> use it in the section item box constructor, not the parent!
     let section = {
       key: key,
       name: name,
@@ -236,7 +223,7 @@ class App extends Component {
       
       this.setState({
         selectedExercise: newExercise
-      }),this.updateSectionInputBoxes()
+      },this.updateSectionInputBoxes())
     }
   }
   
@@ -288,7 +275,6 @@ class App extends Component {
   selectExercise = (e) =>{
     // combobox selection should update state with new exercise
     let arrayIndex = this.getExerciseIndex(this.state.excercises,e.target.value)
-    let exName = this.state.excercises[arrayIndex].name;
     
     this.setState({
       selectedExercise: this.state.excercises[arrayIndex]
@@ -304,7 +290,7 @@ class App extends Component {
   // use as callback for setState
   updateSectionInputBoxes = () => {
     this.currentSections = this.state.selectedExercise.defaultSections.map((sectionItem,index) => {
-      let inputBoxKey = sectionItem.key;
+      let inputBoxKey = sectionItem.key;//this.nextUniqueId(this.state.selectedExercise.name);
       console.log("input key:" + inputBoxKey)
       return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
       
@@ -350,7 +336,7 @@ class App extends Component {
       <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div>
       <div id="QuickStartBtn" className="SettingsControl" onClick={this.applyCurrentTime}><span>Aloita nyt</span></div>
       <span>valmiit:</span>
-      <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" id="Selector" value={this.state.selectedExercise.name} onChange={this.selectExercise}>
+      <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" value={this.state.selectedExercise.name} onChange={this.selectExercise}>
       {this.exercisePresets}
       </select>
       </div>
