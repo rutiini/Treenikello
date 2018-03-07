@@ -120,6 +120,9 @@
 #customStart{
   resize: none;
 }
+#TimeInput{
+  width: 100px;
+}
 .GeneralSettingsContainer{
   display: flex;
   border: black;
