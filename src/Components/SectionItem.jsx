@@ -3,11 +3,6 @@ import './Sectionitem.css'
 
 class SectionItem extends Component {
     
-    // this should be a pure component probably since not much is going on in here, we just need to optimize rendering to handle the component alone.
-    // constructor(props){
-    //     super(props)
-    // }
-    
     polarToCartesian(centerX, centerY, radius, angleInDegrees) {
         var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
         
@@ -17,6 +12,8 @@ class SectionItem extends Component {
         };
     }
     
+    //TODO: Clean up here, it's messy.
+
     componentWillReceiveProps(nextProps){
         
         // console.log("sectionItem angle: " + nextProps.start_angle)

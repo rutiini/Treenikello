@@ -3,7 +3,6 @@ import '../App.css';
 
 class SectionInputBox extends Component {
   
-  // const stuff can be declared here?
   colorOptions = [
     {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
     {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
@@ -13,8 +12,6 @@ class SectionInputBox extends Component {
     {"colorName":"none","colorValue":"none"}
   ]
   
-  // call the parent remove function with current objects position
-  // replace position with unique id for future purpose
   removeSelf(){
     // use obj instead.
     this.props.remove(this.props.section);
@@ -50,11 +47,6 @@ class SectionInputBox extends Component {
     
     this.props.update(this.props.section,this.getNewSection("description",e.target.value))
 
-  }
-
-  // unnecessary! use the array order to manage position!
-  positionChanged(e){
-  
   }
 
   durationChanged(e){
@@ -104,7 +96,6 @@ class SectionInputBox extends Component {
       <div className="MoveArrow" onClick={this.moveUp}>/\</div>
       <div className="HeaderContainer">
       <div className="DeleteSectionBtn" onClick={this.removeSelf.bind(this)}>X</div>
-      {/* <input className="PositionSelector" value={this.props.section.position} onChange={this.positionChanged.bind(this)} type="number"></input> */}
       <textarea id="SectionName" className="NameInputBox" value={this.props.section.name} onChange={this.nameChanged.bind(this)} ></textarea>
       </div>
       <textarea className="DescriptionBox" onChange={this.descriptionChanged.bind(this)} value={this.props.section.description}/><br/>

@@ -171,24 +171,68 @@ class Clock extends Component {
 
     }
 
+    // this function is getting massive. refactor?
     updateFaceElements(){
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
 
-        let d = new Date();
-        let currentMinutePosition = d.getMinutes()*6;
+        const d = new Date();
+        // current hand states
+        const currentMinutePosition = d.getMinutes()*6;
+        const currentHoursPosition = d.getHours()*360;
+        
         let sectionItems;
         let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
-        let activeSet = this.props.activeSection;
-        let startTimeAngle = this.props.startTime.getMinutes()*6;
+        const activeSet = this.props.activeSection;
+        const startTimeAngle = this.props.startTime.getMinutes()*6;
+        
+        // change to absolute
+        const currentPosition = d.getMinutes()*6 + d.getHours()*360; // "absolute minute position"
+        const startPosition = this.props.startTime.getMinutes()*6 + this.props.startTime.getHours()*360;
+        let stopDrawAngle = 354; // more descriptive name
+        
         if(this.props.sectionItems){
             // calculate from start time
-            var angle = startTimeAngle;
-
+            
+            // relative
+            // let angle = startTimeAngle;
+            // absolute
+            let angle = startPosition;
+            console.log(`sections starting angle: ${angle} current time angle: ${currentPosition} `)
             sectionItems = this.props.sectionItems.map((sectionItem,index) => {
-
-                if(angle === fullCicrcle + startTimeAngle){
+                
+                /**/
+                
+                let startAngle = angle
+                angle += sectionItem.duration*6; // transform minutes to degrees
+                
+                // if the section ends before starting angle dont draw it. Also if start is over an hour away
+                if(angle <= currentPosition || currentPosition < angle - 360){
+                    // "extend" full circle by new minutes
+                    stopDrawAngle = stopDrawAngle + currentPosition;
                     return null;
                 }
+                // should not be done during render since it updates state.
+                else if(startAngle <= currentPosition && currentPosition < angle){
+                    if(activeSet == null){
+                        this.props.setActive(sectionItem);
+                    }else if(activeSet.name !== sectionItem.name){
+                        this.props.setActive(sectionItem);
+                    }
+                }
+                
+                if(angle > stopDrawAngle + startPosition){
+                    angle = stopDrawAngle + startPosition;
+                }
+                /**/
+
+                // old implementation
+                /*
+
+                // unnecessary?
+                // if(angle === fullCicrcle + startTimeAngle){
+                //     console.log(`stopDrawAngle ${stopDrawAngle + startPosition} angle ${angle}`)
+                //     return null;
+                // }
 
                 let startAngle = angle
                 angle += sectionItem.duration*6; // transform minutes to degrees
@@ -200,7 +244,8 @@ class Clock extends Component {
                     return null;
                 }
                 // should not be done during render since it updates state.
-                else if(startAngle <= currentMinutePosition && currentMinutePosition < angle){
+                //else if(startAngle <= currentMinutePosition && currentMinutePosition < angle){
+                else if(startAngle <= currentPosition && currentPosition < angle){
                     if(activeSet == null){
                         this.props.setActive(sectionItem);
                     }else if(activeSet.name !== sectionItem.name){
@@ -212,6 +257,8 @@ class Clock extends Component {
                 if(angle > fullCicrcle + startTimeAngle){
                     angle = fullCicrcle + startTimeAngle;
                 }
+                */
+
                 // set the detected section to the info block? -> info block is at app though?
                 // this hack forces redrawing
                 let sectionArcKey = "Arc-" + index + angle;
