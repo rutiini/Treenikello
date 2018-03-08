@@ -18,7 +18,12 @@
   border-radius: 2em;
   min-height: 200px;
   min-width: 230px;
-  cursor: move;
+  /* cursor: move; */
+}
+.MoveArrow{
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1em;
 }
 #CustomStart{
   margin: 1em

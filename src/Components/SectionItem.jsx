@@ -20,10 +20,10 @@ class SectionItem extends Component {
     componentWillReceiveProps(nextProps){
         
         // console.log("sectionItem angle: " + nextProps.start_angle)
-        if(this.props.color !== nextProps.color){
-            console.log("sectionItem color: " + this.props.color)
-            console.log("sectionItem new color: " + nextProps.color)
-        }
+        // if(this.props.color !== nextProps.color){
+        //     console.log("sectionItem color: " + this.props.color)
+        //     console.log("sectionItem new color: " + nextProps.color)
+        // }
     }
     componentWillUpdate(){
         //console.log("sectionItem will update.")
