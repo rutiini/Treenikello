@@ -331,9 +331,9 @@
 }
 
 /* transform layout to work side-by side in landscape mode */
-
 /* orientation based approach */
-@media screen and (orientation:landscape)
+/* breaks layout with on-screen keyboad*/
+@media screen and (orientation:landscape )and (min-height: 600px)
 {
   .Clock{
     float:left;

@@ -18,6 +18,7 @@ class App extends Component {
     const excercise1 = {
       name: "Taidotreenit",
       startTime: new Date(2018,1,1,18,30),
+      preset: true,
       defaultSections: [
         {
           key: "unassigned",
@@ -60,6 +61,7 @@ class App extends Component {
     const excercise2 = {
       name: "Intervallitreeni",
       startTime: new Date(2018,1,1,17,30),
+      preset: true,
       defaultSections: [
         {
           key: "unassigned",
@@ -118,11 +120,17 @@ class App extends Component {
   }
   
   setActiveSection(sectionItem){
-    this.setState({
-      activeSection: sectionItem
-    },() =>{
-      console.log("Currently active section: " + sectionItem.name);
-    });
+    // don't set null.
+    // if(sectionItem == null){
+    //   console.log("create dummy section")
+    //   sectionItem = this.createSection("","",0,"","none")
+    // }
+    // TODO: update can cause infinite loop, fix!
+    if(sectionItem != null){
+      this.setState({
+        activeSection: sectionItem
+      });
+    }
     
   }
   
@@ -142,19 +150,25 @@ class App extends Component {
   }
   
   updateSection(oldSection,newSection){
-    console.log("updating section: " + oldSection.name)
+    // console.log("updating section: " + oldSection.name)
     const targetSectionIndex = this.state.selectedExercise.defaultSections.indexOf(oldSection);
     if(targetSectionIndex > -1){
       
       let newSections = this.state.selectedExercise.defaultSections;
-      let newExercise = this.state.selectedExercise;
+      let newExcercise = this.state.selectedExercise;
       
       newSections[targetSectionIndex] = newSection;
-      newExercise.defaultSections = newSections;
+      newExcercise.defaultSections = newSections;
+      
+      // update customs to local memory.
+      if(!newExcercise.preset){
+        this.saveCustomExcercises(newExcercise);
+      }
+      
       
       this.setState(
         {
-          selectedExercise: newExercise
+          selectedExercise: newExcercise
         }
         ,this.updateSectionInputBoxes()
       )
@@ -171,10 +185,16 @@ class App extends Component {
   
   addSection(){
     
+    // check wheher current exercise is a template, if it is create a new excercise!
+    if(this.state.selectedExercise.preset){
+      // this.newExcercise()
+      console.log("template modified, create a new excercise based on the selected one!");
+    }
+    
     // reassign keys when the collection is modified..
     let newSections = this.reassignKeys(this.state.selectedExercise.defaultSections, this.state.selectedExercise.name);
     
-    let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",this.nextUniqueId())
+    let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",this.state.selectedExercise.name + this.nextUniqueId())
     newSections.push(section);
     
     let newExercise = this.state.selectedExercise;
@@ -219,18 +239,18 @@ class App extends Component {
   }
   
   timeChanged = (time) =>{
-    console.log(`time changed to ${time}`)
+    // console.log(`time changed to ${time}`)
     const patt = /([0-2][0-9]):([0-5][0-9])/
     const timeComponents = patt.exec(time);
     const hours = timeComponents[1];
     const minutes = timeComponents[2];
     
-    console.log(`time components ${timeComponents[1]} ${timeComponents[2]}`)
+    // console.log(`time components ${timeComponents[1]} ${timeComponents[2]}`)
     let newTime = this.state.selectedExercise.startTime;
     
     newTime.setHours(hours);
     newTime.setMinutes(minutes);
-    console.log(`time set to ${newTime}`);
+    // console.log(`time set to ${newTime}`);
   }
   
   getExerciseIndex(sections,identifier){
@@ -252,7 +272,7 @@ class App extends Component {
   
   moveSectionUp(section){
     // implement
-    console.log(`move section ${section.name} up`)
+    // console.log(`move section ${section.name} up`)
     //
     const moveIndex = this.state.selectedExercise.defaultSections.indexOf(section)
     // if section is first we cant move up any more.
@@ -274,7 +294,7 @@ class App extends Component {
   
   moveSectionDown(section){
     // implement
-    console.log(`move section ${section.name} down`)
+    // console.log(`move section ${section.name} down`)
     
     const moveIndex = this.state.selectedExercise.defaultSections.indexOf(section)
     // if section is last we cant move down any more.
@@ -298,25 +318,100 @@ class App extends Component {
   printSections = (sections) => {
     sections.map((section,index) => {
       console.log(`pos: ${index} name: ${section.name} color: ${section.color} duration: ${section.duration}`);
+      return true;
     })
   }
   
   selectExercise = (e) =>{
     // combobox selection should update state with new exercise
     let arrayIndex = this.getExerciseIndex(this.state.excercises,e.target.value)
-    console.log("selected " + this.state.excercises[arrayIndex].name)
-    
-    this.setState(
-      {
-        selectedExercise: this.state.excercises[arrayIndex]
-      }
-      ,() => {
-        this.updateSectionInputBoxes();
-        this.forceUpdate();
-      }
-    )
+    if(arrayIndex > -1){
+      
+      console.log("selected " + this.state.excercises[arrayIndex].name)
+      
+      this.setState(
+        {
+          selectedExercise: this.state.excercises[arrayIndex]
+        }
+        ,() => {
+          this.updateSectionInputBoxes();
+          this.forceUpdate();
+        }
+      )
+    }else{
+      console.log("add new exercise requested.")
+      this.newExcercise();
+    }
   }
   
+  // start a new custom exercise. Later create a copy based on the previously selected exercise?
+  newExcercise = () => {
+    
+    let reservedNames = this.state.excercises.map( excercise => {
+      return excercise.name; 
+    }) 
+    
+    let name = ""
+    
+    while(true){
+      name = prompt("Enter excercise name: ", "");
+      if(name === ""){
+        alert("enter a name");
+      }else if(name == null){
+        // canceled
+        return;
+      }else if(reservedNames.indexOf(name) === -1){
+        break;
+      }else{
+        alert("Name already exists!");
+      }
+    }
+    
+    let newExcercise = 
+    {
+      name: name,
+      startTime: new Date(),
+      preset: false,
+      defaultSections: []
+    }
+    
+    let newExercises = this.state.excercises;
+    newExercises.push(newExcercise);
+    
+    let customs = 
+    [
+      newExcercise,
+    ]
+    this.saveCustomExcercises(customs)
+    // add and select the new excercise
+    this.setState({
+      excercises: newExercises
+    }, /*this.setState({
+      selectedExercise: newExcercise
+    }),this.updateSectionInputBoxes()*/) // fix to update sectioninputboxes as well!
+    // update the selecor and select the new exercise by default?
+  }
+  // updates the locally stored excercises
+  saveCustomExcercises = (excercises) =>{
+    localStorage.setItem("customExcercises",JSON.stringify(excercises));
+  }
+  // returns an array of the locally stored excercises
+  getCustomExcercises = () => {
+    
+    if(localStorage.getItem("customExcercises") === "undefined"){
+      localStorage.clear();
+    }
+    
+    // need to parse the date objects sepaprately
+    let customs = JSON.parse(localStorage.customExcercises || null) || {};
+    console.log(customs)
+    for(let i = 0; i < customs.length; i++){
+      customs[i].startTime = new Date(customs[i].startTime);
+      console.log(customs[i]);
+      
+      return customs;
+    }
+  }
   // use as callback for setState
   updateSectionItemsForClock = () => {
     // unimplemented.
@@ -325,43 +420,50 @@ class App extends Component {
   updateSectionInputBoxes = () => {
     this.currentSections = this.state.selectedExercise.defaultSections.map((sectionItem,index) => {
       let inputBoxKey = sectionItem.key;
-      console.log("input key:" + inputBoxKey + " name " + sectionItem.name)
+      // console.log("input key:" + inputBoxKey + " name " + sectionItem.name)
       return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
       
     })
-    // this.forceUpdate() // TODO: handle the state change better to avoid using this?
+    // call render?
   }
   
   updateExercisePresets = () => {
     this.exercisePresets = this.state.excercises.map((excercise,index) => {
+      console.log(`excercise  added to menu ${excercise.name}`)
       return <option key={index} value={excercise.name}>{excercise.name}</option>
     })
+    this.exercisePresets.push(<option key="addNewSection">+new exercise</option>)
   }
   
   componentWillMount(){
     // have a state container which handles all the available saved presets
     
     // assign proper keys to exercises
-    let newExercises = this.state.excercises.map(exercise => {
+    let newExcercises = this.state.excercises.map(exercise => {
       // need to restart sequence under each exercise
       let rekeyedSections = this.reassignKeys(exercise.defaultSections,exercise.name);
       exercise.defaultSections = rekeyedSections;
       return exercise;
     })
+    
+    // add excercises that the user has created locally
+    let customExcercises = this.getCustomExcercises();
+    console.log(`found ${JSON.stringify(customExcercises)} from local storage`);
+    newExcercises = newExcercises.concat(customExcercises);
+    
     this.setState(
       {
-        excercises: newExercises,
-        selectedExercise: newExercises[0]
+        excercises: newExcercises,
+        selectedExercise: newExcercises[0]
       }
       ,this.updateSectionInputBoxes()
     )
     
-    this.exercisePresets = this.state.excercises.map((excercise,index) => {
-      return <option key={index} value={excercise.name}>{excercise.name}</option>
-    })
+    this.updateExercisePresets();
   }
   
   componentWillUpdate(){
+    this.updateExercisePresets();
     console.log("App: componentWillUpdate ran");
     // updating sectioninput boxes should be called here
     // this.updateSectionInputBoxes();

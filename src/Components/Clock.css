@@ -38,6 +38,12 @@
 #minor{
     fill: #3f3f3f;
 }
+.ActiveSection{
+    opacity: 1;
+}
+.InactiveSection{
+    opacity: 0.65;
+}
 .timerOn{
     transition: linear;
     transition-duration: 500ms;

@@ -10,6 +10,10 @@ const SectionInfo = (props) => {
     sectionColor = props.activeSection.color;
     sectionName = props.activeSection.name;
     sectionDescription = props.activeSection.description;
+  }else{
+    sectionColor = "";
+    sectionName = "";
+    sectionDescription = "";
   }
   
   return (

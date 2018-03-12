@@ -171,37 +171,27 @@ class Clock extends Component {
 
     }
 
-    // this function is getting massive. refactor?
     updateFaceElements(){
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
 
         const d = new Date();
-        // current hand states
-        const currentMinutePosition = d.getMinutes()*6;
-        const currentHoursPosition = d.getHours()*360;
         
         let sectionItems;
-        let fullCicrcle = 354; // leave a gap to hilight the starting moment or find another way to hilight the start..
         const activeSet = this.props.activeSection;
-        const startTimeAngle = this.props.startTime.getMinutes()*6;
         
         // change to absolute
         const currentPosition = d.getMinutes()*6 + d.getHours()*360; // "absolute minute position"
         const startPosition = this.props.startTime.getMinutes()*6 + this.props.startTime.getHours()*360;
-        let stopDrawAngle = 354; // more descriptive name
+        let stopDrawAngle = 360; // opacity of sections is a good way of communication where we start and are..
         
         if(this.props.sectionItems){
             // calculate from start time
-            
-            // relative
-            // let angle = startTimeAngle;
-            // absolute
+
             let angle = startPosition;
-            console.log(`sections starting angle: ${angle} current time angle: ${currentPosition} `)
+            // console.log(`sections starting angle: ${angle} current time angle: ${currentPosition} `)
             sectionItems = this.props.sectionItems.map((sectionItem,index) => {
                 
-                /**/
-                
+                let sectionStyle = "InactiveSection";
                 let startAngle = angle
                 angle += sectionItem.duration*6; // transform minutes to degrees
                 
@@ -212,61 +202,29 @@ class Clock extends Component {
                     return null;
                 }
                 // should not be done during render since it updates state.
+                // TODO. set active to full opacity others slightly less.
                 else if(startAngle <= currentPosition && currentPosition < angle){
                     if(activeSet == null){
                         this.props.setActive(sectionItem);
                     }else if(activeSet.name !== sectionItem.name){
                         this.props.setActive(sectionItem);
                     }
+                    sectionStyle = "ActiveSection"
                 }
                 
                 if(angle > stopDrawAngle + startPosition){
                     angle = stopDrawAngle + startPosition;
                 }
-                /**/
-
-                // old implementation
-                /*
-
-                // unnecessary?
-                // if(angle === fullCicrcle + startTimeAngle){
-                //     console.log(`stopDrawAngle ${stopDrawAngle + startPosition} angle ${angle}`)
-                //     return null;
-                // }
-
-                let startAngle = angle
-                angle += sectionItem.duration*6; // transform minutes to degrees
-
-                // if the section ends before starting angle dont draw it..
-                if(angle <= currentMinutePosition){
-                    // "extend" full circle by new minutes
-                    fullCicrcle = fullCicrcle + currentMinutePosition;
-                    return null;
-                }
-                // should not be done during render since it updates state.
-                //else if(startAngle <= currentMinutePosition && currentMinutePosition < angle){
-                else if(startAngle <= currentPosition && currentPosition < angle){
-                    if(activeSet == null){
-                        this.props.setActive(sectionItem);
-                    }else if(activeSet.name !== sectionItem.name){
-                        this.props.setActive(sectionItem);
-                    }
-                }
-
-                // we reach full circle and stop rendering
-                if(angle > fullCicrcle + startTimeAngle){
-                    angle = fullCicrcle + startTimeAngle;
-                }
-                */
-
+               
                 // set the detected section to the info block? -> info block is at app though?
-                // this hack forces redrawing
+                // this hack forces rerendering (changing keys..)
                 let sectionArcKey = "Arc-" + index + angle;
                 return(
-                    <SectionItem cx="50" cy="50" radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} />
+                    <SectionItem cx={this.centerCoordinate} cy={this.centerCoordinate} radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} class={sectionStyle}/>
                 );
             });
-        }else if(this.props.sectionItems.length === 0){
+        // just check whether there is an active item set.
+        }if(this.props.sectionItems.length === 0){
             this.props.setActive(null);
         }
         return sectionItems;

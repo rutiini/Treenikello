@@ -57,7 +57,7 @@ class SectionItem extends Component {
     render() {
         //console.log("drawing arc: " + this.props.start_angle + " -> " + this.props.end_angle)
         return (
-            <path id="arc" fill={this.props.color} fillRule="evenodd" d={this.d}/>
+            <path id="arc" className={this.props.class} fill={this.props.color} fillRule="evenodd" d={this.d}/>
         )   
     }
     
