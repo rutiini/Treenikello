@@ -126,7 +126,7 @@
   resize: none;
 }
 #TimeInput{
-  width: 100px;
+  display: inline-block;
 }
 .GeneralSettingsContainer{
   display: flex;
@@ -187,15 +187,15 @@
   cursor: pointer;
   min-width: 100px;
 }
-#QuickStartBtn{
+.SettingsBtn{
   background: linear-gradient(to top, #34696f, #2f5f63);
   box-shadow: 0 8px 0 #1b383b;
   text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);
 }
-#ApplyBtn{
+#QuickStartBtn{
   background: linear-gradient(to top, #34696f, #2f5f63);
   box-shadow: 0 8px 0 #1b383b;
-  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2); 
+  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);
 }
 #SectionInfo{
   display: block;

@@ -154,7 +154,6 @@ class App extends Component {
       
       const newExcercise = this.state.excercises[this.state.selectedExerciseIndex];
       let newSections = newExcercise.defaultSections;
-      console.log("found ex from list:", this.state.selectedExerciseIndex);
       
       newSections[targetSectionIndex] = newSection;
       newExcercise.defaultSections = newSections;
@@ -190,8 +189,7 @@ class App extends Component {
     let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",prevSelectedExcercise.name + 
     this.nextUniqueId())
     
-    
-    // ALT: rekey sections if necessary.
+    // rekey sections
     const newSections = this.reassignKeys([...prevSelectedExcercise.defaultSections,section],prevSelectedExcercise.name)
     console.log("adding: ", section);
     
@@ -205,29 +203,15 @@ class App extends Component {
         console.log(this.state.selectedExerciseIndex)
         }
     )
-    // this.setState({
-    //   excercises: newExcercises,
-    //   selectedExercise: {
-    //     name: prevSelectedExcercise.name,
-    //     startTime: prevSelectedExcercise.startTime,
-    //     preset: prevSelectedExcercise.preset,
-    //     defaultSections: newSections
-    //   }
-    // },() => {this.saveCustomExcercises()
-    // console.log(this.state.excercises)
-    // console.log(this.state.selectedExercise)
-    // }
-    // )
-    
-
   }
   
   deleteSection(section){
+    
     let newSections = [...this.state.excercises[this.state.selectedExerciseIndex].defaultSections];
     const index = newSections.indexOf(section);
     
     if(index > -1){
-      console.log("delete at ",index)
+
       newSections.splice(index,1);
       
       const newExcercise = {...this.state.excercises[this.state.selectedExerciseIndex],defaultSections: newSections};
@@ -273,7 +257,7 @@ moveSectionDown(section){
     // remove and readd section to new position..
     sections.splice(moveIndex,1);
     sections.splice(moveIndex + 1,0,section);
-    // this.printSections(sections);
+    
     const newExcercises = this.state.excercises;
     newExcercises[this.state.selectedExerciseIndex] = excercise;
 
@@ -290,22 +274,23 @@ applyCurrentTime = () => {
   newExercise.startTime = new Date();
   this.setState({
     selectedExercise: newExercise
-  }) // update clock face?
+  })
 }
 
 timeChanged = (time) =>{
-  // console.log(`time changed to ${time}`)
+  console.log(time)
+  if(time == null){
+    time = "00:00";
+  }
   const patt = /([0-2][0-9]):([0-5][0-9])/
   const timeComponents = patt.exec(time);
   const hours = timeComponents[1];
   const minutes = timeComponents[2];
   
-  // console.log(`time components ${timeComponents[1]} ${timeComponents[2]}`)
   let newTime = this.state.excercises[this.state.selectedExerciseIndex].startTime;
   
   newTime.setHours(hours);
   newTime.setMinutes(minutes);
-  // console.log(`time set to ${newTime}`);
 }
 
 getExerciseIndex(excercises,identifier){
@@ -338,7 +323,6 @@ printSections = (sections) => {
 
 selectExercise = (e) =>{
   // combobox selection should update state with new exercise
-  // console.log(this.state.excercises)
   const arrayIndex = this.getExerciseIndex(this.state.excercises,e.target.value)
   if(arrayIndex > -1){
     
@@ -402,9 +386,44 @@ newExcercise = () => {
   this.setState({
     ...this.state,
     excercises: newExercises,
-    selectedExercise: newExcercise
+    selectedExerciseIndex: newExercises.length - 1
   }) 
 }
+
+// get saved excercises from browser cache
+getSavedExcercises = () =>{
+  const customsJSON = localStorage.customExcercises;
+  if(customsJSON !== undefined){
+    let customs = JSON.parse(customsJSON);
+    if(customs === undefined || customs == null){
+      console.log("local storage corrupted. clearing cached data.")
+      localStorage.clear();
+      return null;
+    }
+    
+    console.log("custom excercises: ", customs);
+    // need to parse the date objects sepaprately
+    for(let i = 0; i < customs.length; i++){
+      customs[i].startTime = new Date(customs[i].startTime);
+      console.log(customs[i]);
+      
+    }
+    return customs;
+  }
+}
+// save users custom excercises to browser cache
+saveExcercises = () =>{
+  const excercises = this.state.excercises;
+  const nonPresets = excercises.filter((x) => {return x.preset !== true;})
+  localStorage.setItem("customExcercises",JSON.stringify(nonPresets));
+}
+deleteExcercise = () => {
+  const newExcercises = [...this.state.excercises];
+  if(!newExcercises[this.state.selectedExerciseIndex].preset){
+    console.log(`deleting excercise ${newExcercises[this.state.selectedExerciseIndex].name}`)
+  }
+}
+
 // updates the locally stored excercises
 saveCustomExcercises = () =>{
   const excercises = this.state.excercises;
@@ -419,7 +438,6 @@ getCustomExcercises = () => {
     if(customs === undefined || customs == null){
       console.log("local storage corrupted. clearing cached data.")
       sessionStorage.clear();
-      localStorage.clear();
       return null;
     }
     
@@ -480,11 +498,8 @@ componentWillMount(){
   
   this.setState(
     {
-      // ...this.state,
-      excercises: newExcercises,
-      selectedExercise: newExcercises[0]
+      excercises: newExcercises
     }
-    // ,this.updateSectionInputBoxes()
   )
   
   this.updateExercisePresets();
@@ -508,16 +523,18 @@ render() {
     <Clock id="clock" sectionItems={this.state.excercises[this.state.selectedExerciseIndex].defaultSections} startTime={this.state.excercises[this.state.selectedExerciseIndex].startTime} canvasSide="100" activeSection={this.state.activeSection} setActive={this.setActiveSection.bind(this)}/>
     <div id="SettingsContainer">
     <div className="GeneralSettingsContainer">
-    <span>aloitusaika:</span>
+    <span>aloitus:</span>
     <div id="StartTimePicker" className="SettingsControlTime">
     <TimePicker id="TimeInput" value={this.state.excercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
     </div>
     {/* <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div> */}
     <div id="QuickStartBtn" className="SettingsControl" onClick={this.applyCurrentTime}><span>Aloita nyt</span></div>
-    <span>valitse pohja:</span>
+    <span>treeni:</span>
     <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" value={this.state.excercises[this.state.selectedExerciseIndex].name} onChange={this.selectExercise}>
     {this.exercisePresets}
     </select>
+    <div className="SettingsControl SettingsBtn" onClick={this.saveExcercises}>save</div>
+    <div className="SettingsControl SettingsBtn" onClick={this.deleteExcercise}>delete</div>
     </div>
     <div className="ConfigBox" id="App-configbox">
     {this.currentSections}
