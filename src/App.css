@@ -333,7 +333,7 @@
 /* transform layout to work side-by side in landscape mode */
 /* orientation based approach */
 /* breaks layout with on-screen keyboad*/
-@media screen and (orientation:landscape )and (min-height: 600px)
+@media screen and (orientation:landscape )and (min-height: 810px)
 {
   .Clock{
     float:left;
@@ -353,7 +353,7 @@
     height: 90%;
   }
   .GeneralSettingsContainer{
-    display: inline-flex;
+    display: inline-block;
   }
   .SettingsControl{
     margin-top: 1em;

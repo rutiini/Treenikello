@@ -258,14 +258,14 @@ class Clock extends Component {
 
     componentWillReceiveProps(nextProps){
         // fires when component is recieving new props
-         console.log("Clock: ComponentWillRecieveProps triggered")
+        //console.log("Clock: ComponentWillRecieveProps triggered")
     }
     componentWillUpdate(){
         // fires before rendering with new props or state
-        this.sectionItems = this.updateFaceElements();
+        // this.sectionItems = this.updateFaceElements();
     }
     render() {
-
+        this.sectionItems = this.updateFaceElements();
         return (
             <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
             {/* <div id="StringDateContainer">
