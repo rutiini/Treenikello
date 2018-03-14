@@ -5,6 +5,7 @@ import SectionInputBox from './Components/SectionInputBox';
 import SectionInfo from './Components/SectionInfo';
 import UniqueId from 'react-html-id';
 import TimePicker from 'react-time-picker';
+import {exercises} from './Store';
 
 class App extends Component {
   
@@ -15,101 +16,9 @@ class App extends Component {
     // modify exercises with new unique ids
     UniqueId.enableUniqueIds(this);
     
-    const excercise1 = {
-      name: "Taidotreenit",
-      startTime: new Date(2018,1,1,18,30),
-      preset: true,
-      defaultSections: [
-        {
-          key: "unassigned",
-          name: 'Alkulämmittely',
-          duration: 10,
-          color: "#1b85b8",
-          description: 'nilkat lämpimiksi, käsipallo'
-        },
-        {
-          key: "unassigned",
-          name: 'Alkuvenyttely',
-          duration: 5,
-          color: "#559e83",
-          description: 'erityisesti jalat vetreiksi'
-        },
-        {
-          key: "unassigned",
-          name: 'Tengi',
-          duration: 10,
-          color: "#ae5a41",
-          description: 'kokeilkaa uutta korkeaa'
-        },
-        {
-          key: "unassigned",
-          name: 'Päivän aihe',
-          duration: 20,
-          color: "#c3cb71",
-          description: 'perustekniikkaa'
-        },
-        {
-          key: "unassigned",
-          name: 'Loppujumppa',
-          duration: 15,
-          color: "#5a5255",
-          description: 'intervallit mitseihin täysillä'
-        }
-      ]
-    }
-    
-    const excercise2 = {
-      name: "Intervallitreeni",
-      startTime: new Date(2018,1,1,17,30),
-      preset: true,
-      defaultSections: [
-        {
-          key: "unassigned",
-          name: 'Sarja',
-          duration: 5,
-          color: "#ae5a41",
-          description: 'kyykyt'
-        },
-        {
-          key: "unassigned",
-          name: 'tauko',
-          duration: 5,
-          color: "#559e83",
-          description: 'lepoa'
-        },
-        {
-          key: "unassigned",
-          name: 'Sarja',
-          duration: 5,
-          color: "#ae5a41",
-          description: 'vatsat'
-        },
-        {
-          key: "unassigned",
-          name: 'tauko',
-          duration: 5,
-          color: "#559e83",
-          description: 'lepoa'
-        },
-        {
-          key: "unassigned",
-          name: 'Sarja',
-          duration: 5,
-          color: "#ae5a41",
-          description: 'punnerrukset'
-        },
-        {
-          key: "unassigned",
-          name: 'tauko',
-          duration: 5,
-          color: "#559e83",
-          description: 'lepoa'
-        },
-      ]
-    }
     // to componentwillmount
     this.state = {
-      excercises: [excercise1,excercise2],
+      excercises: exercises,
       selectedExerciseIndex: 0
     }
   }
@@ -159,7 +68,7 @@ class App extends Component {
       newExcercise.defaultSections = newSections;
       const newExcercises = [...this.state.excercises]
       newExcercises[this.state.selectedExerciseIndex].defaultSections = newSections;
-
+      
       this.setState(
         {
           excercises: newExcercises,
@@ -179,7 +88,7 @@ class App extends Component {
   }
   
   addSection(){
-
+    
     const prevSelectedExcercise = this.state.excercises[this.state.selectedExerciseIndex];
     if(prevSelectedExcercise.preset){
       // create new as a copy of the selected..
@@ -191,41 +100,41 @@ class App extends Component {
     
     // rekey sections
     const newSections = this.reassignKeys([...prevSelectedExcercise.defaultSections,section],prevSelectedExcercise.name)
-    console.log("adding: ", section);
+    // console.log("adding: ", section);
     
     const newExcercises = [...this.state.excercises]
     newExcercises[this.state.selectedExerciseIndex].defaultSections = newSections;
     
     this.setState({
       excercises: newExcercises
-      },() => {this.saveCustomExcercises()
-        console.log(this.state.excercises)
-        console.log(this.state.selectedExerciseIndex)
-        }
-    )
-  }
-  
-  deleteSection(section){
-    
-    let newSections = [...this.state.excercises[this.state.selectedExerciseIndex].defaultSections];
-    const index = newSections.indexOf(section);
-    
-    if(index > -1){
+    },() => {this.saveCustomExcercises()
+      // console.log(this.state.excercises)
+      // console.log(this.state.selectedExerciseIndex)
+    }
+  )
+}
 
-      newSections.splice(index,1);
-      
-      const newExcercise = {...this.state.excercises[this.state.selectedExerciseIndex],defaultSections: newSections};
-      const newExcercises = [...this.state.excercises];
-      newExcercises[this.state.selectedExerciseIndex] = newExcercise;
-      
-      this.setState( (prevState) =>
-      {
-        return {excercises: newExcercises}
-      },this.saveCustomExcercises()
-    );
+deleteSection(section){
+  
+  let newSections = [...this.state.excercises[this.state.selectedExerciseIndex].defaultSections];
+  const index = newSections.indexOf(section);
+  
+  if(index > -1){
     
-    // update customs to local memory.
-  }
+    newSections.splice(index,1);
+    
+    const newExcercise = {...this.state.excercises[this.state.selectedExerciseIndex],defaultSections: newSections};
+    const newExcercises = [...this.state.excercises];
+    newExcercises[this.state.selectedExerciseIndex] = newExcercise;
+    
+    this.setState( (prevState) =>
+    {
+      return {excercises: newExcercises}
+    },this.saveCustomExcercises()
+  );
+  
+  // update customs to local memory.
+}
 }
 
 
@@ -238,10 +147,9 @@ moveSectionUp(section){
     // remove and readd section to new position..
     sections.splice(moveIndex,1);
     sections.splice(moveIndex - 1,0,section);
-    // this.printSections(sections);
     const newExcercises = this.state.excercises;
     newExcercises[this.state.selectedExerciseIndex] = excercise;
-
+    
     this.setState({
       excercises: newExcercises
     })
@@ -260,10 +168,12 @@ moveSectionDown(section){
     
     const newExcercises = this.state.excercises;
     newExcercises[this.state.selectedExerciseIndex] = excercise;
-
-    this.setState({
-      excercises: newExcercises
-    })
+    
+    this.setState(
+      {
+        excercises: newExcercises
+      }
+    )
   }
 }
 
@@ -418,9 +328,21 @@ saveExcercises = () =>{
   localStorage.setItem("customExcercises",JSON.stringify(nonPresets));
 }
 deleteExcercise = () => {
-  const newExcercises = [...this.state.excercises];
-  if(!newExcercises[this.state.selectedExerciseIndex].preset){
-    console.log(`deleting excercise ${newExcercises[this.state.selectedExerciseIndex].name}`)
+  const newExercises = [...this.state.excercises];
+  if(!newExercises[this.state.selectedExerciseIndex].preset){
+    // set selected to first in list (presets should always exist)
+    const deleteIndex = this.state.selectedExerciseIndex;
+    this.setState({
+      selectedExerciseIndex: 0
+    })
+    console.log(`deleting excercise ${newExercises[deleteIndex].name}`)
+    console.log(`excercises left:`,newExercises.splice(deleteIndex,1))
+    
+    this.setState(
+      {
+        excercises: newExercises
+      }
+    )
   }
 }
 
@@ -432,7 +354,12 @@ saveCustomExcercises = () =>{
 }
 // returns an array of the locally stored excercises
 getCustomExcercises = () => {
-  const customsJSON = sessionStorage.customExcercises;
+  let customsJSON = sessionStorage.customExcercises;
+  if(customsJSON === undefined){
+    console.log("sessionStorage is empty. checking localStorage");
+    customsJSON = localStorage.customExcercises;
+  }
+  
   if(customsJSON !== undefined){
     let customs = JSON.parse(customsJSON);
     if(customs === undefined || customs == null){
@@ -441,15 +368,15 @@ getCustomExcercises = () => {
       return null;
     }
     
-    console.log("custom excercises: ", customs);
     // need to parse the date objects sepaprately
     for(let i = 0; i < customs.length; i++){
       customs[i].startTime = new Date(customs[i].startTime);
-      console.log(customs[i]);
-      
+      // console.log(customs[i]);
     }
+    console.log("custom excercises: ", customs);
     return customs;
   }
+  
 }
 
 // use as callback for setState
@@ -492,7 +419,7 @@ componentWillMount(){
   // add excercises that the user has created locally
   let customExcercises = this.getCustomExcercises();
   if(customExcercises !== null && customExcercises !== undefined && customExcercises.length > 0){
-    console.log(`adding ${customExcercises.length} custom excercises to list`)
+    // console.log(`adding ${customExcercises.length} custom excercises to list`)
     newExcercises = newExcercises.concat(customExcercises);
   }
   
@@ -508,12 +435,12 @@ componentWillMount(){
 // specify the correct props and state for this! recieves old and new props?!
 componentWillUpdate(nextProps, nextState){
   // updating sectioninput boxes should be called here
-  console.log("App: componentWillUpdate ran");
+  //console.log("App: componentWillUpdate ran");
 }
 
 render() {
   // move to componentWillUpdate or componentWillrecieveprops?
-  console.log("rerendering app", new Date())
+  //console.log("rerendering app", new Date())
   this.updateExercisePresets();
   this.updateSectionInputBoxes();
   
@@ -527,7 +454,6 @@ render() {
     <div id="StartTimePicker" className="SettingsControlTime">
     <TimePicker id="TimeInput" value={this.state.excercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
     </div>
-    {/* <div id="ApplyBtn" className="SettingsControl" value="apply" onClick={this.applySettings.bind(this)}>Aseta</div> */}
     <div id="QuickStartBtn" className="SettingsControl" onClick={this.applyCurrentTime}><span>Aloita nyt</span></div>
     <span>treeni:</span>
     <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" value={this.state.excercises[this.state.selectedExerciseIndex].name} onChange={this.selectExercise}>

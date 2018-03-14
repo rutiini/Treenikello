@@ -177,6 +177,7 @@ class Clock extends Component {
         const d = new Date();
         
         let sectionItems;
+        // handle in componentdidupdate?
         const activeSet = this.props.activeSection;
         
         // change to absolute
@@ -267,10 +268,8 @@ class Clock extends Component {
     render() {
         this.sectionItems = this.updateFaceElements();
         return (
-            <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)} onTap={this.cycleTimerFunctions.bind(this)}>
-            {/* <div id="StringDateContainer">
-            {this.state.date}<br/>
-            </div> */}
+            <div className="Clock" onClick={this.cycleTimerFunctions.bind(this)}>
+            
             <svg id="clock" viewBox="0 0 100 100">
             <circle id="face" cx="50" cy="50" r="45"/>
             {this.sectionItems}
