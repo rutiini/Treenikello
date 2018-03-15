@@ -1,4 +1,89 @@
-// move storage stuff from app to here
+// session / localstorage functionality
+class Store{
+  
+  // get saved exercises from browser cache
+  getSavedExercises = () =>{
+    const customsJSON = localStorage.customExercises;
+    if(customsJSON !== undefined){
+      let customs = JSON.parse(customsJSON);
+      if(customs === undefined || customs == null){
+        console.log("local storage corrupted. clearing cached data.")
+        localStorage.clear();
+        return null;
+      }
+      
+      // need to parse the date objects sepaprately
+      for(let i = 0; i < customs.length; i++){
+        customs[i].startTime = new Date(customs[i].startTime);
+        
+      }
+      return customs;
+    }
+  }
+  
+  // save users custom exercises to browser cache
+  saveExercises = (exercises) =>{
+    const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+    localStorage.setItem("customExercises",JSON.stringify(nonPresets));
+  }
+
+  // updates the locally stored exercises
+  saveSessionExercises = (exercises) =>{
+    const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+    sessionStorage.setItem("customExercises",JSON.stringify(nonPresets));
+  }
+
+  // returns an array of the locally stored exercises
+  getSessionExercises = () => {
+    let customsJSON = sessionStorage.customExercises;
+    if(customsJSON === undefined){
+      console.log("sessionStorage is empty. checking localStorage");
+      customsJSON = localStorage.customExercises;
+    }
+    
+    if(customsJSON !== undefined){
+      let customs = JSON.parse(customsJSON);
+      if(customs === undefined || customs == null){
+        console.log("local storage corrupted. clearing cached data.")
+        sessionStorage.clear();
+        return null;
+      }
+      
+      // need to parse the date objects sepaprately
+      for(let i = 0; i < customs.length; i++){
+        customs[i].startTime = new Date(customs[i].startTime);
+        // console.log(customs[i]);
+      }
+      console.log("store: found custom exercises: ", customs);
+      return customs;
+    }
+    
+  }
+ 
+  // not necessary, we only load and save in the store, state management is in the app (for now)
+  // deleteexercise = () => {
+  //   const newExercises = [...this.state.exercises];
+  //   if(!newExercises[this.state.selectedExerciseIndex].preset){
+  //     // set selected to first in list (presets should always exist)
+  //     const deleteIndex = this.state.selectedExerciseIndex;
+  //     this.setState({
+  //       selectedExerciseIndex: 0
+  //     })
+  //     console.log(`deleting exercise ${newExercises[deleteIndex].name}`)
+  //     console.log(`exercises left:`,newExercises.splice(deleteIndex,1))
+      
+  //     this.setState(
+  //       {
+  //         exercises: newExercises
+  //       }
+  //     )
+  //   }
+  // }
+   
+}
+
+const store = new Store({});
+export default store;
 
 export const exercises = [
   {
@@ -93,5 +178,12 @@ export const exercises = [
     ],
   }
 ]
-
-// add sessionstorage and localstorage here.
+export const colorOptions = 
+[
+  {"colorName":"dark blue","colorValue":"#1b85b8"},
+  {"colorName":"dark grey","colorValue":"#5a5255"},
+  {"colorName":"dark green","colorValue":"#559e83"},
+  {"colorName":"dark red","colorValue":"#ae5a41"},
+  {"colorName":"olive green","colorValue":"#c3cb71"},
+  {"colorName":"none","colorValue":"none"}
+]

@@ -1,17 +1,9 @@
 import React, {Component} from 'react';
 import '../App.css';
+import {colorOptions} from '../Store'
 
 class SectionInputBox extends Component {
-  
-  colorOptions = [
-    {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
-    {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
-    {"colorName":"dark green","colorValue":"#559e83"}, //-> dark green
-    {"colorName":"dark red","colorValue":"#ae5a41"}, //-> dark red
-    {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
-    {"colorName":"none","colorValue":"none"}
-  ]
-  
+
   removeSelf(){
     // use obj instead.
     this.props.remove(this.props.section);
@@ -66,22 +58,8 @@ class SectionInputBox extends Component {
     this.props.moveUp(this.props.section);
   }
   
-  // use this for customized color options?
-  getColorOptions(){
-    
-    var colorOptions = [
-      {"colorName":"dark blue","colorValue":"#1b85b8"}, //-> dark blue
-      {"colorName":"dark grey","colorValue":"#5a5255"}, //-> dark grey
-      {"colorName":"dark green","colorValue":"#559e83"}, //-> dark green
-      {"colorName":"dark red","colorValue":"#ae5a41"}, //-> dark red
-      {"colorName":"olive green","colorValue":"#c3cb71"}, //-> olive green
-      {"colorName":"none","colorValue":"none"}
-    ]
-    return colorOptions;
-  }
-  
   componentWillMount(){  
-    this.options = this.colorOptions.map(optionItem => {
+    this.options = colorOptions.map(optionItem => {
       let colorCode = optionItem.colorValue;
       let colorName = optionItem.colorName;
       

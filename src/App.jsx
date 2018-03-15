@@ -5,7 +5,7 @@ import SectionInputBox from './Components/SectionInputBox';
 import SectionInfo from './Components/SectionInfo';
 import UniqueId from 'react-html-id';
 import TimePicker from 'react-time-picker';
-import {exercises} from './Store';
+import store, {exercises} from './Store';
 
 class App extends Component {
   
@@ -18,7 +18,7 @@ class App extends Component {
     
     // to componentwillmount
     this.state = {
-      excercises: exercises,
+      exercises: exercises,
       selectedExerciseIndex: 0
     }
   }
@@ -44,8 +44,6 @@ class App extends Component {
   // returns a section with generated key.
   createSection(name, description, duration,color, key){
     
-    this.sumAngle = this.sumAngle + duration*6;
-    
     const section = {
       key: key,
       name: name,
@@ -57,24 +55,24 @@ class App extends Component {
   }
   
   updateSection(oldSection,newSection){
-    
-    const targetSectionIndex = this.state.excercises[this.state.selectedExerciseIndex].defaultSections.indexOf(oldSection);
+    const {exercises,selectedExerciseIndex} = this.state;
+
+    const targetSectionIndex = exercises[selectedExerciseIndex].defaultSections.indexOf(oldSection);
     if(targetSectionIndex > -1){
       
-      const newExcercise = this.state.excercises[this.state.selectedExerciseIndex];
-      let newSections = newExcercise.defaultSections;
+      const newexercise = exercises[selectedExerciseIndex];
+      let newSections = newexercise.defaultSections;
       
       newSections[targetSectionIndex] = newSection;
-      newExcercise.defaultSections = newSections;
-      const newExcercises = [...this.state.excercises]
-      newExcercises[this.state.selectedExerciseIndex].defaultSections = newSections;
+      newexercise.defaultSections = newSections;
+      const newExercises = [...exercises]
+      newExercises[selectedExerciseIndex].defaultSections = newSections;
       
       this.setState(
         {
-          excercises: newExcercises,
-          selectedExercise: newExcercise
+          exercises: newExercises,
+          selectedExercise: newexercise
         }
-        ,this.saveCustomExcercises()
       )
     }
   }
@@ -88,90 +86,91 @@ class App extends Component {
   }
   
   addSection(){
-    
-    const prevSelectedExcercise = this.state.excercises[this.state.selectedExerciseIndex];
-    if(prevSelectedExcercise.preset){
+    const {exercises,selectedExerciseIndex} = this.state;
+
+    const prevSelectedexercise = exercises[selectedExerciseIndex];
+    if(prevSelectedexercise.preset){
       // create new as a copy of the selected..
-      console.log("template modified, create a new excercise based on the selected one!");
+      console.log("template modified, create a new exercise based on the selected one!");
     }
     
-    let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",prevSelectedExcercise.name + 
+    let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",prevSelectedexercise.name + 
     this.nextUniqueId())
     
     // rekey sections
-    const newSections = this.reassignKeys([...prevSelectedExcercise.defaultSections,section],prevSelectedExcercise.name)
+    const newSections = this.reassignKeys([...prevSelectedexercise.defaultSections,section],prevSelectedexercise.name)
     // console.log("adding: ", section);
     
-    const newExcercises = [...this.state.excercises]
-    newExcercises[this.state.selectedExerciseIndex].defaultSections = newSections;
+    const newExercises = [...exercises]
+    newExercises[selectedExerciseIndex].defaultSections = newSections;
     
-    this.setState({
-      excercises: newExcercises
-    },() => {this.saveCustomExcercises()
-      // console.log(this.state.excercises)
-      // console.log(this.state.selectedExerciseIndex)
-    }
-  )
-}
-
-deleteSection(section){
+    this.setState(
+      {
+        exercises: newExercises
+      }
+    )
+  }
   
-  let newSections = [...this.state.excercises[this.state.selectedExerciseIndex].defaultSections];
-  const index = newSections.indexOf(section);
-  
-  if(index > -1){
+  deleteSection(section){
+    const {exercises, selectedExerciseIndex} = this.state;
     
-    newSections.splice(index,1);
+    let newSections = [...exercises[selectedExerciseIndex].defaultSections];
+    const index = newSections.indexOf(section);
     
-    const newExcercise = {...this.state.excercises[this.state.selectedExerciseIndex],defaultSections: newSections};
-    const newExcercises = [...this.state.excercises];
-    newExcercises[this.state.selectedExerciseIndex] = newExcercise;
-    
-    this.setState( (prevState) =>
+    if(index > -1)
     {
-      return {excercises: newExcercises}
-    },this.saveCustomExcercises()
-  );
-  
-  // update customs to local memory.
-}
+      newSections.splice(index,1)
+      const newexercise = {...exercises[selectedExerciseIndex],defaultSections: newSections};
+      const newExercises = [...exercises];
+      newExercises[selectedExerciseIndex] = newexercise;
+      
+      this.setState( (prevState) =>
+      {
+        return {exercises: newExercises}
+      }
+    );
+  }
 }
 
 
 moveSectionUp(section){
-  const excercise = this.state.excercises[this.state.selectedExerciseIndex];
-  const moveIndex = excercise.defaultSections.indexOf(section)
+  const {exercises,selectedExerciseIndex} = this.state;
+
+  const exercise = exercises[selectedExerciseIndex];
+  const moveIndex = exercise.defaultSections.indexOf(section)
   // if section is first we cant move up any more.
   if(moveIndex > 0){
-    let sections = excercise.defaultSections;
+    let sections = exercise.defaultSections;
     // remove and readd section to new position..
     sections.splice(moveIndex,1);
     sections.splice(moveIndex - 1,0,section);
-    const newExcercises = this.state.excercises;
-    newExcercises[this.state.selectedExerciseIndex] = excercise;
+    const newExercises = exercises;
+    newExercises[selectedExerciseIndex] = exercise;
     
     this.setState({
-      excercises: newExcercises
+      exercises: newExercises
     })
   }
 }
 
 moveSectionDown(section){
-  const excercise = this.state.excercises[this.state.selectedExerciseIndex];
-  const moveIndex = excercise.defaultSections.indexOf(section)
+  const {exercises,selectedExerciseIndex} = this.state;
+
+  const exercise = exercises[selectedExerciseIndex];
+  const moveIndex = exercise.defaultSections.indexOf(section)
   // if section is last we cant move down any more.
-  if(moveIndex < excercise.defaultSections.length - 1){
-    let sections = excercise.defaultSections;
+  if(moveIndex < exercise.defaultSections.length - 1){
+    let sections = exercise.defaultSections;
     // remove and readd section to new position..
     sections.splice(moveIndex,1);
     sections.splice(moveIndex + 1,0,section);
     
-    const newExcercises = this.state.excercises;
-    newExcercises[this.state.selectedExerciseIndex] = excercise;
+    const newExercises = exercises;
+    newExercises[selectedExerciseIndex] = exercise;
     
     this.setState(
       {
-        excercises: newExcercises
+        exercises: newExercises
       }
     )
   }
@@ -180,7 +179,9 @@ moveSectionDown(section){
 /* helper functions */
 
 applyCurrentTime = () => {
-  const newExercise = this.state.excercises[this.state.selectedExerciseIndex];
+  const {exercises,selectedExerciseIndex} = this.state;
+
+  const newExercise = exercises[selectedExerciseIndex];
   newExercise.startTime = new Date();
   this.setState({
     selectedExercise: newExercise
@@ -188,6 +189,8 @@ applyCurrentTime = () => {
 }
 
 timeChanged = (time) =>{
+  const {exercises,selectedExerciseIndex} = this.state;
+
   console.log(time)
   if(time == null){
     time = "00:00";
@@ -197,14 +200,14 @@ timeChanged = (time) =>{
   const hours = timeComponents[1];
   const minutes = timeComponents[2];
   
-  let newTime = this.state.excercises[this.state.selectedExerciseIndex].startTime;
+  let newTime = exercises[selectedExerciseIndex].startTime;
   
   newTime.setHours(hours);
   newTime.setMinutes(minutes);
 }
 
-getExerciseIndex(excercises,identifier){
-  return excercises.map(
+getExerciseIndex(exercises,identifier){
+  return exercises.map(
     function(x){
       if(x !== undefined){
         return x.name
@@ -232,11 +235,13 @@ printSections = (sections) => {
 }
 
 selectExercise = (e) =>{
+  const {exercises} = this.state;
+
   // combobox selection should update state with new exercise
-  const arrayIndex = this.getExerciseIndex(this.state.excercises,e.target.value)
+  const arrayIndex = this.getExerciseIndex(exercises,e.target.value)
   if(arrayIndex > -1){
     
-    console.log("selected ", this.state.excercises[arrayIndex]);
+    console.log("selected ", exercises[arrayIndex]);
     
     this.setState(
       {
@@ -245,16 +250,16 @@ selectExercise = (e) =>{
     )
   }else{
     console.log("add new exercise requested.")
-    this.newExcercise();
+    this.newExercise();
   }
 }
 
 // start a new custom exercise. Later create a copy based on the previously selected exercise?
-newExcercise = () => {
-  
-  let reservedNames = this.state.excercises.map( excercise => {
-    if(excercise !== undefined){
-      return excercise.name;
+newExercise = () => {
+  const {exercises} = this.state;
+  let reservedNames = exercises.map( exercise => {
+    if(exercise !== undefined){
+      return exercise.name;
     }else{
       return null;
     }
@@ -263,7 +268,7 @@ newExcercise = () => {
   let name = ""
   
   while(true){
-    name = prompt("Enter excercise name: ", "");
+    name = prompt("Enter exercise name: ", "");
     if(name === ""){
       alert("enter a name");
     }else if(name == null){
@@ -276,7 +281,7 @@ newExcercise = () => {
     }
   }
   
-  const newExcercise = 
+  const newexercise = 
   {
     name: name,
     startTime: new Date(),
@@ -284,105 +289,51 @@ newExcercise = () => {
     defaultSections: []
   }
   
-  let newExercises = [...this.state.excercises, newExcercise];
+  let newExercises = [...exercises, newexercise];
   
-  let customs = 
-  [
-    newExcercise,
-  ]
-  this.saveCustomExcercises(customs)
-  
-  // add and select the new excercise
+  // add and select the new exercise
   this.setState({
     ...this.state,
-    excercises: newExercises,
+    exercises: newExercises,
     selectedExerciseIndex: newExercises.length - 1
   }) 
 }
 
-// get saved excercises from browser cache
-getSavedExcercises = () =>{
-  const customsJSON = localStorage.customExcercises;
-  if(customsJSON !== undefined){
-    let customs = JSON.parse(customsJSON);
-    if(customs === undefined || customs == null){
-      console.log("local storage corrupted. clearing cached data.")
-      localStorage.clear();
-      return null;
-    }
-    
-    console.log("custom excercises: ", customs);
-    // need to parse the date objects sepaprately
-    for(let i = 0; i < customs.length; i++){
-      customs[i].startTime = new Date(customs[i].startTime);
-      console.log(customs[i]);
-      
-    }
-    return customs;
-  }
+// pass custom exercises for store to be saved
+saveExercises = () =>{
+  const {exercises} = this.state;
+  const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+  // save only here..
+  store.saveExercises(nonPresets);
 }
-// save users custom excercises to browser cache
-saveExcercises = () =>{
-  const excercises = this.state.excercises;
-  const nonPresets = excercises.filter((x) => {return x.preset !== true;})
-  localStorage.setItem("customExcercises",JSON.stringify(nonPresets));
-}
-deleteExcercise = () => {
-  const newExercises = [...this.state.excercises];
-  if(!newExercises[this.state.selectedExerciseIndex].preset){
+
+// updates the state, save will pass the change to store.
+deleteExercise = () => {
+  const {exercises,selectedExerciseIndex} = this.state;
+
+  const newExercises = [...exercises];
+  if(!newExercises[selectedExerciseIndex].preset){
     // set selected to first in list (presets should always exist)
-    const deleteIndex = this.state.selectedExerciseIndex;
+    const deleteIndex = selectedExerciseIndex;
     this.setState({
       selectedExerciseIndex: 0
     })
-    console.log(`deleting excercise ${newExercises[deleteIndex].name}`)
-    console.log(`excercises left:`,newExercises.splice(deleteIndex,1))
+    console.log(`deleting exercise ${newExercises[deleteIndex].name}`)
+    console.log(`exercises left:`,newExercises.splice(deleteIndex,1))
     
     this.setState(
       {
-        excercises: newExercises
+        exercises: newExercises
       }
     )
   }
 }
 
-// updates the locally stored excercises
-saveCustomExcercises = () =>{
-  const excercises = this.state.excercises;
-  const nonPresets = excercises.filter((x) => {return x.preset !== true;})
-  sessionStorage.setItem("customExcercises",JSON.stringify(nonPresets));
-}
-// returns an array of the locally stored excercises
-getCustomExcercises = () => {
-  let customsJSON = sessionStorage.customExcercises;
-  if(customsJSON === undefined){
-    console.log("sessionStorage is empty. checking localStorage");
-    customsJSON = localStorage.customExcercises;
-  }
-  
-  if(customsJSON !== undefined){
-    let customs = JSON.parse(customsJSON);
-    if(customs === undefined || customs == null){
-      console.log("local storage corrupted. clearing cached data.")
-      sessionStorage.clear();
-      return null;
-    }
-    
-    // need to parse the date objects sepaprately
-    for(let i = 0; i < customs.length; i++){
-      customs[i].startTime = new Date(customs[i].startTime);
-      // console.log(customs[i]);
-    }
-    console.log("custom excercises: ", customs);
-    return customs;
-  }
-  
-}
-
 // use as callback for setState
 updateSectionInputBoxes = () => {
-  
-  this.currentSections = this.state.excercises[this.state.selectedExerciseIndex].defaultSections.map((sectionItem,index) => {
+  const {exercises,selectedExerciseIndex} = this.state;
+
+  this.currentSections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem,index) => {
     let inputBoxKey = sectionItem.key;
     // console.log("input key:" + inputBoxKey + " name " + sectionItem.name)
     return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
@@ -391,41 +342,42 @@ updateSectionInputBoxes = () => {
 }
 
 updateExercisePresets = () => {
-  this.exercisePresets = this.state.excercises.map((excercise,index) => {
-    // we should not have undefined excercises in the memory
-    if(excercise !== undefined){
-      // console.log(`excercise  added to menu `, excercise)
-      return <option key={index} value={excercise.name}>{excercise.name}</option>
+  this.exercisePresets = this.state.exercises.map((exercise,index) => {
+    // we should not have undefined exercises in the memory
+    if(exercise !== undefined){
+      // console.log(`exercise  added to menu `, exercise)
+      return <option key={index} value={exercise.name}>{exercise.name}</option>
     }else{
       return null;
     }
   })
-  this.exercisePresets.push(<option key="addNewExcercise">+new exercise</option>)
+  this.exercisePresets.push(<option key="addNewexercise">+new exercise</option>)
 }
 
 /* Lifecycle hools */
 
 componentWillMount(){
-  // have a state container which handles all the available saved presets
+  // destructure from state to ease the syntax
+  const {exercises} = this.state;
   
   // assign proper keys to exercises
-  let newExcercises = this.state.excercises.map(exercise => {
+  let newExercises = exercises.map(exercise => {
     // need to restart sequence under each exercise
     let rekeyedSections = this.reassignKeys(exercise.defaultSections,exercise.name);
     exercise.defaultSections = rekeyedSections;
     return exercise;
   })
   
-  // add excercises that the user has created locally
-  let customExcercises = this.getCustomExcercises();
-  if(customExcercises !== null && customExcercises !== undefined && customExcercises.length > 0){
-    // console.log(`adding ${customExcercises.length} custom excercises to list`)
-    newExcercises = newExcercises.concat(customExcercises);
+  // add exercises that the user has created locally
+  let customExercises = store.getSessionExercises();
+  if(customExercises !== null && customExercises !== undefined && customExercises.length > 0){
+    // console.log(`adding ${customExercises.length} custom exercises to list`)
+    newExercises = newExercises.concat(customExercises);
   }
   
   this.setState(
     {
-      excercises: newExcercises
+      exercises: newExercises
     }
   )
   
@@ -443,24 +395,26 @@ render() {
   //console.log("rerendering app", new Date())
   this.updateExercisePresets();
   this.updateSectionInputBoxes();
+  // deconstruct state for simpler syntax
+  const {exercises,selectedExerciseIndex,activeSection} = this.state;
   
   return (
     <div className="App">
-    <SectionInfo activeSection={this.state.activeSection}/>
-    <Clock id="clock" sectionItems={this.state.excercises[this.state.selectedExerciseIndex].defaultSections} startTime={this.state.excercises[this.state.selectedExerciseIndex].startTime} canvasSide="100" activeSection={this.state.activeSection} setActive={this.setActiveSection.bind(this)}/>
+    <SectionInfo activeSection={activeSection}/>
+    <Clock id="clock" sectionItems={exercises[selectedExerciseIndex].defaultSections} startTime={exercises[selectedExerciseIndex].startTime} canvasSide="100" activeSection={activeSection} setActive={this.setActiveSection.bind(this)}/>
     <div id="SettingsContainer">
     <div className="GeneralSettingsContainer">
     <span>aloitus:</span>
     <div id="StartTimePicker" className="SettingsControlTime">
-    <TimePicker id="TimeInput" value={this.state.excercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
+    <TimePicker id="TimeInput" value={exercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
     </div>
     <div id="QuickStartBtn" className="SettingsControl" onClick={this.applyCurrentTime}><span>Aloita nyt</span></div>
     <span>treeni:</span>
-    <select id="ExcerciseSelector" className="SettingsCombox" name="selectExcercise" value={this.state.excercises[this.state.selectedExerciseIndex].name} onChange={this.selectExercise}>
+    <select id="exerciseSelector" className="SettingsCombox" name="selectexercise" value={exercises[selectedExerciseIndex].name} onChange={this.selectExercise}>
     {this.exercisePresets}
     </select>
-    <div className="SettingsControl SettingsBtn" onClick={this.saveExcercises}>save</div>
-    <div className="SettingsControl SettingsBtn" onClick={this.deleteExcercise}>delete</div>
+    <div className="SettingsControl SettingsBtn" onClick={this.saveExercises}>save</div>
+    <div className="SettingsControl SettingsBtn" onClick={this.deleteExercise}>delete</div>
     </div>
     <div className="ConfigBox" id="App-configbox">
     {this.currentSections}
