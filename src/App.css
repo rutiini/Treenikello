@@ -18,7 +18,6 @@
   border-radius: 2em;
   min-height: 200px;
   min-width: 230px;
-  /* cursor: move; */
 }
 .MoveArrow{
   cursor: pointer;
@@ -74,11 +73,10 @@
   font-weight: bold;
   margin: 0.5em;
   margin-bottom: 0em;
-  border-radius: 2em;
+  border-radius: 0.5em;
   border-style: solid;
   border-top-color: black;
   overflow: hidden;
-
 }
 .SectionInfoDescription{
   margin: 0 auto;
@@ -93,9 +91,6 @@
 @keyframes marquee{
   0%   { transform: translate(0, 0); }
   100% { transform: translate(-100%, 0); }
-}
-#ExcerciseSelector{
-  width: 200px;
 }
 #App-configbox{
   display: grid;
@@ -114,92 +109,25 @@
   border-width: 2px;
   border-radius: 2em;
   min-height: 200px;
-  
 }
 .NewSectionContent{
   line-height: 4em;
   vertical-align: middle;
   font-size: 3em;
 }
-
-#customStart{
-  resize: none;
-}
-#TimeInput{
-  display: inline-block;
-}
 .GeneralSettingsContainer{
   display: flex;
   border: black;
   border-style: solid;
   border-width: 2px;
-  border-radius: 2em;
+  border-radius: 0.5em;
   background-color: #b6b6b6;
   margin: 1em;
-  justify-content: center;
-  display: flex;
+  justify-content: space-around;
   padding: 1em;
-  font-weight: bold;
-  font-size: 1em;
 }
-.GeneralSettingsContainer > span{
-  margin-top: 1.5em;
-  margin-left: 1%;
-}
-.SettingsControl{
-  display: block;
-  height: 2em;
-  width: 4em;
-  border-style: solid;
-  background-color: #dbdbdb;
-  padding: 1em;
-  margin-left: 3%;
-  border-radius: 2em;
-  border-color: black;
-  cursor: pointer;
-}
-.SettingsControlTime{
-  display: inline-block;
-  height: 2em;
-  border-style: solid;
-  background-color: #dbdbdb;
-  padding: 1em;
-  margin-left: 1%;
-  border-radius: 2em;
-  border-color: black;
-  cursor: pointer;
-  min-width: 100px;
-}
-.SettingsControlTime > input{
-  font-weight: bold;
-  text-align: center;
-  font-size: 1em;
-  width: 2em;
-}
-.SettingsCombox{
-  display: inline-block;
-  border-style: solid;
-  background-color: #dbdbdb;
-  padding: 1em;
-  margin-left: 3%;
-  border-radius: 2em;
-  border-color: black;
-  cursor: pointer;
-  min-width: 100px;
-}
-.SettingsBtn{
-  background: linear-gradient(to top, #34696f, #2f5f63);
-  box-shadow: 0 8px 0 #1b383b;
-  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);
-}
-#QuickStartBtn{
-  background: linear-gradient(to top, #34696f, #2f5f63);
-  box-shadow: 0 8px 0 #1b383b;
-  text-shadow: 0 2px 2px rgba(255, 255, 255, 0.2);
-}
-#SectionInfo{
-  display: block;
-  font-size: 2.5em;
+.material-icons{
+  vertical-align:middle;
 }
 
 /* Prevent the text contents of draggable elements from being selectable. */
@@ -242,37 +170,23 @@
   .GeneralSettingsContainer{
     display: block;
   }
-  .SettingsControl{
-    line-height: 1em;
-    text-align: center;
-    border-style: solid;
-    background-color: #dbdbdb;
-    margin-left: 1%;
-    padding: 1em;
-    border-radius: 1em;
-    border-color: black;
+  .GeneralSettingsContainer button, div{
+    padding-bottom: 10px;
+  }
+  .GeneralSettingsContainer button{
+     margin-right: 10px;
   }
   .SectionInfoBox{
-    display: block;
-    height: 3em;
     font-size: 1em;
     font-weight: bold;
     margin: 0.5em;
     margin-bottom: 0em;
-    border-radius: 2em;
     border-style: solid;
     border-top-color: black;
-    overflow: hidden;
-  }
-  .SettingsControlTime > input{
-    font-weight: bold;
-    text-align: center;
-    width: 3em;
-    font-size: 0.8em;
   }
 }
 
-@media only screen and (max-width: 520px){
+@media only screen and (max-width: 600px){
   .App {
     height: 95%;
   }
@@ -287,46 +201,6 @@
     grid-template-rows: auto;
     height: 330px;
     overflow: auto;
-  }
-  .GeneralSettingsContainer{
-    display: block;
-    margin: 0.5em;
-    justify-content: center;
-    line-height: 2em;
-    padding: 1em;
-    font-weight: bold;
-    font-size: 0.8em;
-  }
-  .SettingsControl{
-    line-height: 1em;
-    text-align: center;
-    border-style: solid;
-    background-color: #dbdbdb;
-    margin-left: 1%;
-    padding: 1em;
-    border-radius: 1em;
-    border-color: black;
-  }
-  .SectionInfoBox{
-    display: block;
-    height: 3em;
-    font-size: 1em;
-    font-weight: bold;
-    margin: 0.5em;
-    margin-bottom: 0em;
-    border-radius: 2em;
-    border-style: solid;
-    border-top-color: black;
-    overflow: hidden;
-  }
-  .SettingsControlTime{
-    display: inline-block;
-  }
-  .SettingsControlTime > input{
-    font-weight: bold;
-    text-align: center;
-    width: 4em;
-    font-size: 1em;
   }
 }
 
@@ -352,9 +226,9 @@
     grid-template-columns: 1fr;
     height: 90%;
   }
-  .GeneralSettingsContainer{
+  /* .GeneralSettingsContainer{
     display: inline-block;
-  }
+  } */
   .SettingsControl{
     margin-top: 1em;
   }
