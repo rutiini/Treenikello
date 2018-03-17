@@ -4,6 +4,7 @@ import Clock from './Components/Clock';
 import SectionInputBox from './Components/SectionInputBox';
 import SectionInfo from './Components/SectionInfo';
 import UniqueId from 'react-html-id';
+import SectionListItem from './Components/SectionListItem';
 import store, {exercises} from './Store';
 // MUI stuff
 import TimeInput from 'material-ui-time-picker'
@@ -11,6 +12,7 @@ import Button from 'material-ui/Button';
 import Input from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
+import EditSectionForm from './Components/EditSectionForm';
 
 class App extends Component {
   
@@ -416,16 +418,16 @@ class App extends Component {
       <div className="GeneralSettingsContainer">
       <div>
       <i className="material-icons">access_time</i>
-      <TimeInput mode="24h" value={exercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
+      <TimeInput id="TimeInput" mode="24h" value={exercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
       </div>
       <div>
       <i className="material-icons">timelapse</i>
       <FormControl>
           <Select
             native
-            value={this.state.age}
+            value={exercises[selectedExerciseIndex].name}
             onChange={this.selectExercise}
-            input={<Input id="age-native-helper" />}>
+            input={<Input id="exercise-selector" />}>
             {this.exercisePresets}
           </Select>
       </FormControl>
@@ -439,10 +441,13 @@ class App extends Component {
       <Button variant="raised" onClick={this.deleteExercise}>
       Poista
       </Button>
+      <EditSectionForm exercise={exercises[selectedExerciseIndex]} edit={true}/>
       </div>
       <div className="ConfigBox" id="App-configbox">
       {this.currentSections}
-      <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div></div>
+      <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div>
+      </div>
+      <SectionListItem section={exercises[selectedExerciseIndex].defaultSections[0]}/>
       </div>
       </div>
       </div>

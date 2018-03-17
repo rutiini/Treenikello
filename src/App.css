@@ -11,11 +11,14 @@
 #SettingsContainer{
   height: 40%;
 }
+#TimeInput{
+  width: 50px;
+}
 .SectionItemBox{
   border: black;
   border-style: solid;
   border-width: 2px;
-  border-radius: 2em;
+  border-radius: 1em;
   min-height: 200px;
   min-width: 230px;
 }

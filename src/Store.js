@@ -26,13 +26,13 @@ class Store{
     const nonPresets = exercises.filter((x) => {return x.preset !== true;})
     localStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
-
+  
   // updates the locally stored exercises
   saveSessionExercises = (exercises) =>{
     const nonPresets = exercises.filter((x) => {return x.preset !== true;})
     sessionStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
-
+  
   // returns an array of the locally stored exercises
   getSessionExercises = () => {
     let customsJSON = sessionStorage.customExercises;
@@ -59,7 +59,7 @@ class Store{
     }
     
   }
- 
+  
   // not necessary, we only load and save in the store, state management is in the app (for now)
   // deleteexercise = () => {
   //   const newExercises = [...this.state.exercises];
@@ -71,7 +71,7 @@ class Store{
   //     })
   //     console.log(`deleting exercise ${newExercises[deleteIndex].name}`)
   //     console.log(`exercises left:`,newExercises.splice(deleteIndex,1))
-      
+  
   //     this.setState(
   //       {
   //         exercises: newExercises
@@ -79,7 +79,7 @@ class Store{
   //     )
   //   }
   // }
-   
+  
 }
 
 const store = new Store({});
@@ -180,10 +180,44 @@ export const exercises = [
 ]
 export const colorOptions = 
 [
+  {"colorName":"none","colorValue":"none"},
   {"colorName":"dark blue","colorValue":"#1b85b8"},
   {"colorName":"dark grey","colorValue":"#5a5255"},
   {"colorName":"dark green","colorValue":"#559e83"},
   {"colorName":"dark red","colorValue":"#ae5a41"},
   {"colorName":"olive green","colorValue":"#c3cb71"},
-  {"colorName":"none","colorValue":"none"}
+  {"colorName":"red","colorValue":"#ee4035"},
+  {"colorName":"orange","colorValue":"#f37736"},
+  {"colorName":"yellow","colorValue":"#fdf498"},
+  {"colorName":"green","colorValue":"#7bc043"},
+  {"colorName":"blue","colorValue":"#0392cf"},
 ]
+/*
+// original color palette
+[
+  {"colorName":"none","colorValue":"none"},
+  {"colorName":"dark blue","colorValue":"#1b85b8"},
+  {"colorName":"dark grey","colorValue":"#5a5255"},
+  {"colorName":"dark green","colorValue":"#559e83"},
+  {"colorName":"dark red","colorValue":"#ae5a41"},
+  {"colorName":"olive green","colorValue":"#c3cb71"},
+]
+// brighter color palette (rainbow dash)
+[
+  {"colorName":"none","colorValue":"none"},
+  {"colorName":"red","colorValue":"#ee4035"},
+  {"colorName":"orange","colorValue":"#f37736"},
+  {"colorName":"yellow","colorValue":"#fdf498"},
+  {"colorName":"green","colorValue":"#7bc043"},
+  {"colorName":"blue","colorValue":"#0392cf"},
+]
+// alternative pastel colors (beach)
+[
+  {"colorName":"none","colorValue":"none"},
+  {"colorName":"grass","colorValue":"#ffeead"},
+  {"colorName":"sand","colorValue":"#f37736"},
+  {"colorName":"salmon","colorValue":"#ff6f69"},
+  {"colorName":"pine","colorValue":"#ffcc5c"},
+  {"colorName":"algae","colorValue":"#88d8b0"},
+]
+*/
