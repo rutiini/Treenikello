@@ -7,12 +7,7 @@ import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   card: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
+    minWidth: '100%'
   },
   title: {
     marginBottom: 16,
@@ -23,34 +18,42 @@ const styles = theme => ({
     marginBottom: 12,
     color: theme.palette.text.secondary,
   },
+  button: {
+    marginRight: 10,
+  },
+  moveButton: {
+    cursor: 'pointer'
+  }
 });
 
+// open edit dialog from button
+
 function SectionListItem(props) {
-  const { classes } = props;
+  const { classes,section, moveUp, moveDown, remove, update } = props;
   // const bull = <span className={classes.bullet}>•</span>;
   
-  const {section} = props;
-
   return (
-    <div>
       <Card className={classes.card}>
-      <i class="material-icons">arrow_upward</i>
+      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveUp(section) } >arrow_upward</i>
         <CardContent>
           <Typography variant="headline" component="h2">
           {section.name}
           </Typography>
-          {/* <Typography className={classes.title}>{section.description}</Typography> */}
           <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
           <Typography component="p">
           {section.description}
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+        <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}}>
+          <i className="material-icons">color_lens</i>
+        </Button>
+        <Button variant="fab" mini style={{backgroundColor: section.color}}>
+          <i className="material-icons">settings</i>
+        </Button>
         </CardActions>
-        <i class="material-icons">arrow_downward</i>
+        <i className={`material-icons ${classes.moveButton}`} onClick={() => moveDown(section) }>arrow_downward</i>
       </Card>
-    </div>
   );
 }
 

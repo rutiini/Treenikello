@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
 import Clock from './Components/Clock';
-import SectionInputBox from './Components/SectionInputBox';
-import SectionInfo from './Components/SectionInfo';
 import UniqueId from 'react-html-id';
 import SectionListItem from './Components/SectionListItem';
 import store, {exercises} from './Store';
+import BottomNavTabs from './Components/BottomNavTabs';
 // MUI stuff
-import TimeInput from 'material-ui-time-picker'
-import Button from 'material-ui/Button';
-import Input from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import Select from 'material-ui/Select';
-import EditSectionForm from './Components/EditSectionForm';
+// deprecated
+// import SectionInputBox from './Components/SectionInputBox';
+// import SectionInfo from './Components/SectionInfo';
+// import BottomNavigation from './Components/BottomNavigation';
+// import TimeInput from 'material-ui-time-picker'
+// import Button from 'material-ui/Button';
+// import Input from 'material-ui/Input';
+// import { FormControl } from 'material-ui/Form';
+// import Select from 'material-ui/Select';
+// import EditSectionForm from './Components/EditSectionForm';
 
 class App extends Component {
   
@@ -32,12 +35,15 @@ class App extends Component {
   
   /* Section manipulation */
   
-  setActiveSection(sectionItem){
+  setActiveSection = (sectionIndex) => {
     // TODO: should be coordinates for the section instead of separate object
-    if(sectionItem != null){
+    if(sectionIndex < 0){
+      console.log("no active section");  
+    }else{
+      console.log("active section: " + sectionIndex);
       this.setState({
-        activeSection: sectionItem
-      });
+        activeSectionIndex: sectionIndex
+      })
     }
     
   }
@@ -136,7 +142,7 @@ class App extends Component {
   }
   
   
-  moveSectionUp(section){
+  moveSectionUp = (section) => {
     const {exercises,selectedExerciseIndex} = this.state;
     
     const exercise = exercises[selectedExerciseIndex];
@@ -159,7 +165,7 @@ class App extends Component {
     }
   }
   
-  moveSectionDown(section){
+  moveSectionDown = (section) => {
     const {exercises,selectedExerciseIndex} = this.state;
     
     const exercise = exercises[selectedExerciseIndex];
@@ -241,11 +247,34 @@ class App extends Component {
     })
   }
   
-  selectExercise = (e) =>{
+  // selectExercise = (e) =>{
+  //   const {exercises} = this.state;
+    
+  //   console.log("select value: ", e.target)
+  //   // combobox selection should update state with new exercise
+  //   const arrayIndex = this.getExerciseIndex(exercises,e.target.value)
+  //   if(arrayIndex > -1){
+      
+  //     console.log("selected ", exercises[arrayIndex]);
+      
+  //     this.setState(
+  //       {
+  //         selectedExerciseIndex: arrayIndex
+  //       }
+  //     )
+  //   }
+  //   // else{
+  //   //   console.log("add new exercise requested.")
+  //   //   this.newExercise();
+  //   // }
+  // }
+
+  selectExercise = (name) =>{
     const {exercises} = this.state;
     
+    console.log("select value: ", name)
     // combobox selection should update state with new exercise
-    const arrayIndex = this.getExerciseIndex(exercises,e.target.value)
+    const arrayIndex = this.getExerciseIndex(exercises,name)
     if(arrayIndex > -1){
       
       console.log("selected ", exercises[arrayIndex]);
@@ -255,9 +284,6 @@ class App extends Component {
           selectedExerciseIndex: arrayIndex
         }
       )
-    }else{
-      console.log("add new exercise requested.")
-      this.newExercise();
     }
   }
   
@@ -345,8 +371,10 @@ class App extends Component {
     
     this.currentSections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem,index) => {
       let inputBoxKey = sectionItem.key;
-      // console.log("input key:" + inputBoxKey + " name " + sectionItem.name)
-      return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
+      // MUI style elments
+      return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
+      // original tyle
+      // return <SectionInputBox key={inputBoxKey} id={inputBoxKey} name={sectionItem.name} section={sectionItem} remove={this.deleteSection.bind(this)} update={this.updateSection.bind(this)} moveUp={this.moveSectionUp.bind(this)} moveDown={this.moveSectionDown.bind(this)}/>
       
     })
   }
@@ -408,48 +436,29 @@ class App extends Component {
     this.updateExercisePresets();
     this.updateSectionInputBoxes();
     // deconstruct state for simpler syntax
-    const {exercises,selectedExerciseIndex,activeSection} = this.state;
+    const {exercises,selectedExerciseIndex,activeSectionIndex} = this.state;
     
     return (
       <div className="App">
-      <SectionInfo activeSection={activeSection}/>
-      <Clock id="clock" sectionItems={exercises[selectedExerciseIndex].defaultSections} startTime={exercises[selectedExerciseIndex].startTime} canvasSide="100" activeSection={activeSection} setActive={this.setActiveSection.bind(this)}/>
+      <Clock 
+      id="clock" 
+      sectionItems={exercises[selectedExerciseIndex].defaultSections} 
+      startTime={exercises[selectedExerciseIndex].startTime} 
+      canvasSide="100" 
+      activeSection={activeSectionIndex} 
+      setActive={this.setActiveSection}/>
       <div id="SettingsContainer">
-      <div className="GeneralSettingsContainer">
-      <div>
-      <i className="material-icons">access_time</i>
-      <TimeInput id="TimeInput" mode="24h" value={exercises[this.state.selectedExerciseIndex].startTime} onChange={this.timeChanged}/>
       </div>
-      <div>
-      <i className="material-icons">timelapse</i>
-      <FormControl>
-          <Select
-            native
-            value={exercises[selectedExerciseIndex].name}
-            onChange={this.selectExercise}
-            input={<Input id="exercise-selector" />}>
-            {this.exercisePresets}
-          </Select>
-      </FormControl>
-      </div>
-      <Button variant="raised" onClick={this.applyCurrentTime}>
-      Aloita nyt
-      </Button>
-      <Button variant="raised" onClick={this.saveExercises}>
-      Tallenna
-      </Button>
-      <Button variant="raised" onClick={this.deleteExercise}>
-      Poista
-      </Button>
-      <EditSectionForm exercise={exercises[selectedExerciseIndex]} edit={true}/>
-      </div>
-      <div className="ConfigBox" id="App-configbox">
-      {this.currentSections}
-      <div className="NewSection" id="AddSection" onClick={this.addSection.bind(this)}><div className="NewSectionContent">new</div>
-      </div>
-      <SectionListItem section={exercises[selectedExerciseIndex].defaultSections[0]}/>
-      </div>
-      </div>
+      <BottomNavTabs 
+      exercises={exercises} 
+      selectedExerciseIndex={selectedExerciseIndex} 
+      moveUp={this.moveSectionUp} 
+      moveDown={this.moveSectionDown} 
+      updateSection={this.updateSection} 
+      removeSection={this.removeSection}
+      setTime={this.timeChanged}
+      selectExercise={this.selectExercise}
+      activeSectionIndex={activeSectionIndex}/>
       </div>
     );
   }

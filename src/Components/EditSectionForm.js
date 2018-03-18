@@ -26,6 +26,10 @@ export default class EditSectionDialog extends Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  handleChange = (e) => {
+    console.log(`color set ${e.target.value}`);
+  }
   
   componentWillMount(){
     this.colorOptions = colorOptions.map(optionItem => {
@@ -77,7 +81,7 @@ export default class EditSectionDialog extends Component {
       <InputLabel htmlFor="item-color">Väri</InputLabel>
       <Select
       value=""
-      onChange="{this.handleChange}"
+      onChange={this.handleChange}
       inputProps={{
         name: 'color',
         id: 'item-color',
