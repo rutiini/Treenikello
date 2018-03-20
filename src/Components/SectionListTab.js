@@ -6,10 +6,14 @@ import SectionListItem from './SectionListItem';
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    // width: '100%',
     height: 300,
     backgroundColor: theme.palette.background.paper,
     justify: 'center'
+  },
+  nav:{
+    // height: 'inherit',
+    // overflowY: 'auto'
   },
   listItem: {
     width: '100%',
@@ -44,7 +48,7 @@ function SectionListTab(props) {
   
   return (
     <div className={classes.root}>
-    <List component="nav">
+    <List component="nav" className={classes.nav}>
     {sections}
     </List>
     </div>

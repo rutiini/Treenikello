@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -8,7 +8,7 @@ import Button from 'material-ui/Button';
 import EditSectionForm from './EditSectionForm';
 import TimeInput from 'material-ui-time-picker'
 
-const styles = {
+const styles = theme => ({
   root: {
     flexGrow: 1,
     alignContent: "center",
@@ -27,34 +27,45 @@ const styles = {
   button: {
     marginRight: 10,
   }
-};
+});
 
-function ActionsMenuBar(props) {
-  const { classes, exercises, selectedExerciseIndex, setTime } = props;
-  // const menuIcon = <i className="material-icons">menu</i>;
-  
-  return (
-    <div className={classes.root}>
-    <AppBar position="static">
-    <Toolbar>
-  <div>
-  <i className="material-icons">access_time</i>
-  <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}/>
-  <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">update</i></Button>
-  </div>
-  <Typography variant="title" color="inherit" className={classes.flex}>
-  {props.title}
-  </Typography>
-  {/* <Button variant="fab" mini color="inherit"><i className="material-icons">delete</i></Button> */}
-  <EditSectionForm exercise={exercises[selectedExerciseIndex]} edit={true}/>
-  </Toolbar>
-  </AppBar>
-  </div>
-);
-}
+export default withStyles(styles) (class ActionsMenuBar extends Component{
+  state = {
+    open: false
+  }
 
-ActionsMenuBar.propTypes = {
+  handleToggle = () => {
+    this.setState({
+      open: !this.state.open
+    })
+  }
+
+
+  render(){
+    const { classes, exercises, selectedExerciseIndex, setTime, title } = this.props;
+    const { open } = this.state;
+
+    return (
+      <div className={classes.root}>
+      <AppBar position="static">
+      <Toolbar>
+    <div>
+    <i className="material-icons">access_time</i>
+    <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}/>
+    <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">update</i></Button>
+    </div>
+    <Typography variant="title" color="inherit" className={classes.flex}>
+    {title}
+    </Typography>
+    <Button variant="fab" mini color="secondary" aria-label="add" onClick={this.handleToggle}><i className="material-icons">add</i></Button>
+    <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={open} section={exercises[selectedExerciseIndex].defaultSections[0]} handleToggle={this.handleToggle}/>
+    </Toolbar>
+    </AppBar>
+    </div>
+  );
+  }
+});
+
+this.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-export default withStyles(styles)(ActionsMenuBar);

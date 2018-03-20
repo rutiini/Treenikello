@@ -3,7 +3,7 @@
   height: 100%;
 }
 .Clock{
-  height: 60%;
+  max-height: 60%;
 }
 #clock{
   max-height: 1000px;
@@ -157,9 +157,9 @@
   .App {
     height: 95%;
   }
-  .Clock{
+  /* .Clock{
     height: 60%;
-  }
+  } */
   #SettingsContainer{
     height: 40%;
   }
@@ -199,9 +199,9 @@
   .App {
     height: 95%;
   }
-  .Clock{
+  /* .Clock{
     height: 60%;
-  }
+  } */
   #SettingsContainer{
     height: 40%;
   }
@@ -222,11 +222,11 @@
 {
   .Clock{
     float:left;
-    width: 60%;
+    /* width: 60%; */
     height: 100%;
   }
   #clock{
-    max-width: 1000px;
+    max-width: 60%;
   }
   #SettingsContainer{
     height: 80%;

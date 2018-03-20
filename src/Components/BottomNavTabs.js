@@ -28,6 +28,9 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     width: "100%",
   },
+  buttonRight: {
+    flex: 1
+  }
 });
 
 class BottomNavTabs extends Component {

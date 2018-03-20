@@ -11,24 +11,45 @@ import { MenuItem } from 'material-ui/Menu';
 import { FormControl } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import { InputLabel } from 'material-ui/Input';
+import { withStyles} from 'material-ui/styles';
 // store
 import { colorOptions } from '../Store';
 
-export default class EditSectionDialog extends Component {
+const styles = theme => ({
+  EditSectionForm: {
+    width: '75%'
+  }
+})
+
+export default withStyles(styles) (class EditSectionDialog extends Component {
   state = {
     open: false,
-  };
-  
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
-  
-  handleClose = () => {
-    this.setState({ open: false });
+    section: {
+      name: '',
+      description: '',
+      duration: 0,
+      color: ''
+    }
   };
 
-  handleChange = (e) => {
-    console.log(`color set ${e.target.value}`);
+  handleClose = () => {
+    this.props.handleToggle();
+  };
+
+  // magical generic prop handling:
+  handleChange = name  => ({target: { value }}) => {
+    console.log(`${[name]} set ${value}`);
+    // magic part 2:
+    
+    this.setState({
+      section:{
+        ...this.state.section,
+        [name]: value
+      }
+    },
+    // how come state is not mutated here
+    console.log(this.state.section))
+    
   }
   
   componentWillMount(){
@@ -39,23 +60,42 @@ export default class EditSectionDialog extends Component {
       return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
     })
   }
+  // set initial state
+  componentWillReceiveProps(nextProps){
+    if(nextProps.section){
+      this.setState({
+        section: nextProps.section
+      })
+    }else{
+      this.setState({
+        section: {
+          name: '',
+          description: '',
+          duration: 5,
+          color: ''
+        }
+      }
+      )
+    }
+  }
 
   render() {
-    const { exercise, edit } = this.props;
-    const title = !edit ? `Uusi osio` : `Muokkaa osiota`
-    const description = !edit ? `Lisää uusi osio harjoitukseen ${exercise.name}` : `Muokkaa osiota`
+    const { exercise, classes, open, section } = this.props;
+    
+    const title = !section ? `Uusi osio` : `Muokkaa osiota`
+    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercise.name}` : `Muokkaa osiota`
+
     return (
-      <div>
-      <Button variant="fab" mini color="secondary" aria-label="add" onClick={this.handleClickOpen}><i className="material-icons">add</i></Button>
       <Dialog
-      open={this.state.open}
+      open={open}
       onClose={this.handleClose}
       aria-labelledby="form-dialog-title"
+      // className={classes.EditSectionForm}
       >
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>
       <DialogContentText>
-      {description}
+      {dialogDescription}
       </DialogContentText>
       <TextField
       autoFocus
@@ -63,25 +103,27 @@ export default class EditSectionDialog extends Component {
       id="name"
       label="Nimi"
       type="text"
+      value={this.state.section.name}
+      onChange={this.handleChange('name')}
       fullWidth
       />
       <br/>
       <TextField
-      // autoFocus
       margin="dense"
       id="description"
       label="Sisältö"
       type="text"
       multiline
       rows="3"
+      value={this.state.section.description}
+      onChange={this.handleChange('description')}
       fullWidth
       />
-
-      <FormControl className="{classes.formControl}">
+      <FormControl className={classes.EditSectionDialog}>
       <InputLabel htmlFor="item-color">Väri</InputLabel>
       <Select
-      value=""
-      onChange={this.handleChange}
+      value={this.state.section.color}
+      onChange={this.handleChange('color')}
       inputProps={{
         name: 'color',
         id: 'item-color',
@@ -97,18 +139,20 @@ export default class EditSectionDialog extends Component {
       <TextField margin="dense"
       id="duration"
       label="Kesto"
-      type="number"/>
+      type="number"
+      value={this.state.section.duration}
+      onChange={this.handleChange('duration')}
+      />
       </DialogContent>
       <DialogActions>
       <Button onClick={this.handleClose} color="primary">
-      Cancel
+      Peruuta
       </Button>
       <Button onClick={this.handleClose} color="primary">
-      Add
+      Lisää
       </Button>
       </DialogActions>
       </Dialog>
-      </div>
     );
   }
-}
+})
