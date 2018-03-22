@@ -172,7 +172,7 @@ class Clock extends Component {
     }
     
     getActiveSectionIndex = (sections) => {
-
+        
         const {startTime} = this.props;
         const d = new Date();
         const currentPosition = d.getMinutes()*6 + d.getHours()*360; // "absolute minute position"
@@ -181,7 +181,7 @@ class Clock extends Component {
         let index = -1;
         
         if(currentPosition >= startPosition){
-
+            
             for(let i= 0; i< sections.length; i++){
                 const sectionAngle = sections[i].duration*6;
                 if(angle <= currentPosition && currentPosition <= angle + sectionAngle){
@@ -190,7 +190,12 @@ class Clock extends Component {
                 }
                 angle = angle + sectionAngle;
             }
+            // exercise is complpeted.. NOT WORKING
+            if(currentPosition > angle + sections[sections.length -1].duration*6){
+                index++;
+            }
         }
+        // if the angle moves from last section to the exercise set index to "over"
         
         return index;
     }
@@ -306,14 +311,13 @@ class Clock extends Component {
         // udpate active section to parent?
         componentDidUpdate(){
             const index = this.getActiveSectionIndex(this.props.sectionItems)
-            // if(this.state.ActiveSectionIndex){
-                if(this.state.ActiveSectionIndex !== index){
-                    this.setState({
-                        ActiveSectionIndex: index
-                    })
-                    this.props.setActive(index);
-                }
-            // }
+
+            if(this.state.ActiveSectionIndex !== index){
+                this.setState({
+                    ActiveSectionIndex: index
+                })
+                this.props.setActive(index);
+            }
         }
         
         componentDidMount(){

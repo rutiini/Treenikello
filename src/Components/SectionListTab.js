@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem } from 'material-ui/List';
+import Button from 'material-ui/Button';
 import SectionListItem from './SectionListItem';
 
 const styles = theme => ({
@@ -25,7 +26,13 @@ const styles = theme => ({
 });
 
 function SectionListTab(props) {
-  const { classes, exercise, moveUp, moveDown, remove, update } = props;
+  const { classes, 
+          exercise, 
+          moveUp, 
+          moveDown, 
+          deleteSection, 
+          update,
+          handleSectionEditToggle } = props;
   // const draftsIcon = <i className="material-icons">drafts</i>
   // const inboxIcon = <i className="material-icons">inbox</i>
   
@@ -40,16 +47,21 @@ function SectionListTab(props) {
         moveUp={moveUp} 
         moveDown={moveDown} 
         update={update} 
-        remove={remove}
+        deleteSection={deleteSection}
+        handleSectionEditToggle={handleSectionEditToggle}
         />
         </ListItem>
       )
     })
-  
+    
   return (
     <div className={classes.root}>
     <List component="nav" className={classes.nav}>
     {sections}
+    <ListItem className={classes.listItem} key="add-section-button">
+    <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={handleSectionEditToggle}><i className="material-icons">add</i></Button>
+    </ListItem>
+    
     </List>
     </div>
   );

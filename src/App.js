@@ -5,6 +5,7 @@ import UniqueId from 'react-html-id';
 import SectionListItem from './Components/SectionListItem';
 import store, {exercises} from './Store';
 import BottomNavTabs from './Components/BottomNavTabs';
+import EditSectionForm from './Components/EditSectionForm';
 // MUI stuff
 // deprecated
 // import SectionInputBox from './Components/SectionInputBox';
@@ -29,7 +30,9 @@ class App extends Component {
     // to componentwillmount
     this.state = {
       exercises: exercises,
-      selectedExerciseIndex: 0
+      selectedExerciseIndex: 0,
+      editSectionOpen: false,
+      selectedSectionIndex: 0
     }
   }
   
@@ -82,6 +85,10 @@ class App extends Component {
         },
         store.saveSessionExercises(newExercises)
       )
+    }else{
+      // add newSection to the current ex
+      console.log(`adding new section ${newSection.name}`)
+      this.addSection(newSection);
     }
   }
   
@@ -93,7 +100,8 @@ class App extends Component {
     return rekeyedArr;
   }
   
-  addSection(){
+  // TODO: refactor all of these to store?
+  addSection(section){
     const {exercises,selectedExerciseIndex} = this.state;
     
     const prevSelectedexercise = exercises[selectedExerciseIndex];
@@ -102,11 +110,11 @@ class App extends Component {
       console.log("template modified, create a new exercise based on the selected one!");
     }
     
-    let section = this.createSection('Uusi osio','lisää sisältö',5,"lightblue",prevSelectedexercise.name + 
+    let newSection = this.createSection(section.name,section.description,section.duration,section.color,prevSelectedexercise.name + 
     this.nextUniqueId())
     
     // rekey sections
-    const newSections = this.reassignKeys([...prevSelectedexercise.defaultSections,section],prevSelectedexercise.name)
+    const newSections = this.reassignKeys([...prevSelectedexercise.defaultSections,newSection],prevSelectedexercise.name)
     // console.log("adding: ", section);
     
     const newExercises = [...exercises]
@@ -393,6 +401,21 @@ class App extends Component {
     })
     this.exercisePresets.push(<option key="addNewexercise">+ new exercise</option>)
   }
+
+  handleSectionEditToggle = (section) => {
+    
+    const {editSectionOpen,exercises,selectedExerciseIndex,activeSectionIndex} = this.state;
+    
+    // open for edit
+    if(!editSectionOpen){
+      const i = exercises[selectedExerciseIndex].defaultSections.indexOf(section);
+      this.setState({selectedSectionIndex: i})
+    }
+
+    this.setState({
+      editSectionOpen: !this.state.editSectionOpen
+    })
+  } 
   
   /* Lifecycle hools */
   
@@ -436,7 +459,7 @@ class App extends Component {
     this.updateExercisePresets();
     this.updateSectionInputBoxes();
     // deconstruct state for simpler syntax
-    const {exercises,selectedExerciseIndex,activeSectionIndex} = this.state;
+    const {exercises,selectedExerciseIndex,activeSectionIndex, editSectionOpen, selectedSectionIndex} = this.state;
     
     return (
       <div className="App">
@@ -455,10 +478,15 @@ class App extends Component {
       moveUp={this.moveSectionUp} 
       moveDown={this.moveSectionDown} 
       updateSection={this.updateSection} 
-      removeSection={this.removeSection}
+      deleteSection={this.deleteSection.bind(this)}
       setTime={this.timeChanged}
       selectExercise={this.selectExercise}
-      activeSectionIndex={activeSectionIndex}/>
+      activeSectionIndex={activeSectionIndex}
+      editSectionOpen={editSectionOpen}
+      handleSectionEditToggle={this.handleSectionEditToggle}
+      handleSubmit={this.updateSection.bind(this)}/>
+      {/* host the forms on the app level to have them and the state available? */}
+      <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)}/>
       </div>
     );
   }

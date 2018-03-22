@@ -8,6 +8,8 @@ import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   root: {
+    height: 300,
+    overflow: 'auto',
     width: '90%',
     justify: 'center',
     backgroundColor: theme.palette.background.list,
@@ -81,9 +83,10 @@ class WorkoutMonitorTab extends Component {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-        <Typography>All steps completed - you&quot;re finished</Typography>
+        <Typography>Treeni suoritettu!</Typography>
         <Button onClick={this.handleReset} className={classes.button}>
-        Reset
+        {/* aseta aika tähän hetkeen? */}
+        Aloita alusta
         </Button>
         </Paper>
       )}

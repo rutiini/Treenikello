@@ -42,7 +42,7 @@ export default withStyles(styles) (class ActionsMenuBar extends Component{
 
 
   render(){
-    const { classes, exercises, selectedExerciseIndex, setTime, title } = this.props;
+    const { classes, exercises, selectedExerciseIndex, setTime, title, handleSubmit } = this.props;
     const { open } = this.state;
 
     return (
@@ -52,13 +52,12 @@ export default withStyles(styles) (class ActionsMenuBar extends Component{
     <div>
     <i className="material-icons">access_time</i>
     <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}/>
-    <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">update</i></Button>
     </div>
     <Typography variant="title" color="inherit" className={classes.flex}>
     {title}
     </Typography>
-    <Button variant="fab" mini color="secondary" aria-label="add" onClick={this.handleToggle}><i className="material-icons">add</i></Button>
-    <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={open} section={exercises[selectedExerciseIndex].defaultSections[0]} handleToggle={this.handleToggle}/>
+    <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">update</i></Button>
+    <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={open} handleToggle={this.handleToggle} handleSubmit={handleSubmit}/>
     </Toolbar>
     </AppBar>
     </div>

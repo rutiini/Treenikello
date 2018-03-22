@@ -26,39 +26,51 @@ const styles = theme => ({
   }
 });
 
-// open edit dialog from button
 
 function SectionListItem(props) {
-  const { classes,section, moveUp, moveDown, remove, update } = props;
-  // const bull = <span className={classes.bullet}>•</span>;
-  
-  return (
+  const { classes,
+    section, 
+    moveUp, 
+    moveDown, 
+    deleteSection, 
+    update,
+    handleSectionEditToggle } = props;
+    
+    // open edit dialog from button
+    const openEdit = () => {
+      handleSectionEditToggle(section);
+    }
+    const deleteSelf = () => {
+      deleteSection(section)
+    }
+    
+    return (
       <Card className={classes.card}>
       <i className={`material-icons ${classes.moveButton}`} onClick={() => moveUp(section) } >arrow_upward</i>
-        <CardContent>
-          <Typography variant="headline" component="h2">
-          {section.name}
-          </Typography>
-          <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
-          <Typography component="p">
-          {section.description}
-          </Typography>
-        </CardContent>
-        <CardActions>
-        <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}}>
-          <i className="material-icons">color_lens</i>
-        </Button>
-        <Button variant="fab" mini style={{backgroundColor: section.color}}>
-          <i className="material-icons">settings</i>
-        </Button>
-        </CardActions>
-        <i className={`material-icons ${classes.moveButton}`} onClick={() => moveDown(section) }>arrow_downward</i>
+      <CardContent>
+      <Typography variant="headline" component="h2">
+      {section.name}
+      </Typography>
+      <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
+      <Typography component="p">
+      {section.description}
+      </Typography>
+      </CardContent>
+      <CardActions>
+      <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}} onClick={deleteSelf}>
+      <i className="material-icons">delete</i>
+      </Button>
+      <Button variant="fab" mini style={{backgroundColor: section.color}} onClick={openEdit}>
+      <i className="material-icons">settings</i>
+      </Button>
+      </CardActions>
+      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveDown(section) }>arrow_downward</i>
       </Card>
-  );
-}
-
-SectionListItem.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SectionListItem);
+    );
+  }
+  
+  SectionListItem.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+  
+  export default withStyles(styles)(SectionListItem);

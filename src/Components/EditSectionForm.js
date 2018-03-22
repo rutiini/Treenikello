@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Button from 'material-ui/Button';
+import {Form} from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Dialog, {
   DialogActions,
@@ -36,9 +37,13 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
     this.props.handleToggle();
   };
 
+  handleSubmit = () => {
+    this.props.handleSubmit(this.props.section,this.state.section);
+    this.props.handleToggle();
+  }
   // magical generic prop handling:
   handleChange = name  => ({target: { value }}) => {
-    console.log(`${[name]} set ${value}`);
+    // console.log(`${[name]} set ${value}`);
     // magic part 2:
     
     this.setState({
@@ -46,9 +51,7 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
         ...this.state.section,
         [name]: value
       }
-    },
-    // how come state is not mutated here
-    console.log(this.state.section))
+    })
     
   }
   
@@ -82,8 +85,9 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
   render() {
     const { exercise, classes, open, section } = this.props;
     
-    const title = !section ? `Uusi osio` : `Muokkaa osiota`
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercise.name}` : `Muokkaa osiota`
+    const title = !section ? `Uusi osio` : `Muokkaa osiota`;
+    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercise.name}` : `Muokkaa osiota`;
+    const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
 
     return (
       <Dialog
@@ -97,6 +101,7 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
       <DialogContentText>
       {dialogDescription}
       </DialogContentText>
+      {/* <Form> */}
       <TextField
       autoFocus
       margin="dense"
@@ -143,13 +148,14 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
       value={this.state.section.duration}
       onChange={this.handleChange('duration')}
       />
+      {/* </Form> */}
       </DialogContent>
       <DialogActions>
       <Button onClick={this.handleClose} color="primary">
       Peruuta
       </Button>
-      <Button onClick={this.handleClose} color="primary">
-      Lisää
+      <Button onClick={this.handleSubmit} color="primary">
+      {acceptBtnText}
       </Button>
       </DialogActions>
       </Dialog>

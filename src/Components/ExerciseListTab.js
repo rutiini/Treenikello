@@ -22,14 +22,19 @@ function ExerciseListTab(props) {
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
   
+  // const clicked = ()  => ({target: { value }}) => {
+  const clicked = exercise => () => {
+    selectExercise(exercise.name)
+  }
+
   const exerciseItems = exercises.map((exercise,index) => {
     let duration = 0;
     exercise.defaultSections.forEach(element => {
       duration = duration + Number.parseInt(element.duration);
     });
-    const exerciseKey = exercise.name;
+  const exerciseKey = exercise.name;
     return (
-      <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={selectExercise} button>
+      <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={clicked(exercise)} button>
       <ListItemIcon>
       {placeHolderIcon}
       </ListItemIcon>
