@@ -30,6 +30,9 @@ const styles = theme => ({
   },
   buttonRight: {
     flex: 1
+  },
+  tabContent:{
+    alignContent: 'center'
   }
 });
 
@@ -80,7 +83,7 @@ class BottomNavTabs extends Component {
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
           >
-          <TabContainer dir={theme.direction}><WorkoutMonitorTab exercise={exercises[selectedExerciseIndex]} activeSectionIndex={activeSectionIndex}/></TabContainer>
+          <TabContainer dir={theme.direction}><WorkoutMonitorTab exercise={exercises[selectedExerciseIndex]} activeSectionIndex={activeSectionIndex} className={classes.tabContent}/></TabContainer>
           <TabContainer dir={theme.direction}><SectionListTab 
           exercise={exercises[selectedExerciseIndex]} 
           moveUp={moveUp} 

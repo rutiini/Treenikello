@@ -10,8 +10,8 @@ const styles = theme => ({
   root: {
     height: 300,
     overflow: 'auto',
-    width: '90%',
-    justify: 'center',
+    // width: '100%',
+    // justify: 'center',
     backgroundColor: theme.palette.background.list,
   },
   button: {

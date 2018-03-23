@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction } from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 
 const styles = theme => ({
   root: {
@@ -13,6 +14,7 @@ const styles = theme => ({
   listItem: {
     width: '100%',
     textAlign: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -55,6 +57,11 @@ function ExerciseListTab(props) {
     // <div className={classes.root}>
     <List component="nav">
     {exerciseItems}
+    <ListItem className={classes.listItem} key='add-exercise-btn'>
+    <Button variant="fab" mini color="secondary" aria-label="add">
+    <i className="material-icons">add</i>
+    </Button>
+    </ListItem>
     </List>
     // </div>
   );
