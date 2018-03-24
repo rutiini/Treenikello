@@ -7,8 +7,7 @@ import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   card: {
-    minWidth: '100%',
-    height: 175
+    minWidth: '100%'
   },
   title: {
     marginBottom: 16,
@@ -29,7 +28,9 @@ const styles = theme => ({
   },
   buttonContainer:{
     height: '100%',
-    width: '20%'
+    width: '20%',
+    verticalAlign: 'middle',
+    justifyContent: 'center'
   },
   pos: {
     marginTop: 12,
@@ -37,14 +38,10 @@ const styles = theme => ({
     color: theme.palette.text.secondary,
   },
   button: {
-    marginRight: 10,
+    margin: 5,
   },
   moveButton: {
     cursor: 'pointer'
-  },
-  cover: {
-    width: 151,
-    height: 151,
   },
   description:{
     display: 'block',
@@ -52,6 +49,9 @@ const styles = theme => ({
     // whiteSpace: 'nowrap',
     // textOverflow: 'ellipsis',
     height: 60
+  },
+  cellContainer: {
+    textAlign: 'center'
   }
 });
 
@@ -62,7 +62,6 @@ function SectionListItem(props) {
     moveUp,
     moveDown,
     deleteSection,
-    update,
     handleSectionEditToggle } = props;
 
     // open edit dialog from button
@@ -92,14 +91,24 @@ function SectionListItem(props) {
       </Typography>
       </div>
       {/* buttons part */}
-      <div className="buttonContainer">
+      <div className={classes.buttonContainer}>
       <CardActions>
+      <table className={classes.cellContainer}>
+        <tr>
+          <td>
       <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}} onClick={deleteSelf}>
       <i className="material-icons">delete</i>
       </Button>
+      </td>
+      </tr>
+      <tr>
+        <td>
       <Button variant="fab" mini style={{backgroundColor: section.color}} onClick={openEdit}>
       <i className="material-icons">settings</i>
       </Button>
+      </td>
+      </tr>
+      </table>
       </CardActions>
       </div>
       </CardContent>

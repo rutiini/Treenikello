@@ -26,7 +26,6 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: "100%",
   },
   buttonRight: {
     flex: 1
@@ -56,8 +55,7 @@ class BottomNavTabs extends Component {
       exercises, 
       selectedExerciseIndex, 
       moveUp, 
-      moveDown, 
-      updateSection, 
+      moveDown,
       deleteSection,
       setTime,
       selectExercise,
@@ -87,8 +85,7 @@ class BottomNavTabs extends Component {
           <TabContainer dir={theme.direction}><SectionListTab 
           exercise={exercises[selectedExerciseIndex]} 
           moveUp={moveUp} 
-          moveDown={moveDown} 
-          update={updateSection} 
+          moveDown={moveDown}
           deleteSection={deleteSection}
           handleSectionEditToggle={handleSectionEditToggle}
           /></TabContainer>

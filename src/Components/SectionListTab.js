@@ -7,22 +7,11 @@ import SectionListItem from './SectionListItem';
 
 const styles = theme => ({
   root: {
-    // width: '100%',
     height: 300,
     backgroundColor: theme.palette.background.paper,
-    // justify: 'center'
-  },
-  nav:{
-    // height: 'inherit',
-    // overflowY: 'auto'
   },
   listItem: {
-    width: '100%',
     textAlign: 'center',
-    justifyContent: 'center'
-  },
-  listCard: {
-    width: '100%'
   }
 });
 

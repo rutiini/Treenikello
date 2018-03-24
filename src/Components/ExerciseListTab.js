@@ -8,7 +8,6 @@ import Button from 'material-ui/Button';
 const styles = theme => ({
   root: {
     width: '100%',
-    height: 300,
     backgroundColor: theme.palette.background.paper,
   },
   listItem: {
@@ -32,19 +31,31 @@ function ExerciseListTab(props) {
   const exerciseItems = exercises.map((exercise,index) => {
     let duration = 0;
     exercise.defaultSections.forEach(element => {
-      duration = duration + Number.parseInt(element.duration);
+      duration = duration + Number.parseInt(element.duration,10);
     });
+    // delete button only for non-presets
+    let deleteBtn;
+    if(exercise.preset){
+      deleteBtn = 
+      <IconButton disabled>
+        {deleteIcon}
+      </IconButton>
+    }else{
+      deleteBtn = 
+      <IconButton>
+        {deleteIcon}
+      </IconButton>
+    } 
+
   const exerciseKey = exercise.name;
     return (
       <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={clicked(exercise)} button>
-      <ListItemIcon>
+      <ListItemIcon className={classes.listItemIcon}>
       {placeHolderIcon}
       </ListItemIcon>
       <ListItemText primary={exercise.name} secondary={`kesto: ${duration} min`}/>
       <ListItemSecondaryAction>
-      <IconButton>
-      {deleteIcon}
-      </IconButton>
+      {deleteBtn}
       <IconButton>
       {editIcon}
       </IconButton>

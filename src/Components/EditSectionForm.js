@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Button from 'material-ui/Button';
-import {Form} from 'material-ui/Form';
+// import {Form} from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 import Dialog, {
   DialogActions,
@@ -77,8 +77,7 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
           duration: 5,
           color: ''
         }
-      }
-      )
+      })
     }
   }
 
@@ -119,7 +118,7 @@ export default withStyles(styles) (class EditSectionDialog extends Component {
       label="Sisältö"
       type="text"
       multiline
-      rows="3"
+      rows="2"
       value={this.state.section.description}
       onChange={this.handleChange('description')}
       fullWidth

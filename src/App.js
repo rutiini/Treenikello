@@ -404,7 +404,7 @@ class App extends Component {
 
   handleSectionEditToggle = (section) => {
     
-    const {editSectionOpen,exercises,selectedExerciseIndex,activeSectionIndex} = this.state;
+    const {editSectionOpen,exercises,selectedExerciseIndex} = this.state;
     
     // open for edit
     if(!editSectionOpen){
@@ -476,8 +476,7 @@ class App extends Component {
       exercises={exercises} 
       selectedExerciseIndex={selectedExerciseIndex} 
       moveUp={this.moveSectionUp} 
-      moveDown={this.moveSectionDown} 
-      updateSection={this.updateSection} 
+      moveDown={this.moveSectionDown}
       deleteSection={this.deleteSection.bind(this)}
       setTime={this.timeChanged}
       selectExercise={this.selectExercise}
