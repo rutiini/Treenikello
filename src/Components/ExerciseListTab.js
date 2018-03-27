@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 function ExerciseListTab(props) {
-  const { classes,exercises, selectExercise } = props;
+  const { classes,exercises, selectExercise,handleExerciseEditToggle } = props;
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
@@ -26,6 +26,13 @@ function ExerciseListTab(props) {
   // const clicked = ()  => ({target: { value }}) => {
   const clicked = exercise => () => {
     selectExercise(exercise.name)
+  }
+
+  const addClicked = () => {
+    handleExerciseEditToggle()
+  }
+  const editClicked = exercise => {
+    handleExerciseEditToggle(exercise)
   }
 
   const exerciseItems = exercises.map((exercise,index) => {
@@ -56,7 +63,7 @@ function ExerciseListTab(props) {
       <ListItemText primary={exercise.name} secondary={`kesto: ${duration} min`}/>
       <ListItemSecondaryAction>
       {deleteBtn}
-      <IconButton>
+      <IconButton onClick={editClicked}>
       {editIcon}
       </IconButton>
       </ListItemSecondaryAction>
@@ -69,7 +76,7 @@ function ExerciseListTab(props) {
     <List component="nav">
     {exerciseItems}
     <ListItem className={classes.listItem} key='add-exercise-btn'>
-    <Button variant="fab" mini color="secondary" aria-label="add">
+    <Button variant="fab" mini color="secondary" aria-label="add" onClick={addClicked}>
     <i className="material-icons">add</i>
     </Button>
     </ListItem>

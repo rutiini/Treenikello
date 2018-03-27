@@ -6,6 +6,7 @@ import SectionListItem from './Components/SectionListItem';
 import store, {exercises} from './Store';
 import BottomNavTabs from './Components/BottomNavTabs';
 import EditSectionForm from './Components/EditSectionForm';
+import EditExerciseDialog from './Components/EditExerciseDialog';
 // MUI stuff
 // deprecated
 // import SectionInputBox from './Components/SectionInputBox';
@@ -32,7 +33,8 @@ class App extends Component {
       exercises: exercises,
       selectedExerciseIndex: 0,
       editSectionOpen: false,
-      selectedSectionIndex: 0
+      selectedSectionIndex: 0,
+      editExerciseOpen: false
     }
   }
   
@@ -255,28 +257,6 @@ class App extends Component {
     })
   }
   
-  // selectExercise = (e) =>{
-  //   const {exercises} = this.state;
-    
-  //   console.log("select value: ", e.target)
-  //   // combobox selection should update state with new exercise
-  //   const arrayIndex = this.getExerciseIndex(exercises,e.target.value)
-  //   if(arrayIndex > -1){
-      
-  //     console.log("selected ", exercises[arrayIndex]);
-      
-  //     this.setState(
-  //       {
-  //         selectedExerciseIndex: arrayIndex
-  //       }
-  //     )
-  //   }
-  //   // else{
-  //   //   console.log("add new exercise requested.")
-  //   //   this.newExercise();
-  //   // }
-  // }
-
   selectExercise = (name) =>{
     const {exercises} = this.state;
     
@@ -294,7 +274,7 @@ class App extends Component {
       )
     }
   }
-  
+
   // start a new custom exercise. Later create a copy based on the previously selected exercise?
   newExercise = () => {
     const {exercises} = this.state;
@@ -415,8 +395,18 @@ class App extends Component {
     this.setState({
       editSectionOpen: !this.state.editSectionOpen
     })
-  } 
+  }
   
+  handleExerciseEditToggle = (exercise) => {
+    const {editExerciseOpen,exercises,selectedExerciseIndex} = this.state;
+    
+    // get exercise name to validate uniqueness etc.
+    console.log(exercise)
+    // if(editExerciseOpen){
+      this.setState({editExerciseOpen: !editExerciseOpen})
+    // }
+  }
+
   /* Lifecycle hools */
   
   componentWillMount(){
@@ -459,7 +449,7 @@ class App extends Component {
     this.updateExercisePresets();
     this.updateSectionInputBoxes();
     // deconstruct state for simpler syntax
-    const {exercises,selectedExerciseIndex,activeSectionIndex, editSectionOpen, selectedSectionIndex} = this.state;
+    const {exercises,selectedExerciseIndex,activeSectionIndex, editSectionOpen, selectedSectionIndex,editExerciseOpen} = this.state;
     
     return (
       <div className="App">
@@ -483,9 +473,11 @@ class App extends Component {
       activeSectionIndex={activeSectionIndex}
       editSectionOpen={editSectionOpen}
       handleSectionEditToggle={this.handleSectionEditToggle}
-      handleSubmit={this.updateSection.bind(this)}/>
+      handleSubmit={this.updateSection.bind(this)}
+      handleExerciseEditToggle={this.handleExerciseEditToggle}/>
       {/* host the forms on the app level to have them and the state available? */}
       <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)}/>
+      <EditExerciseDialog exercise={exercises[selectedExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle}/>
       </div>
     );
   }

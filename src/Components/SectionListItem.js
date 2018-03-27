@@ -94,6 +94,7 @@ function SectionListItem(props) {
       <div className={classes.buttonContainer}>
       <CardActions>
       <table className={classes.cellContainer}>
+      <tbody>
         <tr>
           <td>
       <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}} onClick={deleteSelf}>
@@ -108,6 +109,7 @@ function SectionListItem(props) {
       </Button>
       </td>
       </tr>
+      </tbody>
       </table>
       </CardActions>
       </div>

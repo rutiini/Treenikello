@@ -12,6 +12,7 @@ const styles = theme => ({
   },
   listItem: {
     textAlign: 'center',
+    justifyContent: 'center'
   }
 });
 

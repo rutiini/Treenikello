@@ -61,7 +61,8 @@ class BottomNavTabs extends Component {
       selectExercise,
       activeSectionIndex,
       handleSectionEditToggle,
-      handleSubmit
+      handleSubmit,
+      handleExerciseEditToggle
     } = this.props;
 
     const tabLabels = ["Treeni","Osiot","Harjoitukset"]
@@ -89,7 +90,7 @@ class BottomNavTabs extends Component {
           deleteSection={deleteSection}
           handleSectionEditToggle={handleSectionEditToggle}
           /></TabContainer>
-          <TabContainer dir={theme.direction}><ExerciseListTab exercises={exercises} selectedExerciseIndex={selectedExerciseIndex} selectExercise={selectExercise}/></TabContainer>
+          <TabContainer dir={theme.direction}><ExerciseListTab exercises={exercises} selectedExerciseIndex={selectedExerciseIndex} selectExercise={selectExercise} handleExerciseEditToggle={handleExerciseEditToggle}/></TabContainer>
         </SwipeableViews>
         <AppBar position="static" color="default">
           <Tabs
