@@ -172,7 +172,6 @@ class Clock extends Component {
     }
     
     getActiveSectionIndex = (sections) => {
-        
         const {startTime} = this.props;
         const d = new Date();
         const currentPosition = d.getMinutes()*6 + d.getHours()*360; // "absolute minute position"
@@ -180,7 +179,7 @@ class Clock extends Component {
         let angle = startPosition;
         let index = -1;
         
-        if(currentPosition >= startPosition){
+        if(sections.length > 0 && currentPosition >= startPosition){
             
             for(let i= 0; i< sections.length; i++){
                 const sectionAngle = sections[i].duration*6;

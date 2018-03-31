@@ -18,7 +18,7 @@ const styles = theme => ({
 });
 
 function ExerciseListTab(props) {
-  const { classes,exercises, selectExercise,handleExerciseEditToggle } = props;
+  const { classes,exercises, selectExercise,handleExerciseEditToggle,deleteExercise } = props;
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
@@ -31,8 +31,11 @@ function ExerciseListTab(props) {
   const addClicked = () => {
     handleExerciseEditToggle()
   }
-  const editClicked = exercise => {
+  const editClicked = exercise => () => {
     handleExerciseEditToggle(exercise)
+  }
+  const deleteClicked = exercise => () => {
+    deleteExercise(exercise)
   }
 
   const exerciseItems = exercises.map((exercise,index) => {
@@ -42,31 +45,38 @@ function ExerciseListTab(props) {
     });
     // delete button only for non-presets
     let deleteBtn;
+    let editBtn;
     if(exercise.preset){
-      deleteBtn = 
-      <IconButton disabled>
-        {deleteIcon}
-      </IconButton>
-    }else{
-      deleteBtn = 
-      <IconButton>
-        {deleteIcon}
-      </IconButton>
+      deleteBtn =
+        <IconButton disabled>
+          {deleteIcon}
+        </IconButton>
+      editBtn =
+        <IconButton disabled>
+          {editIcon}
+        </IconButton>
+    } else {
+      deleteBtn =
+        <IconButton onClick={deleteClicked(exercise)}>
+          {deleteIcon}
+        </IconButton>
+      editBtn =
+        <IconButton onClick={editClicked(exercise)}>
+          {editIcon}
+        </IconButton>
     } 
 
   const exerciseKey = exercise.name;
     return (
       <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={clicked(exercise)} button>
-      <ListItemIcon className={classes.listItemIcon}>
-      {placeHolderIcon}
-      </ListItemIcon>
-      <ListItemText primary={exercise.name} secondary={`kesto: ${duration} min`}/>
-      <ListItemSecondaryAction>
-      {deleteBtn}
-      <IconButton onClick={editClicked}>
-      {editIcon}
-      </IconButton>
-      </ListItemSecondaryAction>
+        <ListItemIcon className={classes.listItemIcon}>
+          {placeHolderIcon}
+        </ListItemIcon>
+        <ListItemText primary={exercise.name} secondary={`kesto: ${duration} min`} />
+        <ListItemSecondaryAction>
+          {deleteBtn}
+          {editBtn}
+        </ListItemSecondaryAction>
       </ListItem>
     )
   })
@@ -74,12 +84,12 @@ function ExerciseListTab(props) {
   return (
     // <div className={classes.root}>
     <List component="nav">
-    {exerciseItems}
-    <ListItem className={classes.listItem} key='add-exercise-btn'>
-    <Button variant="fab" mini color="secondary" aria-label="add" onClick={addClicked}>
-    <i className="material-icons">add</i>
-    </Button>
-    </ListItem>
+      {exerciseItems}
+      <ListItem className={classes.listItem} key='add-exercise-btn'>
+        <Button variant="fab" mini color="secondary" aria-label="add" onClick={addClicked}>
+          <i className="material-icons">add</i>
+        </Button>
+      </ListItem>
     </List>
     // </div>
   );

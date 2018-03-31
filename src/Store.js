@@ -24,6 +24,7 @@ class Store{
   // save users custom exercises to browser cache
   saveExercises = (exercises) =>{
     const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+    console.log(`saving ${nonPresets.length} exercises`)
     localStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
@@ -180,12 +181,12 @@ export const exercises = [
 ]
 export const colorOptions = 
 [
-  {"colorName":"none","colorValue":"none"},
-  {"colorName":"dark blue","colorValue":"#1b85b8"},
-  {"colorName":"dark grey","colorValue":"#5a5255"},
-  {"colorName":"dark green","colorValue":"#559e83"},
-  {"colorName":"dark red","colorValue":"#ae5a41"},
-  {"colorName":"olive green","colorValue":"#c3cb71"},
+  // {"colorName":"none","colorValue":"none"},
+  // {"colorName":"dark blue","colorValue":"#1b85b8"},
+  // {"colorName":"dark grey","colorValue":"#5a5255"},
+  // {"colorName":"dark green","colorValue":"#559e83"},
+  // {"colorName":"dark red","colorValue":"#ae5a41"},
+  // {"colorName":"olive green","colorValue":"#c3cb71"},
   {"colorName":"red","colorValue":"#ee4035"},
   {"colorName":"orange","colorValue":"#f37736"},
   {"colorName":"yellow","colorValue":"#fdf498"},

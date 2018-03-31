@@ -6,7 +6,6 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import EditSectionForm from './EditSectionForm';
-import TimeInput from 'material-ui-time-picker'
 
 const styles = theme => ({
   root: {
@@ -29,7 +28,7 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles) (class ActionsMenuBar extends Component{
+export default withStyles(styles)(class ActionsMenuBar extends Component {
   state = {
     open: false
   }
@@ -41,27 +40,24 @@ export default withStyles(styles) (class ActionsMenuBar extends Component{
   }
 
 
-  render(){
-    const { classes, exercises, selectedExerciseIndex, setTime, title, handleSubmit } = this.props;
+  render() {
+    const { classes, exercises, selectedExerciseIndex, setTime, title, handleSubmit, saveExercises } = this.props;
     const { open } = this.state;
 
     return (
       <div className={classes.root}>
-      <AppBar position="static">
-      <Toolbar>
-    <div>
-    <i className="material-icons">access_time</i>
-    <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}/>
-    </div>
-    <Typography variant="title" color="inherit" className={classes.flex}>
-    {title}
-    </Typography>
-    <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">update</i></Button>
-    <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={open} handleToggle={this.handleToggle} handleSubmit={handleSubmit}/>
-    </Toolbar>
-    </AppBar>
-    </div>
-  );
+        <AppBar position="static">
+          <Toolbar>
+          <Button variant="fab" mini color="inherit" onClick={saveExercises}><i className="material-icons">save</i></Button>
+            <Typography variant="title" color="inherit" className={classes.flex}>
+              {title}
+            </Typography>
+            <Button variant="fab" mini color="inherit" onClick={() => setTime(new Date())}><i className="material-icons">play_circle_outline</i></Button>
+            <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={open} handleToggle={this.handleToggle} handleSubmit={handleSubmit} />
+          </Toolbar>
+        </AppBar>
+      </div>
+    );
   }
 });
 
