@@ -8,12 +8,12 @@
 #clock{
   max-height: 1000px;
 }
-#SettingsContainer{
+/* #SettingsContainer{
   height: 45%;
 }
 #TimeInput{
   width: 50px;
-}
+} */
 .material-icons{
   vertical-align:middle;
 }
@@ -160,9 +160,9 @@
   /* .Clock{
     height: 60%;
   } */
-  #SettingsContainer{
+  /* #SettingsContainer{
     height: 40%;
-  }
+  } */
   /*
   #App-configbox{
     grid-template-columns: 1fr 1fr;
@@ -202,9 +202,9 @@
   /* .Clock{
     height: 60%;
   } */
-  #SettingsContainer{
+  /* #SettingsContainer{
     height: 40%;
-  }
+  } */
   /*
   #App-configbox{
     grid-template-columns: 1fr;

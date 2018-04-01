@@ -7,6 +7,8 @@ import store, { exercises } from './Store';
 import BottomNavTabs from './Components/BottomNavTabs';
 import EditSectionForm from './Components/EditSectionForm';
 import EditExerciseDialog from './Components/EditExerciseDialog';
+import ConfirmationDialog from './Components/ConfirmationDialog';
+import NotificationSnackBar from './Components/NotificationSnackBar';
 // MUI stuff
 // deprecated
 // import SectionInputBox from './Components/SectionInputBox';
@@ -35,7 +37,9 @@ class App extends Component {
       editSectionOpen: false,
       selectedSectionIndex: 0,
       editExerciseOpen: false,
-      editExerciseIndex: -1
+      editExerciseIndex: -1,
+      confirmationDialogOpen: false,
+      snackBarOpen: false
     }
   }
 
@@ -313,6 +317,7 @@ class App extends Component {
     const nonPresets = exercises.filter((x) => { return x.preset !== true; })
     // save only here..
     store.saveExercises(nonPresets);
+    this.handleShowSnackbar();
   }
 
   // return true for valid new name
@@ -335,8 +340,10 @@ class App extends Component {
   handleDeleteExercise = (exercise) => {
     const { exercises } = this.state;
     const deleteIndex = exercises.indexOf(exercise);
-    // console.log(`delete at ${deleteIndex}`)
-
+    
+    // wait for the prompt..
+    // const confirm = this.handleToggleCofirmationDialog()
+    // console.log("prompt result: ", confirm)
     const newExercises = [...exercises];
     // set selected to first in list (presets should always exist)
     this.setState({
@@ -410,6 +417,26 @@ class App extends Component {
 
   }
 
+  handleShowSnackbar = () => {
+    this.setState({ snackBarOpen: true });
+  };
+
+  handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ snackBarOpen: false });
+  };
+
+  handleToggleCofirmationDialog = (result) => {
+    console.log('result of dialog:', result)
+    const { confirmationDialogOpen } = this.state;
+    this.setState({ confirmationDialogOpen: !confirmationDialogOpen });
+    
+    return result;
+  }
+
   /* Lifecycle hools */
 
   componentWillMount() {
@@ -458,7 +485,9 @@ class App extends Component {
       editSectionOpen,
       selectedSectionIndex,
       editExerciseOpen,
-      editExerciseIndex } = this.state;
+      editExerciseIndex,
+      confirmationDialogOpen,
+      snackBarOpen } = this.state;
 
     return (
       <div className="App">
@@ -489,6 +518,8 @@ class App extends Component {
         {/* host the forms on the app level to have them and the state available? */}
         <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
         <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName}/>
+        <ConfirmationDialog open={confirmationDialogOpen} handleToggle={this.handleToggleCofirmationDialog}/>
+        <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar}/>
       </div>
     );
   }

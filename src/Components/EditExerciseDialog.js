@@ -55,8 +55,9 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
     const { handleSubmit, validateName } = this.props;
     const { exercise } = this.state;
     // validate that the name is unique
+    // for updates the same name should be allowed
     const nameOK = validateName(exercise.name);
-    if (nameOK && exercise.name !== '') {
+    if ((nameOK || this.props.exercise ) && exercise.name !== '') {
       handleSubmit(this.props.exercise, exercise);
       this.handleClose();
     } else {
@@ -97,6 +98,34 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
       titleText = 'Muokkaa harjoitusta';
       descriptionText = 'Päivitä harjoituksen tiedot';
     }
+    let nameInput
+    if(errorText){
+      nameInput =
+      <TextField
+        autoFocus
+        margin="dense"
+        id="name"
+        label="Nimi"
+        type="text"
+        value={exercise.name}
+        onChange={this.handleChange('name')}
+        helperText={errorText}
+        fullWidth
+        error
+      />
+      }else{
+        nameInput =
+        <TextField
+        autoFocus
+        margin="dense"
+        id="name"
+        label="Nimi"
+        type="text"
+        value={exercise.name}
+        onChange={this.handleChange('name')}
+        fullWidth
+      />
+      }
 
     return (
       <Dialog
@@ -109,17 +138,7 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
           <DialogContentText>
             {descriptionText}
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Nimi"
-            type="text"
-            value={exercise.name}
-            onChange={this.handleChange('name')}
-            // errorText={errorText}
-            fullWidth
-          />
+          {nameInput}
           <i className="material-icons">access_time</i>
           <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercise.startTime} onChange={this.handleTimeChange} />
           {/* value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}  */}
