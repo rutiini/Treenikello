@@ -21,12 +21,12 @@ const styles = theme => ({
     height: '100%',
     width: '20%'
   },
-  textContainer:{
+  textContainer: {
     height: '100%',
     width: '60%',
     userSelect: 'none',
   },
-  buttonContainer:{
+  buttonContainer: {
     height: '100%',
     width: '20%',
     verticalAlign: 'middle',
@@ -43,7 +43,7 @@ const styles = theme => ({
   moveButton: {
     cursor: 'pointer'
   },
-  description:{
+  description: {
     display: 'block',
     overflow: 'hidden',
     // whiteSpace: 'nowrap',
@@ -52,6 +52,10 @@ const styles = theme => ({
   },
   cellContainer: {
     textAlign: 'center'
+  },
+  exerciseSymbol: {
+    fontSize: 60,
+    textShadow: '0px 0px 3px black'
   }
 });
 
@@ -64,63 +68,63 @@ function SectionListItem(props) {
     deleteSection,
     handleSectionEditToggle } = props;
 
-    // open edit dialog from button
-    const openEdit = () => {
-      handleSectionEditToggle(section);
-    }
-    const deleteSelf = () => {
-      deleteSection(section)
-    }
-
-    return (
-      <Card className={classes.card}>
-      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveUp(section) } >arrow_upward</i>
-      <CardContent className={classes.content}>
-      {/* left edge icon */}
-      <div className={classes.iconContainer}>
-        <i className="material-icons" style={{fontSize: 60, color: section.color, textShadow: '2px 3px 10px black'}}>directions_run</i>
-      <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
-      </div>
-      {/* text part */}
-      <div className={classes.textContainer}>
-      <Typography variant="headline" component="h2">
-      {section.name}
-      </Typography>
-      <Typography component="p" className={classes.description}>
-      {section.description}
-      </Typography>
-      </div>
-      {/* buttons part */}
-      <div className={classes.buttonContainer}>
-      <CardActions>
-      <table className={classes.cellContainer}>
-      <tbody>
-        <tr>
-          <td>
-      <Button variant="fab" className={classes.button} mini style={{backgroundColor: section.color}} onClick={deleteSelf}>
-      <i className="material-icons">delete</i>
-      </Button>
-      </td>
-      </tr>
-      <tr>
-        <td>
-      <Button variant="fab" mini style={{backgroundColor: section.color}} onClick={openEdit}>
-      <i className="material-icons">settings</i>
-      </Button>
-      </td>
-      </tr>
-      </tbody>
-      </table>
-      </CardActions>
-      </div>
-      </CardContent>
-      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveDown(section) }>arrow_downward</i>
-      </Card>
-    );
+  // open edit dialog from button
+  const openEdit = () => {
+    handleSectionEditToggle(section);
+  }
+  const deleteSelf = () => {
+    deleteSection(section)
   }
 
-  SectionListItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-  };
+  return (
+    <Card className={classes.card}>
+      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveUp(section)} >arrow_upward</i>
+      <CardContent className={classes.content}>
+        {/* left edge icon */}
+        <div className={classes.iconContainer}>
+          <i className={`material-icons ${classes.exerciseSymbol}`}  style={{ color: section.color }}>directions_run</i>
+          <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
+        </div>
+        {/* text part */}
+        <div className={classes.textContainer}>
+          <Typography variant="headline" component="h2">
+            {section.name}
+          </Typography>
+          <Typography component="p" className={classes.description}>
+            {section.description}
+          </Typography>
+        </div>
+        {/* buttons part */}
+        <div className={classes.buttonContainer}>
+          <CardActions>
+            <table className={classes.cellContainer}>
+              <tbody>
+                <tr>
+                  <td>
+                    <Button variant="fab" className={classes.button} mini style={{ backgroundColor: section.color }} onClick={deleteSelf}>
+                      <i className="material-icons">delete</i>
+                    </Button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Button variant="fab" mini style={{ backgroundColor: section.color }} onClick={openEdit}>
+                      <i className="material-icons">settings</i>
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </CardActions>
+        </div>
+      </CardContent>
+      <i className={`material-icons ${classes.moveButton}`} onClick={() => moveDown(section)}>arrow_downward</i>
+    </Card>
+  );
+}
 
-  export default withStyles(styles)(SectionListItem);
+SectionListItem.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SectionListItem);

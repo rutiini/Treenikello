@@ -189,7 +189,6 @@ class Clock extends Component {
                 }
                 angle = angle + sectionAngle;
             }
-            // exercise is complpeted.. NOT WORKING
             if(currentPosition >= (angle + sections[sections.length -1].duration*6)){
                 index++;
             }

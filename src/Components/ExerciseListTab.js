@@ -74,7 +74,7 @@ function ExerciseListTab(props) {
         <ListItemIcon className={classes.listItemIcon}>
           {placeHolderIcon}
         </ListItemIcon>
-        <ListItemText primary={exercise.name} secondary={`kesto: ${duration} min`} />
+        <ListItemText primary={exercise.name} secondary={`osioita: ${exercise.defaultSections.length} kesto: ${duration} min`} />
         <ListItemSecondaryAction>
           {deleteBtn}
           {editBtn}

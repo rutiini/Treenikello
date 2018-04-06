@@ -10,6 +10,7 @@ import Dialog, {
 class ConfirmationDialog extends Component {
 
   accept = () => {
+    this.props.handleAccept();
     this.props.handleToggle(true);
   }
   cancel = () => {

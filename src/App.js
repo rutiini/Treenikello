@@ -39,6 +39,7 @@ class App extends Component {
       editExerciseOpen: false,
       editExerciseIndex: -1,
       confirmationDialogOpen: false,
+      deleteExerciseIndex: -1,
       snackBarOpen: false
     }
   }
@@ -337,26 +338,26 @@ class App extends Component {
 
   }
 
-  handleDeleteExercise = (exercise) => {
-    const { exercises } = this.state;
-    const deleteIndex = exercises.indexOf(exercise);
-    
-    // wait for the prompt..
-    // const confirm = this.handleToggleCofirmationDialog()
-    // console.log("prompt result: ", confirm)
-    const newExercises = [...exercises];
-    // set selected to first in list (presets should always exist)
-    this.setState({
-      selectedExerciseIndex: 0
-    })
+  handleDeleteExercise = () => {
+    const { exercises, deleteExerciseIndex } = this.state;
 
-    newExercises.splice(deleteIndex, 1)
+    if (deleteExerciseIndex !== -1) {
+      console.log(`deleting exercise at ${deleteExerciseIndex}`)
+      const newExercises = [...exercises];
+      // set selected to first in list (presets should always exist)
+      this.setState({
+        selectedExerciseIndex: 0
+      })
 
-    this.setState(
-      {
-        exercises: newExercises
-      }, store.saveSessionExercises(newExercises)
-    )
+      newExercises.splice(deleteExerciseIndex, 1)
+
+      this.setState(
+        {
+          exercises: newExercises,
+          deleteExerciseIndex: -1
+        }, store.saveSessionExercises(newExercises)
+      )
+    }
   }
 
   // use as callback for setState
@@ -429,15 +430,22 @@ class App extends Component {
     this.setState({ snackBarOpen: false });
   };
 
-  handleToggleCofirmationDialog = (result) => {
-    console.log('result of dialog:', result)
+  handleToggleCofirmationDialog = (exercise) => {
+    const { exercises } = this.state;
+    // console.log('result of dialog:', exercise.name)
+    const deleteIndex = exercises.indexOf(exercise);
+
     const { confirmationDialogOpen } = this.state;
-    this.setState({ confirmationDialogOpen: !confirmationDialogOpen });
-    
-    return result;
+    this.setState(
+      {
+        confirmationDialogOpen: !confirmationDialogOpen,
+        deleteExerciseIndex: deleteIndex
+      }
+    );
+
   }
 
-  /* Lifecycle hools */
+  /* Lifecycle hooks */
 
   componentWillMount() {
     // destructure from state to ease the syntax
@@ -514,12 +522,15 @@ class App extends Component {
           handleSubmit={this.updateSection.bind(this)}
           handleExerciseEditToggle={this.handleExerciseEditToggle}
           saveExercises={this.saveExercises}
-          deleteExercise={this.handleDeleteExercise} />
+          // deleteExercise={this.handleDeleteExercise}
+          deleteExercise={this.handleToggleCofirmationDialog} />
         {/* host the forms on the app level to have them and the state available? */}
         <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
-        <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName}/>
-        <ConfirmationDialog open={confirmationDialogOpen} handleToggle={this.handleToggleCofirmationDialog}/>
-        <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar}/>
+        <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
+        <ConfirmationDialog open={confirmationDialogOpen}
+          handleToggle={this.handleToggleCofirmationDialog}
+          handleAccept={this.handleDeleteExercise} />
+        <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
       </div>
     );
   }
