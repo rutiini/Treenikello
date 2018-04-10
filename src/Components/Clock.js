@@ -321,10 +321,11 @@ class Clock extends Component {
         componentDidMount(){
             
             this._interval = setInterval(() => {
-                var d = new Date()
-                var secRotation = 6*d.getSeconds();
-                var minRotation = 6*d.getMinutes();
-                var hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
+                let {secPosition,minPosition,hourPosition} = this.state;
+                let d = new Date()
+                let secRotation = 6*d.getSeconds();
+                let minRotation = 6*d.getMinutes();
+                let hourRotation = 30*(d.getHours()%12) + d.getMinutes()/2;
                 
                 this.setState(
                     {
@@ -335,12 +336,12 @@ class Clock extends Component {
                     }
                 )
                 
-                this.rotateHand(document.getElementById('secHand'),this.state.secPosition)
-                this.rotateHand(document.getElementById('min'),this.state.minPosition)
-                this.rotateHand(document.getElementById('hour'),this.state.hourPosition)
+                this.rotateHand(document.getElementById('secHand'),secPosition)
+                this.rotateHand(document.getElementById('min'),minPosition)
+                this.rotateHand(document.getElementById('hour'),hourPosition)
             },1000)
             
-            var timerHand = document.getElementById("timerHand");
+            let timerHand = document.getElementById("timerHand");
             timerHand.setAttribute("visibility","hidden");
             
         }

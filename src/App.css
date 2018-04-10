@@ -1,9 +1,9 @@
 .App {
   text-align: center;
-  height: 100%;
+  /* height: 100%; */
 }
 .Clock{
-  max-height: 55%;
+  height: 55%;
 }
 #clock{
   max-height: 1000px;

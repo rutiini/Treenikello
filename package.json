@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "material-ui": "^1.0.0-beta.37",
-    "material-ui-time-picker": "^0.1.5",
-    "npm": "^5.7.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "material-ui": "^1.0.0-beta.41",
+    "material-ui-time-picker": "^0.1.6",
+    "npm": "^5.8.0",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
     "react-html-id": "^0.1.2",
     "react-scripts": "1.1.1",
     "react-swipeable-views": "^0.12.13",
-    "react-time-picker": "^2.3.0"
+    "react-time-picker": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
