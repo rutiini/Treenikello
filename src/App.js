@@ -44,6 +44,8 @@ class App extends Component {
     }
   }
 
+  /* implement the new context api for state management! */
+
   /* Section manipulation */
 
   setActiveSection = (sectionIndex) => {
@@ -506,31 +508,29 @@ class App extends Component {
           canvasSide="100"
           activeSection={activeSectionIndex}
           setActive={this.setActiveSection} />
-        <div id="SettingsContainer">
-        </div>
-        <BottomNavTabs
-          exercises={exercises}
-          selectedExerciseIndex={selectedExerciseIndex}
-          moveUp={this.moveSectionUp}
-          moveDown={this.moveSectionDown}
-          deleteSection={this.deleteSection.bind(this)}
-          setTime={this.timeChanged}
-          selectExercise={this.selectExercise}
-          activeSectionIndex={activeSectionIndex}
-          editSectionOpen={editSectionOpen}
-          handleSectionEditToggle={this.handleSectionEditToggle}
-          handleSubmit={this.updateSection.bind(this)}
-          handleExerciseEditToggle={this.handleExerciseEditToggle}
-          saveExercises={this.saveExercises}
-          // deleteExercise={this.handleDeleteExercise}
-          deleteExercise={this.handleToggleCofirmationDialog} />
-        {/* host the forms on the app level to have them and the state available? */}
-        <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
-        <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
-        <ConfirmationDialog open={confirmationDialogOpen}
-          handleToggle={this.handleToggleCofirmationDialog}
-          handleAccept={this.handleDeleteExercise} />
-        <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
+          <BottomNavTabs
+            exercises={exercises}
+            selectedExerciseIndex={selectedExerciseIndex}
+            moveUp={this.moveSectionUp}
+            moveDown={this.moveSectionDown}
+            deleteSection={this.deleteSection.bind(this)}
+            setTime={this.timeChanged}
+            selectExercise={this.selectExercise}
+            activeSectionIndex={activeSectionIndex}
+            editSectionOpen={editSectionOpen}
+            handleSectionEditToggle={this.handleSectionEditToggle}
+            handleSubmit={this.updateSection.bind(this)}
+            handleExerciseEditToggle={this.handleExerciseEditToggle}
+            saveExercises={this.saveExercises}
+            // deleteExercise={this.handleDeleteExercise}
+            deleteExercise={this.handleToggleCofirmationDialog} />
+          {/* host the forms on the app level to have them and the state available? */}
+          <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
+          <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
+          <ConfirmationDialog open={confirmationDialogOpen}
+            handleToggle={this.handleToggleCofirmationDialog}
+            handleAccept={this.handleDeleteExercise} />
+          <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
       </div>
     );
   }

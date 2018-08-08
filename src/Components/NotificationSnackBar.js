@@ -17,7 +17,6 @@ class NotificationSnackBar extends Component {
   render() {
     const { classes,handleHide,open } = this.props;
     return (
-      <div>
         <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -42,7 +41,6 @@ class NotificationSnackBar extends Component {
             </IconButton>,
           ]}
         />
-      </div>
     );
   }
 }

@@ -1,140 +1,12 @@
 .App {
   text-align: center;
-  /* height: 100%; */
 }
-.Clock{
-  height: 55%;
-}
-#clock{
-  max-height: 1000px;
-}
-/* #SettingsContainer{
-  height: 45%;
-}
-#TimeInput{
-  width: 50px;
-} */
 .material-icons{
   vertical-align:middle;
 }
-/*
-.SectionItemBox{
-  border: black;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 1em;
-  min-height: 200px;
-  min-width: 230px;
-}
-.MoveArrow{
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 1em;
-}
-#CustomStart{
-  margin: 1em
-}
-.PositionSelector{
-  width:2em;
-  text-align: center;
-  margin-left: 1em;
-}
-.NameInputBox{
-  font-weight: bold;
-  width: 9em;
-  height: 1.2em;
-  text-align: center;
-  margin-left: 0.5em;
-  resize: none;
-}
-.DeleteSectionBtn{
-  font-size: 1.2em;
-  cursor: pointer;
-}
-.DescriptionBox{
-  margin: 0.5em;
-  width: 80%;
-  height: 20%;
-  resize: none;
-  text-align: center;
-  overflow: auto;
-}
-.DurationSelector{
-  margin: 0.5em;
-  width: 3em;
-}
-.ColorSelector{
-  margin: 0.5em;
-}
-.HeaderContainer{
-  font-weight: bold; 
-  display: flex;
-  padding-inline-start: 1em;
-  margin-top: 1em;
+.clockContainer{
   justify-content: center;
 }
-.SectionInfoBox{
-  display: block;
-  height: 3em;
-  font-size: 2em;
-  font-weight: bold;
-  margin: 0.5em;
-  margin-bottom: 0em;
-  border-radius: 0.5em;
-  border-style: solid;
-  border-top-color: black;
-  overflow: hidden;
-}
-.SectionInfoDescription{
-  margin: 0 auto;
-  white-space: nowrap;
-  font-size: 1em;
-  font-weight: normal;
-  width: 100%;
-  display: inline-block;
-  padding-left: 100%;
-  animation: marquee 15s linear infinite;
-}
-@keyframes marquee{
-  0%   { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
-}
-#App-configbox{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
-  grid-gap: 10px;
-  padding-right: 1em;
-  padding-left: 1em;
-  padding-bottom: 1em;
-  overflow: auto;
-  height: 100%;
-  background-color: #e4e4e4
-}
-#AddSection{
-  border: black;
-  border-style: dashed;
-  border-width: 2px;
-  border-radius: 2em;
-  min-height: 200px;
-}
-.NewSectionContent{
-  line-height: 4em;
-  vertical-align: middle;
-  font-size: 3em;
-}
-.GeneralSettingsContainer{
-  display: flex;
-  border: black;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 0.5em;
-  background-color: #b6b6b6;
-  margin: 1em;
-  justify-content: space-around;
-  padding: 1em;
-}
-
 */
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
@@ -151,98 +23,29 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-/* transform layout to work on portrait mode */
-@media only screen and (max-width: 800px){
+
+/* move to jss */
+@media only screen and (max-width: 599px){
   
-  .App {
-    height: 95%;
+  .clock {
+    width: 350px;
+    justify-content: center;
   }
-  /* .Clock{
-    height: 60%;
-  } */
-  /* #SettingsContainer{
-    height: 40%;
-  } */
-  /*
-  #App-configbox{
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    grid-gap: 10px;
-    height: 330px;
-    overflow: auto;
-  }
-  #CustomStart{
-    min-height: 10em;
-  }
-  .GeneralSettingsContainer{
-    display: block;
-  }
-  .GeneralSettingsContainer button, div{
-    padding-bottom: 10px;
-  }
-  .GeneralSettingsContainer button{
-     margin-right: 10px;
-  }
-  .SectionInfoBox{
-    font-size: 1em;
-    font-weight: bold;
-    margin: 0.5em;
-    margin-bottom: 0em;
-    border-style: solid;
-    border-top-color: black;
-  }
-  */
+  
 }
-
-
-@media only screen and (max-width: 600px){
-  .App {
-    height: 95%;
-  }
-  /* .Clock{
-    height: 60%;
-  } */
-  /* #SettingsContainer{
-    height: 40%;
-  } */
-  /*
-  #App-configbox{
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    height: 330px;
-    overflow: auto;
-  }
-  */
+@media only screen and (min-width: 600px){
+  
+  .clock {
+    width: 500px;
+    justify-content: center;
+  } 
+  
 }
+@media only screen and (min-width: 960px){
 
-/* transform layout to work side-by side in landscape mode */
-/* orientation based approach */
-/* breaks layout with on-screen keyboad*/
-@media screen and (orientation:landscape )and (min-height: 810px)
-{
-  .Clock{
-    float:left;
-    /* width: 60%; */
-    height: 100%;
+  .clock {
+    width: 940px;
+    justify-content: center;
   }
-  #clock{
-    max-width: 60%;
-  }
-  #SettingsContainer{
-    height: 80%;
-    width: 35%;
-    float: right;
-  }
-  #App-configbox{
-    grid-template-columns: 1fr;
-    height: 90%;
-  }
-  /* 
-  .GeneralSettingsContainer{
-    display: inline-block;
-  }
-  .SettingsControl{
-    margin-top: 1em;
-  }
-  */
+  
 }

@@ -41,7 +41,7 @@ function ExerciseListTab(props) {
   }
 
   const exerciseItems = exercises.map((exercise, index) => {
-    let duration = 0;
+    let duration =  0;
     exercise.defaultSections.forEach(element => {
       duration = duration + Number.parseInt(element.duration, 10);
     });

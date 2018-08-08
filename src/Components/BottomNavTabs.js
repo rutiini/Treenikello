@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import SwipeableViews from 'react-swipeable-views';
@@ -31,7 +31,8 @@ const styles = theme => ({
     flex: 1
   },
   tabContent:{
-    alignContent: 'center'
+    alignContent: 'center',
+    height: 100% - 72 - 64
   }
 });
 
@@ -73,14 +74,14 @@ class BottomNavTabs extends Component {
     const exercisesIcon = <i className="material-icons">fitness_center</i>
 
     return (
-      <div className={classes.root}>
+      <Fragment>
       <ActionsMenuBar title={tabLabels[this.state.value]} 
       exercises={exercises} 
       selectedExerciseIndex={selectedExerciseIndex} 
       setTime={setTime} 
       handleSubmit={handleSubmit}
       saveExercises={saveExercises}/>
-      <SwipeableViews
+      <SwipeableViews style={{height: 100% - 72 - 64}}
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
@@ -109,7 +110,7 @@ class BottomNavTabs extends Component {
             <Tab label={tabLabels[2]} icon={exercisesIcon} />
           </Tabs>
         </AppBar>
-      </div>
+      </Fragment>
     );
   }
 }

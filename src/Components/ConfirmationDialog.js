@@ -20,7 +20,6 @@ class ConfirmationDialog extends Component {
   render() {
     const { open, handleToggle } = this.props;
     return (
-      <div>
         <Dialog
           open={open}
           onClose={handleToggle}
@@ -42,7 +41,6 @@ class ConfirmationDialog extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
     );
   }
 }
