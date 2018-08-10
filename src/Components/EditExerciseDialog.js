@@ -7,8 +7,6 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
-// import { FormControl } from 'material-ui/Form';
-// import { InputLabel } from 'material-ui/Input';
 import { withStyles } from 'material-ui/styles';
 import TimeInput from 'material-ui-time-picker';
 
@@ -41,8 +39,6 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
   }
   // magical generic prop handling:
   handleChange = name => ({ target: { value } }) => {
-    // console.log(`${[name]} set ${value}`);
-
     this.setState({
       exercise: {
         ...this.state.exercise,
@@ -65,6 +61,7 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
       this.setState({ errorText: 'virheellinen nimi' })
     }
   }
+  
   // set initial state
   componentWillReceiveProps(nextProps) {
 

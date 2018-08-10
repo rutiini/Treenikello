@@ -5,7 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
-import EditSectionForm from './EditSectionForm';
+import EditSectionForm from './EditSectionDialog';
 
 const styles = theme => ({
   root: {

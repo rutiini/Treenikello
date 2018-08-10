@@ -11,7 +11,7 @@
   overflow: auto;
 }
 .clock {
-  height:40vh;
+  height:45vh;
   justify-content: center;
 }
 .react-swipeable-view-container{
@@ -37,13 +37,13 @@
 /* move to jss */
 @media only screen and (max-width: 599px){
   .controlsContainer {
-    height: calc(60vh - 56px - 72px - 4px);
+    height: calc(55vh - 56px - 72px - 4px);
   }
   
 }
 @media only screen and (min-width: 600px){
   .controlsContainer {
-    height: calc(60vh - 64px - 72px - 4px);
+    height: calc(55vh - 64px - 72px - 4px);
   }
   
 }

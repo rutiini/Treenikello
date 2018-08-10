@@ -5,21 +5,10 @@ import UniqueId from 'react-html-id';
 import SectionListItem from './Components/SectionListItem';
 import store, { exercises } from './Store';
 import BottomNavTabs from './Components/BottomNavTabs';
-import EditSectionForm from './Components/EditSectionForm';
+import EditSectionDialog from './Components/EditSectionDialog';
 import EditExerciseDialog from './Components/EditExerciseDialog';
 import ConfirmationDialog from './Components/ConfirmationDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
-// MUI stuff
-// deprecated
-// import SectionInputBox from './Components/SectionInputBox';
-// import SectionInfo from './Components/SectionInfo';
-// import BottomNavigation from './Components/BottomNavigation';
-// import TimeInput from 'material-ui-time-picker'
-// import Button from 'material-ui/Button';
-// import Input from 'material-ui/Input';
-// import { FormControl } from 'material-ui/Form';
-// import Select from 'material-ui/Select';
-// import EditSectionForm from './Components/EditSectionForm';
 
 class App extends Component {
 
@@ -524,7 +513,7 @@ class App extends Component {
             saveExercises={this.saveExercises}
             deleteExercise={this.handleToggleCofirmationDialog} />
           {/* host the forms on the app level to have them and the state available? */}
-          <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
+          <EditSectionDialog exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />
           <EditExerciseDialog exercise={exercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
           <ConfirmationDialog open={confirmationDialogOpen}
             handleToggle={this.handleToggleCofirmationDialog}

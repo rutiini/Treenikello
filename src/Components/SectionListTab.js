@@ -53,7 +53,6 @@ function SectionListTab(props) {
         <ListItem className={classes.listItem} key="add-section-button">
           <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={handleSectionEditToggle}><i className="material-icons">add</i></Button>
         </ListItem>
-
       </List>
     </div>
   );

@@ -21,6 +21,12 @@ const styles = theme => ({
     width: '75%'
   }
 })
+const emptySection = {
+      name: '',
+      description: '',
+      duration: 0,
+      color: ''
+}
 
 export default withStyles(styles)(class EditSectionDialog extends Component {
   
@@ -35,27 +41,27 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
   
   state = {
     open: false,
-    section: {
-      name: '',
-      description: '',
-      duration: 0,
-      color: ''
-    }
+    section: {...emptySection}
   };
 
   handleClose = () => {
     this.props.handleToggle();
+    this.setState({
+      open: false,
+      section: {...emptySection}
+    })
   };
 
   handleSubmit = () => {
     this.props.handleSubmit(this.props.section, this.state.section);
     this.props.handleToggle();
+    this.setState({
+      open: false,
+      section: {...emptySection}
+    })
   }
   // magical generic prop handling:
   handleChange = name => ({ target: { value } }) => {
-    // console.log(`${[name]} set ${value}`);
-    // magic part 2:
-
     this.setState({
       section: {
         ...this.state.section,
@@ -65,23 +71,28 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
 
   }
 
-  // returns the new state instead of using setState..
   static getDerivedStateFromProps(nextProps, prevState){
+    // only when the dialog opens and there is a section should we generate the derived state from props!
     
-    if(nextProps.section && nextProps.open){
-      console.log('editing section: ', nextProps.section)
-      return {section: nextProps.section};
-    }else if(nextProps.open){
-      console.log('adding new section', nextProps, prevState)
-      const section = {
-        name: '',
-        description: '',
-        duration: 5,
-        color: ''
+    // edit contents.
+    if(nextProps.open && prevState.open){
+      return null;
+    // opening the form.
+    }else if(!prevState.open && nextProps.open){
+      if(nextProps.section){
+        return {
+          open: true,
+          section: {...nextProps.section}
+        };
+      }else{
+        return {
+          open: true,
+          section: {...emptySection}
+        };
       }
-      return {section: section};
+    // default.
     }else{
-      return null
+      return null;
     }
   }
 
@@ -103,7 +114,6 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
           <DialogContentText>
             {dialogDescription}
           </DialogContentText>
-          {/* <Form> */}
           <TextField
             autoFocus
             margin="dense"
@@ -150,7 +160,6 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
             value={this.state.section.duration}
             onChange={this.handleChange('duration')}
           />
-          {/* </Form> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
