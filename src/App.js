@@ -522,7 +522,6 @@ class App extends Component {
             handleSubmit={this.updateSection.bind(this)}
             handleExerciseEditToggle={this.handleExerciseEditToggle}
             saveExercises={this.saveExercises}
-            // deleteExercise={this.handleDeleteExercise}
             deleteExercise={this.handleToggleCofirmationDialog} />
           {/* host the forms on the app level to have them and the state available? */}
           <EditSectionForm exercise={exercises[selectedExerciseIndex]} open={editSectionOpen} section={exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection.bind(this)} />

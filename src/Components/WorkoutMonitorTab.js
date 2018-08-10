@@ -8,10 +8,8 @@ import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
   root: {
-    height: 300,
+    height: '100%',
     overflow: 'auto',
-    // width: '100%',
-    // justify: 'center',
     backgroundColor: theme.palette.background.list,
   },
   button: {
@@ -25,12 +23,6 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
   },
 });
-
-function getSteps(sections) {
-  return sections.map(section => {
-    return section.name;
-  })
-}
 
 class WorkoutMonitorTab extends Component {
   state = {
@@ -57,7 +49,7 @@ class WorkoutMonitorTab extends Component {
   
   render() {
     const { classes, exercise, activeSectionIndex } = this.props;
-    const steps = getSteps(exercise.defaultSections);
+    const steps = exercise.defaultSections.map(section => section.name);
     const { activeStep } = this.state;
     
     return (

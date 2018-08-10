@@ -7,8 +7,7 @@ import Button from 'material-ui/Button';
 
 const styles = theme => ({
   root: {
-    width: '100%',
-    height: 300,
+    height: '100%',
     backgroundColor: theme.palette.background.paper,
   },
   listItem: {
@@ -85,7 +84,7 @@ function ExerciseListTab(props) {
 
   return (
     <div className={classes.root}>
-      <List component="nav">
+      <List component="nav" style={{height: '100%', paddingTop: 0, paddingBottom: 0}}>
         {exerciseItems}
         <ListItem className={classes.listItem} key='add-exercise-btn'>
           <Button variant="fab" mini color="secondary" aria-label="add" onClick={addClicked}>

@@ -7,7 +7,8 @@ import SectionListItem from './SectionListItem';
 
 const styles = theme => ({
   root: {
-    height: 300,
+    height: '100%',
+    overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
   },
   listItem: {
@@ -17,43 +18,43 @@ const styles = theme => ({
 });
 
 function SectionListTab(props) {
-  const { classes, 
-          exercise, 
-          moveUp, 
-          moveDown, 
-          deleteSection, 
-          update,
-          handleSectionEditToggle } = props;
+  const { classes,
+    exercise,
+    moveUp,
+    moveDown,
+    deleteSection,
+    update,
+    handleSectionEditToggle } = props;
   // const draftsIcon = <i className="material-icons">drafts</i>
   // const inboxIcon = <i className="material-icons">inbox</i>
-  
-  
-    const sections = exercise.defaultSections.map((sectionItem,index) => {
-      let inputBoxKey = sectionItem.key;
-      // MUI style elments
-      return (
-        <ListItem className={classes.listItem} key={inputBoxKey}>
+
+
+  const sections = exercise.defaultSections.map((sectionItem, index) => {
+    let inputBoxKey = sectionItem.key;
+    // MUI style elments
+    return (
+      <ListItem className={classes.listItem} key={inputBoxKey}>
         <SectionListItem className={classes.listCard}
-        section={sectionItem} 
-        moveUp={moveUp} 
-        moveDown={moveDown} 
-        update={update} 
-        deleteSection={deleteSection}
-        handleSectionEditToggle={handleSectionEditToggle}
+          section={sectionItem}
+          moveUp={moveUp}
+          moveDown={moveDown}
+          update={update}
+          deleteSection={deleteSection}
+          handleSectionEditToggle={handleSectionEditToggle}
         />
-        </ListItem>
-      )
-    })
-    
+      </ListItem>
+    )
+  })
+
   return (
     <div className={classes.root}>
-    <List component="nav" className={classes.nav}>
-    {sections}
-    <ListItem className={classes.listItem} key="add-section-button">
-    <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={handleSectionEditToggle}><i className="material-icons">add</i></Button>
-    </ListItem>
-    
-    </List>
+      <List component="nav" className={classes.nav} style={{paddingTop: 0, paddingBottom: 0}}>
+        {sections}
+        <ListItem className={classes.listItem} key="add-section-button">
+          <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={handleSectionEditToggle}><i className="material-icons">add</i></Button>
+        </ListItem>
+
+      </List>
     </div>
   );
 }

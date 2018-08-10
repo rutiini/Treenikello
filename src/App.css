@@ -7,6 +7,16 @@
 .clockContainer{
   justify-content: center;
 }
+.controlsContainer {
+  overflow: auto;
+}
+.clock {
+  height:40vh;
+  justify-content: center;
+}
+.react-swipeable-view-container{
+  height: 100%;
+}
 */
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
@@ -26,19 +36,15 @@
 
 /* move to jss */
 @media only screen and (max-width: 599px){
-  
-  .clock {
-    width: 350px;
-    justify-content: center;
+  .controlsContainer {
+    height: calc(60vh - 56px - 72px - 4px);
   }
   
 }
 @media only screen and (min-width: 600px){
-  
-  .clock {
-    width: 500px;
-    justify-content: center;
-  } 
+  .controlsContainer {
+    height: calc(60vh - 64px - 72px - 4px);
+  }
   
 }
 @media only screen and (min-width: 960px){
@@ -46,6 +52,11 @@
   .clock {
     width: 940px;
     justify-content: center;
+  }
+  .controlsContainer {
+    height: calc(100% - 940px);
+    /* height: -moz-calc(100% - 940px);
+    height: -webkit-calc(100% - 940px); */
   }
   
 }

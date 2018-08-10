@@ -12,7 +12,7 @@ import ActionsMenuBar from './ActionsMenuBar';
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+    <Typography component="div" dir={dir} style={{height: '100%'}} >
       {children}
     </Typography>
   );
@@ -31,8 +31,7 @@ const styles = theme => ({
     flex: 1
   },
   tabContent:{
-    alignContent: 'center',
-    height: 100% - 72 - 64
+    alignContent: 'center'
   }
 });
 
@@ -81,7 +80,9 @@ class BottomNavTabs extends Component {
       setTime={setTime} 
       handleSubmit={handleSubmit}
       saveExercises={saveExercises}/>
-      <SwipeableViews style={{height: 100% - 72 - 64}}
+      <div className="controlsContainer">
+      <SwipeableViews
+          style={{height: '100%'}}
           axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
@@ -96,6 +97,7 @@ class BottomNavTabs extends Component {
           /></TabContainer>
           <TabContainer dir={theme.direction}><ExerciseListTab exercises={exercises} selectedExerciseIndex={selectedExerciseIndex} selectExercise={selectExercise} handleExerciseEditToggle={handleExerciseEditToggle} deleteExercise={deleteExercise}/></TabContainer>
         </SwipeableViews>
+        </div>
         <AppBar position="static" color="default">
           <Tabs
             value={this.state.value}
