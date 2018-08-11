@@ -87,7 +87,7 @@ function ExerciseListTab(props) {
         </ListItemIcon>
         <ListItemText 
         primary={exercise.name} 
-        secondary={`${starts} - ${stops} osioita: ${exercise.defaultSections.length} kesto: ${duration} min`} />
+        secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`} />
         <ListItemSecondaryAction>
           {deleteBtn}
           {editBtn}

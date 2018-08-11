@@ -47,16 +47,29 @@
   }
   
 }
-@media only screen and (min-width: 960px){
 
+@media only screen and (orientation: landscape) and (min-width: 800px){
+  .controlsContainer {
+    width:50vw;
+    /* adjust for the different reactive element sizes.. */
+    height: calc(100vh - 64px - 72px);
+    float: right;
+  }
+  .menuBlock{
+    width:50vw;
+    float:right;
+    border-left-style: solid;
+    border-left-color:#3f51b5;
+    border-left-width: 2px;
+  }
+  .clockContainer{
+    float: left;
+    height: 99vh;
+    width: 49vw;
+  }
   .clock {
-    width: 940px;
+    width:inherit;
+    height: 99vh;
     justify-content: center;
   }
-  .controlsContainer {
-    height: calc(100% - 940px);
-    /* height: -moz-calc(100% - 940px);
-    height: -webkit-calc(100% - 940px); */
-  }
-  
 }
