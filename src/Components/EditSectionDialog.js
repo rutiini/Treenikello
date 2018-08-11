@@ -72,13 +72,8 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState){
-    // only when the dialog opens and there is a section should we generate the derived state from props!
-    
-    // edit contents.
-    if(nextProps.open && prevState.open){
-      return null;
-    // opening the form.
-    }else if(!prevState.open && nextProps.open){
+    // opening the dialog
+    if(!prevState.open && nextProps.open){
       if(nextProps.section){
         return {
           open: true,

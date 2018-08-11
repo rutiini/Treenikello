@@ -15,19 +15,25 @@ const styles = theme => ({
     width: '75%'
   }
 })
+const emptyExercise = {
+  name: '',
+  startTime: new Date(),
+  preset: false,
+  defaultSections: []
+}
 
 export default withStyles(styles)(class EditExerciseDialog extends Component {
   state = {
-    exercise: {
-      name: '',
-      preset: false,
-      defaultSections: []
-    },
+    open: false,
+    exercise: {...emptyExercise},
     errorText: ''
   };
 
   handleClose = () => {
     this.props.handleToggle();
+    this.setState({
+      open: false
+    });
   };
 
   handleTimeChange = (time) => {
@@ -56,30 +62,34 @@ export default withStyles(styles)(class EditExerciseDialog extends Component {
     if ((nameOK || this.props.exercise ) && exercise.name !== '') {
       handleSubmit(this.props.exercise, exercise);
       this.handleClose();
+      this.setState({
+        open: false
+      });
     } else {
       console.log(`invalid name`)
       this.setState({ errorText: 'virheellinen nimi' })
     }
   }
-  
-  // set initial state
-  componentWillReceiveProps(nextProps) {
 
-    let exerciseInEdit = nextProps.exercise;
-    if (!nextProps.exercise) {
-      // add new exercise!
-      exerciseInEdit = {
-        name: '',
-        preset: false,
-        defaultSections: [],
-        startTime: new Date()
+  static getDerivedStateFromProps(nextProps, prevState){
+    // opening the dialog
+    if(!prevState.open && nextProps.open){
+      if(nextProps.exercise){
+        return {
+          open: true,
+          exercise: {...nextProps.exercise}
+        };
+      }else{
+        return{
+          open: true,
+          exercise: {...emptyExercise}
+        };
       }
+    // default
+    }else{
+      return null;
     }
-    this.setState({
-      exercise: exerciseInEdit,
-      open: nextProps.open,
-      errorText: ''
-    })
+
   }
 
   render() {

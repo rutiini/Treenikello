@@ -7,7 +7,7 @@ import Button from 'material-ui/Button';
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    // height: '100%',
     backgroundColor: theme.palette.background.paper,
   },
   listItem: {
@@ -40,11 +40,23 @@ function ExerciseListTab(props) {
   }
 
   const exerciseItems = exercises.map((exercise, index) => {
+    
+    // add in visual indicator to selected exercise!
+    let selected = props.selectedExerciseIndex === index;
+    let backgroundColor = selected ? 'lightgrey' : 'white';
+    
     let duration =  0;
+    
     exercise.defaultSections.forEach(element => {
       duration = duration + Number.parseInt(element.duration, 10);
     });
-    // delete button only for non-presets
+    
+    // parse timestamps for start and stop
+    const starts = `${exercise.startTime.toLocaleTimeString('FI', {hour: '2-digit', minute:'2-digit'})}`;
+    const stopTime = new Date(exercise.startTime.getTime() + duration*60000);
+    const stops = `${stopTime.toLocaleTimeString('FI', {hour: '2-digit', minute:'2-digit'})}`;
+
+    // buttons disabled for presets.
     let deleteBtn;
     let editBtn;
     if (exercise.preset) {
@@ -69,11 +81,13 @@ function ExerciseListTab(props) {
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={clicked(exercise)} button>
+      <ListItem className={classes.listItem} key={exerciseKey} index={index} value={exercise.name} onClick={clicked(exercise)} style={{backgroundColor: backgroundColor}} button>
         <ListItemIcon className={classes.listItemIcon}>
           {placeHolderIcon}
         </ListItemIcon>
-        <ListItemText primary={exercise.name} secondary={`osioita: ${exercise.defaultSections.length} kesto: ${duration} min`} />
+        <ListItemText 
+        primary={exercise.name} 
+        secondary={`${starts} - ${stops} osioita: ${exercise.defaultSections.length} kesto: ${duration} min`} />
         <ListItemSecondaryAction>
           {deleteBtn}
           {editBtn}

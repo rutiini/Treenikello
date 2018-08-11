@@ -12,7 +12,9 @@ import ActionsMenuBar from './ActionsMenuBar';
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{height: '100%'}} >
+    <Typography component="div" dir={dir} 
+    // style={{height: '100%'}} 
+    >
       {children}
     </Typography>
   );
@@ -87,15 +89,28 @@ class BottomNavTabs extends Component {
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
           >
-          <TabContainer dir={theme.direction}><WorkoutMonitorTab exercise={exercises[selectedExerciseIndex]} activeSectionIndex={activeSectionIndex} className={classes.tabContent}/></TabContainer>
-          <TabContainer dir={theme.direction}><SectionListTab 
+          <TabContainer dir={theme.direction}>
+          <WorkoutMonitorTab 
+          exercise={exercises[selectedExerciseIndex]} 
+          activeSectionIndex={activeSectionIndex} 
+          className={classes.tabContent}/>
+          </TabContainer>
+          <TabContainer dir={theme.direction}>
+          <SectionListTab 
           exercise={exercises[selectedExerciseIndex]} 
           moveUp={moveUp} 
           moveDown={moveDown}
           deleteSection={deleteSection}
           handleSectionEditToggle={handleSectionEditToggle}
           /></TabContainer>
-          <TabContainer dir={theme.direction}><ExerciseListTab exercises={exercises} selectedExerciseIndex={selectedExerciseIndex} selectExercise={selectExercise} handleExerciseEditToggle={handleExerciseEditToggle} deleteExercise={deleteExercise}/></TabContainer>
+          <TabContainer dir={theme.direction}>
+          <ExerciseListTab 
+          exercises={exercises} 
+          selectedExerciseIndex={selectedExerciseIndex} 
+          selectExercise={selectExercise} 
+          handleExerciseEditToggle={handleExerciseEditToggle} 
+          deleteExercise={deleteExercise}/>
+          </TabContainer>
         </SwipeableViews>
         </div>
         <AppBar position="static" color="default">

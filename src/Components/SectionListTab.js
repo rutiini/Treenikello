@@ -7,7 +7,7 @@ import SectionListItem from './SectionListItem';
 
 const styles = theme => ({
   root: {
-    height: '100%',
+    // height: '100%',
     overflow: 'auto',
     backgroundColor: theme.palette.background.paper,
   },

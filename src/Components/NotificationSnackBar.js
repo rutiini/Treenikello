@@ -25,7 +25,7 @@ class NotificationSnackBar extends Component {
           open={open}
           autoHideDuration={4000}
           onClose={handleHide}
-          SnackbarContentProps={{
+          snackbarcontentprops={{
             'aria-describedby': 'message-id',
           }}
           message={<span id="message-id">Saved exercises</span>}
