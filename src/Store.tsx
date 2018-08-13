@@ -1,11 +1,14 @@
+import { IExercise } from "./DataInterfaces";
+
 // session / localstorage functionality
 class Store{
   
   // get saved exercises from browser cache
-  getSavedExercises = () =>{
-    const customsJSON = localStorage.customExercises;
+  public getSavedExercises = () =>{
+    const customsJSON = localStorage.getItem("customExercises");
     if(customsJSON !== undefined){
-      let customs = JSON.parse(customsJSON);
+      const customs : IExercise[] = JSON.parse(customsJSON as string);
+      
       if(customs === undefined || customs == null){
         console.log("local storage corrupted. clearing cached data.")
         localStorage.clear();
@@ -13,52 +16,61 @@ class Store{
       }
       
       // need to parse the date objects sepaprately
-      for(let i = 0; i < customs.length; i++){
-        customs[i].startTime = new Date(customs[i].startTime);
-        
-      }
+      // old implementation
+      // for(let i : number = 0; i < customs.length; i++){
+      //   customs[i].startTime = new Date(customs[i].startTime);
+      // }
+
+      customs.map( (customExercise : IExercise) => {
+        customExercise.startTime = new Date(customExercise.startTime);
+      })
+
       return customs;
     }
+
+    return null;
   }
   
   // save users custom exercises to browser cache
-  saveExercises = (exercises) =>{
-    const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+  public saveExercises = (modifiedExercises : IExercise[]) =>{
+
+    const nonPresets = modifiedExercises.filter((x : IExercise) => x.preset !== true)
     console.log(`saving ${nonPresets.length} exercises`)
     localStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
   // updates the locally stored exercises
-  saveSessionExercises = (exercises) =>{
-    const nonPresets = exercises.filter((x) => {return x.preset !== true;})
+  public saveSessionExercises = (sessionExercises : IExercise[]) =>{
+
+    const nonPresets = sessionExercises.filter((x) => x.preset !== true)
     sessionStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
   // returns an array of the locally stored exercises
-  getSessionExercises = () => {
-    let customsJSON = sessionStorage.customExercises;
+  public getSessionExercises = () => {
+    let customsJSON = sessionStorage.getItem("customExercises");
     if(customsJSON === undefined){
       console.log("sessionStorage is empty. checking localStorage");
-      customsJSON = localStorage.customExercises;
+      customsJSON = localStorage.getItem("customExercises");
     }
     
     if(customsJSON !== undefined){
-      let customs = JSON.parse(customsJSON);
+      const customs : IExercise[] = JSON.parse(customsJSON as string);
       if(customs === undefined || customs == null){
         console.log("local storage corrupted. clearing cached data.")
         sessionStorage.clear();
         return null;
       }
       
-      // need to parse the date objects sepaprately
-      for(let i = 0; i < customs.length; i++){
-        customs[i].startTime = new Date(customs[i].startTime);
-        // console.log(customs[i]);
-      }
+      customs.map( (customExercise : IExercise) => {
+        customExercise.startTime = new Date(customExercise.startTime);
+      })
+
       console.log("store: found custom exercises: ", customs);
       return customs;
     }
     
+    return null;
   }
   
   // not necessary, we only load and save in the store, state management is in the app (for now)
@@ -83,100 +95,100 @@ class Store{
   
 }
 
-const store = new Store({});
+const store = new Store();
 export default store;
 
-export const exercises = [
+export const exercises : IExercise[] = [
   {
-    name: "Taidotreenit",
-    startTime: new Date(2018,1,1,18,30),
-    preset: true,
     defaultSections: [
       {
-        key: "unassigned",
-        name: 'Alkulämmittely',
-        duration: 10,
         color: "#1b85b8",
-        description: 'nilkat lämpimiksi, käsipallo'
-      },
-      {
-        key: "unassigned",
-        name: 'Alkuvenyttely',
-        duration: 5,
-        color: "#559e83",
-        description: 'erityisesti jalat vetreiksi'
-      },
-      {
-        key: "unassigned",
-        name: 'Tengi',
+        description: 'nilkat lämpimiksi, käsipallo',
         duration: 10,
+        key: "unassigned",
+        name: 'Alkulämmittely'
+      },
+      {
+        color: "#559e83",
+        description: 'erityisesti jalat vetreiksi',
+        duration: 5,
+        key: "unassigned",
+        name: 'Alkuvenyttely'
+      },
+      {
         color: "#ae5a41",
-        description: 'kokeilkaa uutta korkeaa'
+        description: 'kokeilkaa uutta korkeaa',
+        duration: 10,
+        key: "unassigned",
+        name: 'Tengi'
       },
       {
-        key: "unassigned",
-        name: 'Päivän aihe',
-        duration: 20,
         color: "#c3cb71",
-        description: 'perustekniikkaa'
+        description: 'perustekniikkaa',
+        duration: 20,
+        key: "unassigned",
+        name: 'Päivän aihe'
       },
       {
-        key: "unassigned",
-        name: 'Loppujumppa',
-        duration: 15,
         color: "#5a5255",
-        description: 'intervallit mitseihin täysillä'
+        description: 'intervallit mitseihin täysillä',
+        duration: 15,
+        key: "unassigned",
+        name: 'Loppujumppa'
       }
-    ]
+    ],
+    name: "Taidotreenit",
+    preset: true,
+    startTime: new Date(2018,1,1,18,30)
   },
   {
-    name: "Intervallitreeni",
-    startTime: new Date(2018,1,1,17,30),
-    preset: true,
     defaultSections: [
       {
-        key: "unassigned",
-        name: 'Sarja',
-        duration: 5,
         color: "#ae5a41",
-        description: 'kyykyt'
+        description: 'kyykyt',
+        duration: 5,
+        key: "unassigned",
+        name: 'Sarja'
       },
       {
+        color: "#559e83",
+        description: 'lepoa',
+        duration: 5,
+        key: "unassigned",
+        name: 'tauko'
+      },
+      {
+        color: "#ae5a41",
+        description: 'vatsat',
+        duration: 5,
+        key: "unassigned",
+        name: 'Sarja'
+      },
+      {
+        color: "#559e83",
+        description: 'lepoa',
+        duration: 5,
         key: "unassigned",
         name: 'tauko',
-        duration: 5,
-        color: "#559e83",
-        description: 'lepoa'
       },
       {
-        key: "unassigned",
-        name: 'Sarja',
-        duration: 5,
         color: "#ae5a41",
-        description: 'vatsat'
+        description: 'punnerrukset',
+        duration: 5,
+        key: "unassigned",
+        name: 'Sarja'
       },
       {
-        key: "unassigned",
-        name: 'tauko',
-        duration: 5,
         color: "#559e83",
-        description: 'lepoa'
-      },
-      {
-        key: "unassigned",
-        name: 'Sarja',
+        description: 'lepoa',
         duration: 5,
-        color: "#ae5a41",
-        description: 'punnerrukset'
-      },
-      {
         key: "unassigned",
-        name: 'tauko',
-        duration: 5,
-        color: "#559e83",
-        description: 'lepoa'
+        name: 'tauko'
       },
     ],
+    name: "Intervallitreeni",
+    preset: true,
+    startTime: new Date(2018,1,1,17,30)
   }
 ]
 export const colorOptions = 
