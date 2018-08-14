@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import * as injectTapEventPlugin from 'react-tap-event-plugin'; unsure if necessary
 import './App.css';
 import BottomNavTabs from './Components/BottomNavTabs';
 import Clock from './Components/Clock';
@@ -9,8 +10,10 @@ import NotificationSnackBar from './Components/NotificationSnackBar';
 import SectionListItem from './Components/SectionListItem';
 import { IExercise, ISection } from './DataInterfaces';
 import store, { exercises } from './Store';
-
 // import UniqueId from 'react-html-id';
+
+// enable tap events on the new MUI version.
+// injectTapEventPlugin();
 
 interface IState {
   activeSectionIndex: number,
@@ -482,13 +485,15 @@ class App extends Component<{}, IState> {
     return (
       <div className="App">
         <Clock
-          id="clock"
+          // className='clock'
           sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
           startTime={stateExercises[selectedExerciseIndex].startTime}
-          canvasSide="100"
+          canvasSide={100}
           activeSection={activeSectionIndex}
           setActive={this.setActiveSection} />
         <BottomNavTabs
+          classes={classes}
+          theme={theme}
           exercises={stateExercises}
           selectedExerciseIndex={selectedExerciseIndex}
           moveUp={this.moveSectionUp}

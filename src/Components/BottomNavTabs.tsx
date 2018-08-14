@@ -1,18 +1,19 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core';
+import { AppBar, Tab, Tabs, Typography } from '@material-ui/core';
+import React, { ChangeEvent, Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
-import SectionListTab from './SectionListTab';
-import ExerciseListTab from './ExerciseListTab';
-import WorkoutMonitorTab from './WorkoutMonitorTab';
+import { IExercise, ISection } from '../DataInterfaces';
 import ActionsMenuBar from './ActionsMenuBar';
+import ExerciseListTab from './ExerciseListTab';
+import SectionListTab from './SectionListTab';
+import WorkoutMonitorTab from './WorkoutMonitorTab';
+// import AppBar from 'material-ui/AppBar';
+// import Tabs, { Tab } from 'material-ui/Tabs';
+// import Typography from 'material-ui/Typography';
 
-function TabContainer({ children, dir }) {
+const TabContainer = (children: any) => {
   return (
-    <Typography component="div" dir={dir}
+    <Typography component="div" dir={"ltr"}
     // style={{height: '100%'}} 
     >
       {children}
@@ -20,37 +21,59 @@ function TabContainer({ children, dir }) {
   );
 }
 
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-  dir: PropTypes.string.isRequired,
-};
+interface IState {
+  value: number
+}
 
-const styles = theme => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-  },
+interface IProps {
+  classes: any, // TODO find out type
+  theme: any,
+  exercises: IExercise[],
+  selectedExerciseIndex: number,
+  moveUp: (section: ISection) => void,
+  moveDown: (section: ISection) => void,
+  deleteSection: (section: ISection) => void,
+  setTime: (time: Date) => void,
+  selectExercise: (name: string) => void,
+  activeSectionIndex: number,
+  handleSectionEditToggle: (section: ISection) => void,
+  handleSubmit: (oldsection: ISection, newsection: ISection) => void,
+  handleExerciseEditToggle: (exercise: IExercise) => void,
+  deleteExercise: (exercise: IExercise) => void,
+  saveExercises: (exercise: IExercise) => void,
+  editSectionOpen: boolean
+}
+
+const styles = (theme: any) => ({
   buttonRight: {
     flex: 1
+  },
+  root: {
+    backgroundColor: theme.palette.background.paper,
   },
   tabContent: {
     alignContent: 'center'
   }
 });
 
-class BottomNavTabs extends Component {
-  state = {
-    value: 0,
-  };
+class BottomNavTabs extends Component<IProps, IState> {
 
-  handleChange = (event, value) => {
+  public componentWillMount() {
+
+    this.setState({
+      value: 0,
+    });
+  }
+
+  public handleChange = (event: ChangeEvent<{}>, value: number) => {
     this.setState({ value });
   };
 
-  handleChangeIndex = index => {
+  public handleChangeIndex = (index: number) => {
     this.setState({ value: index });
   };
 
-  render() {
+  public render() {
     const {
       classes,
       theme,
@@ -122,8 +145,8 @@ class BottomNavTabs extends Component {
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
-            fullWidth
-            centered
+            fullWidth={true}
+            centered={true}
           >
             <Tab label={tabLabels[0]} icon={workoutIcon} />
             <Tab label={tabLabels[1]} icon={sectionsIcon} />
@@ -134,10 +157,5 @@ class BottomNavTabs extends Component {
     );
   }
 }
-
-BottomNavTabs.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(BottomNavTabs);
