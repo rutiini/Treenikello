@@ -171,7 +171,7 @@ class Clock extends Component<IProps, IState> {
                     <g id="hands">
                         {this.hourHand}
                         {this.minHand}
-                        <StopWatchHand x1="50" y1="50" x2="50" y2="14" y3="12" color="yellow" tipColor="red" visibility={this.state.timerEnabled} transform={this.initialRotation} />
+                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} color="yellow" tipColor="red" />
                         {this.secHand}
                     </g>
                     <circle id="midPoint" cx="50" cy="50" r="3" />
@@ -353,7 +353,16 @@ class Clock extends Component<IProps, IState> {
                 // set the detected section to the info block? -> info block is at app though?
                 // this hack forces rerendering (changing keys..)
                 const sectionArcKey = "Arc-" + index + angle;
-                sectionItems.push(<SectionItem cx={this.centerCoordinate} cy={this.centerCoordinate} radius="44.1" start_angle={startAngle} end_angle={angle} thickness="3" key={sectionArcKey} color={sectionItem.color} section={sectionItem} class={sectionStyle} />)
+                sectionItems.push(<SectionItem 
+                    cx={this.centerCoordinate} 
+                    cy={this.centerCoordinate} 
+                    radius={44.1} 
+                    startAngle={startAngle} 
+                    endAngle={angle} 
+                    thickness={3} 
+                    key={sectionArcKey} 
+                    color={sectionItem.color} 
+                    class={sectionStyle} />)
             });
             // just check whether there is an active item set.
         }

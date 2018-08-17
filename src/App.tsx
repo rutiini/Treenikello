@@ -1,5 +1,7 @@
+import { withStyles } from '@material-ui/core';
+import blue from '@material-ui/core/colors/blue';
+import { createMuiTheme } from '@material-ui/core/styles';
 import React, { Component } from 'react';
-// import * as injectTapEventPlugin from 'react-tap-event-plugin'; unsure if necessary
 import './App.css';
 import BottomNavTabs from './Components/BottomNavTabs';
 import Clock from './Components/Clock';
@@ -12,8 +14,31 @@ import { IExercise, ISection } from './DataInterfaces';
 import store, { exercises } from './Store';
 // import UniqueId from 'react-html-id';
 
-// enable tap events on the new MUI version.
-// injectTapEventPlugin();
+const theme = createMuiTheme({
+  palette: {
+    primary: blue
+    // error: {
+    //   dark: palette.error[700],
+    //   light: palette.error[300],
+    //   main: palette.error[500],
+    // },
+    // primary: {
+    //   dark: palette.primary[700],
+    //   light: palette.primary[300],
+    //   main: palette.primary[500],
+    // },
+    // secondary: {
+    //   dark: palette.secondary.A700,
+    //   light: palette.secondary.A200,
+    //   main: palette.secondary.A400,
+  },
+  shape: {
+
+  },
+  zIndex:{
+    
+  }
+})
 
 interface IState {
   activeSectionIndex: number,
@@ -35,7 +60,7 @@ class App extends Component<{}, IState> {
     super(props);
     // modify exercises with new unique ids
     // UniqueId.enableUniqueIds(this);
-    
+
     // bindings..
     this.moveSectionUp = this.moveSectionUp.bind(this);
     this.moveSectionDown = this.moveSectionDown.bind(this);
@@ -146,7 +171,7 @@ class App extends Component<{}, IState> {
   }
 
   public reassignKeys = (itemArr: ISection[], groupId: string) => {
-    
+
     const rekeyedArr = itemArr.map((item, index) => {
       item.key = groupId + `-${index}-`; // this.nextUniqueId(groupId);
       return item;
@@ -164,7 +189,7 @@ class App extends Component<{}, IState> {
       console.log("template modified, create a new exercise based on the selected one!");
     }
 
-    const newSection = this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.name) 
+    const newSection = this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.name)
     // + this.nextUniqueId())
 
     // rekey sections
@@ -199,7 +224,7 @@ class App extends Component<{}, IState> {
       this.setState((prevState) => {
         return { exercises: newExercises };
       },
-      () => store.saveSessionExercises(newExercises))
+        () => store.saveSessionExercises(newExercises))
     }
   }
 
@@ -286,7 +311,7 @@ class App extends Component<{}, IState> {
     const arrayIndex = this.state.exercises.map(exercise => exercise.name).indexOf(name);
 
     if (arrayIndex > -1) {
-    
+
       this.setState(
         {
           selectedExerciseIndex: arrayIndex
@@ -368,7 +393,7 @@ class App extends Component<{}, IState> {
         {
           deleteExerciseIndex: -1,
           exercises: newExercises
-        }, 
+        },
         () => store.saveSessionExercises(newExercises)
       )
     }
@@ -398,7 +423,7 @@ class App extends Component<{}, IState> {
         return null;
       }
     })
-    
+
     exercisePresets.push(<option key="addNewexercise">+ new exercise</option>)
   }
 
@@ -447,7 +472,7 @@ class App extends Component<{}, IState> {
 
   public handleToggleCofirmationDialog = (exercise: IExercise) => {
     const { exercises: stateExercises } = this.state;
-    // console.log('result of dialog:', exercise.name)
+
     const deleteIndex = stateExercises.indexOf(exercise);
 
     const { confirmationDialogOpen } = this.state;
@@ -492,7 +517,7 @@ class App extends Component<{}, IState> {
           activeSection={activeSectionIndex}
           setActive={this.setActiveSection} />
         <BottomNavTabs
-          classes={classes}
+          // classes={classes}
           theme={theme}
           exercises={stateExercises}
           selectedExerciseIndex={selectedExerciseIndex}
@@ -512,12 +537,14 @@ class App extends Component<{}, IState> {
         <EditSectionDialog exercise={stateExercises[selectedExerciseIndex]} open={editSectionOpen} section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection} />
         <EditExerciseDialog exercise={stateExercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
         <ConfirmationDialog open={confirmationDialogOpen}
+          exercise={stateExercises[selectedExerciseIndex]}
           handleToggle={this.handleToggleCofirmationDialog}
-          handleAccept={this.handleDeleteExercise} />
+        // handleAccept={this.handleDeleteExercise} 
+        />
         <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
       </div>
     );
   }
 }
 
-export default App;
+export default withStyles(theme)(App);

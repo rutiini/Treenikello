@@ -1,28 +1,26 @@
-import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Dialog, {
+import { Button } from '@material-ui/core';
+import  { Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from 'material-ui/Dialog';
+} from '@material-ui/core';
+import React, { PureComponent } from 'react';
+import { IExercise } from '../DataInterfaces';
 
-class ConfirmationDialog extends Component {
+interface IProps{
+  exercise: IExercise,
+  handleToggle: (exercise: IExercise) => void,
+  open: boolean
+}
 
-  accept = () => {
-    this.props.handleAccept();
-    this.props.handleToggle(true);
-  }
-  cancel = () => {
-    this.props.handleToggle(false);
-  }
+class ConfirmationDialog extends PureComponent<IProps, {}> {
 
-  render() {
-    const { open, handleToggle } = this.props;
+  public render() {
+    const { open } = this.props;
     return (
         <Dialog
           open={open}
-          onClose={handleToggle}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -36,12 +34,20 @@ class ConfirmationDialog extends Component {
             <Button onClick={this.cancel} color="primary">
               Peruuta
             </Button>
-            <Button onClick={this.accept} color="primary" autoFocus>
+            <Button onClick={this.accept} color="primary" autoFocus={true}>
               Poista
             </Button>
           </DialogActions>
         </Dialog>
     );
+  }
+  
+  private accept = () => {
+    // this.props.handleAccept();
+    this.props.handleToggle(this.props.exercise);
+  }
+  private cancel = () => {
+    this.props.handleToggle(this.props.exercise);
   }
 }
 

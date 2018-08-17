@@ -1,39 +1,39 @@
-import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-// import {Form} from 'material-ui/Form';
-import TextField from 'material-ui/TextField';
-import Dialog, {
+import { Button,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from 'material-ui/Dialog';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl } from 'material-ui/Form';
-import Select from 'material-ui/Select';
-import { InputLabel } from 'material-ui/Input';
-import { withStyles } from 'material-ui/styles';
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Theme,
+  withStyles
+} from '@material-ui/core';
+import React, { Component } from 'react';
 // store
 import { colorOptions } from '../Store';
 
-const styles = theme => ({
+const styles = (theme: Theme) => ({
   EditSectionForm: {
     width: '75%'
   }
 })
 const emptySection = {
-      name: '',
-      description: '',
-      duration: 0,
-      color: ''
+  color: '',
+  description: '',
+  duration: 0,
+  name: '',
 }
 
 export default withStyles(styles)(class EditSectionDialog extends Component {
   
   // constructor(super){
-    colorOptions = colorOptions.map(optionItem => {
-      let colorCode = optionItem.colorValue;
-      let colorName = optionItem.colorName;
+    private colorOptions = colorOptions.map(optionItem => {
+      const colorCode = optionItem.colorValue;
+      const colorName = optionItem.colorName;
 
       return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
     })

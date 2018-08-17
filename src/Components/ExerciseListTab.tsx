@@ -1,11 +1,10 @@
-import { withStyles } from '@material-ui/core';
-import Button from '@material-ui/core';
-import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
-import IconButton from '@material-ui/core';
+import { Theme, withStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
 import { IExercise } from '../DataInterfaces';
 
-const styles = (theme: any) => ({
+const styles = (theme: Theme) => ({
   listItem: {
     justifyContent: 'center',
     textAlign: 'center',
