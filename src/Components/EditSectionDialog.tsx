@@ -13,6 +13,7 @@ import { Button,
   withStyles
 } from '@material-ui/core';
 import React, { Component } from 'react';
+import { IExercise, ISection } from '../DataInterfaces';
 // store
 import { colorOptions } from '../Store';
 
@@ -21,57 +22,31 @@ const styles = (theme: Theme) => ({
     width: '75%'
   }
 })
-const emptySection = {
+const emptySection: ISection = {
   color: '',
   description: '',
   duration: 0,
+  key: '',
   name: '',
 }
 
-export default withStyles(styles)(class EditSectionDialog extends Component {
-  
-  // constructor(super){
-    private colorOptions = colorOptions.map(optionItem => {
-      const colorCode = optionItem.colorValue;
-      const colorName = optionItem.colorName;
+interface IProps{
+  exercise: IExercise, 
+  classes: any, 
+  open: boolean, 
+  section: ISection,
+  handleToggle: (section: ISection) => void, // review the necessity of this!
+  handleSubmit: (oldSection: ISection, newSection: ISection) => void
+}
 
-      return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
-    })
-  // }
-  
-  state = {
-    open: false,
-    section: {...emptySection}
-  };
+interface IState{
+  section: ISection,
+  open: boolean
+}
 
-  handleClose = () => {
-    this.props.handleToggle();
-    this.setState({
-      open: false,
-      section: {...emptySection}
-    })
-  };
+export default withStyles(styles)(class EditSectionDialog extends Component<IProps,IState> {
 
-  handleSubmit = () => {
-    this.props.handleSubmit(this.props.section, this.state.section);
-    this.props.handleToggle();
-    this.setState({
-      open: false,
-      section: {...emptySection}
-    })
-  }
-  // magical generic prop handling:
-  handleChange = name => ({ target: { value } }) => {
-    this.setState({
-      section: {
-        ...this.state.section,
-        [name]: value
-      }
-    })
-
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState){
+  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
     if(!prevState.open && nextProps.open){
       if(nextProps.section){
@@ -90,8 +65,24 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
       return null;
     }
   }
+  
+  // constructor(super){
+    private colorOptions = colorOptions.map(optionItem => {
+      const colorCode = optionItem.colorValue;
+      const colorName = optionItem.colorName;
 
-  render() {
+      return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
+    })
+  
+  public componentDidMount(){
+    
+    this.setState({
+      open: false,
+      section: {...emptySection}
+    });
+  }
+
+  public render() {
     const { exercise, classes, open, section } = this.props;
 
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
@@ -110,14 +101,14 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
             {dialogDescription}
           </DialogContentText>
           <TextField
-            autoFocus
+            autoFocus={true}
             margin="dense"
             id="name"
             label="Nimi"
             type="text"
             value={this.state.section.name}
-            onChange={this.handleChange('name')}
-            fullWidth
+            // onChange={this.handleChange('name')}
+            fullWidth={true}
           />
           <br />
           <TextField
@@ -125,20 +116,20 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
             id="description"
             label="Sisältö"
             type="text"
-            multiline
+            multiline={true}
             rows="2"
             value={this.state.section.description}
-            onChange={this.handleChange('description')}
-            fullWidth
+            // onChange={this.handleChange('description')}
+            fullWidth={true}
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
             <Select
               value={this.state.section.color}
-              onChange={this.handleChange('color')}
+              // onChange={this.handleChange('color')}
               inputProps={{
-                name: 'color',
                 id: 'item-color',
+                name: 'color',
               }}
             >
               <MenuItem value="">
@@ -153,7 +144,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
             label="Kesto"
             type="number"
             value={this.state.section.duration}
-            onChange={this.handleChange('duration')}
+            // onChange={this.handleChange('duration')}
           />
         </DialogContent>
         <DialogActions>
@@ -167,4 +158,32 @@ export default withStyles(styles)(class EditSectionDialog extends Component {
       </Dialog>
     );
   }
+
+  private handleClose = () => {
+    this.props.handleToggle(this.state.section);
+    this.setState({
+      open: false,
+      section: {...emptySection}
+    })
+  };
+
+  private handleSubmit = () => {
+    this.props.handleSubmit(this.props.section, this.state.section);
+    this.props.handleToggle(this.state.section);
+    this.setState({
+      open: false,
+      section: {...emptySection}
+    })
+  }
+
+  // magical generic prop handling:
+  // private handleChange = name => ({ target: { value } }) => {
+  //   this.setState({
+  //     section: {
+  //       ...this.state.section,
+  //       [name]: value
+  //     }
+  //   })
+
+  // }
 })

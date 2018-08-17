@@ -1,10 +1,10 @@
-import { Theme, withStyles } from '@material-ui/core';
+import { createStyles, withStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
 import { IExercise } from '../DataInterfaces';
 
-const styles = (theme: Theme) => ({
+const styles = createStyles({
   listItem: {
     justifyContent: 'center',
     textAlign: 'center',
@@ -12,7 +12,7 @@ const styles = (theme: Theme) => ({
   },
   root: {
     // height: '100%',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   }
 });
 

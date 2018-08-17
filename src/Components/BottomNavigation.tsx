@@ -1,10 +1,6 @@
-// import BottomNavigation, { BottomNavigationAction } from '@material-ui/core';
-import { withStyles } from '@material-ui/core';
-// import PropTypes from 'prop-types';
+import { BottomNavigationAction, withStyles } from '@material-ui/core';
+import { BottomNavigation } from 'material-ui';
 import React, { Component } from 'react';
-// import RestoreIcon from 'material-ui-icons/Restore';
-// import FavoriteIcon from 'material-ui-icons/Favorite';
-// import LocationOnIcon from 'material-ui-icons/LocationOn';
 
 const styles = {
   root: {
@@ -40,19 +36,14 @@ class SimpleBottomNavigation extends Component<IProps, IState> {
     const exercisesIcon = <i className="material-icons">fitness_center</i>
 
     return (
-      // <BottomNavigation
-      //   value={value}
-      //   onChange={this.handleChange}
-      //   showLabels={true}
-      //   className={classes.root}
-      // >
-      //   <BottomNavigationAction label="Workout" icon={workoutIcon} />
-      //   <BottomNavigationAction label="Sections" icon={sectionsIcon} />
-      //   <BottomNavigationAction label="Exercises" icon={exercisesIcon} />
-      // </BottomNavigation>
-      <>
-      unused component.
-      </>
+      <BottomNavigation
+        selectedIndex={value}
+        className={classes.root}
+      >
+        <BottomNavigationAction label="Workout" icon={workoutIcon} />
+        <BottomNavigationAction label="Sections" icon={sectionsIcon} />
+        <BottomNavigationAction label="Exercises" icon={exercisesIcon} />
+      </BottomNavigation>
     );
   }
 }

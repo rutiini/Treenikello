@@ -41,7 +41,7 @@ class Clock extends Component<IProps, IState> {
     private canvasSide: number = 100;
     private centerCoordinate = 100 / 2;
     private faceRadius = 100 / 2 - (100 / 20);
-    private initialRotation: number = 0; // TODO: check whether this needs an actual value
+    // private initialRotation: number = 0; // TODO: check whether this needs an actual value
 
     private timerEnabled = false;
     private timerStarted = false;

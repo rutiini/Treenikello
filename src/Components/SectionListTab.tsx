@@ -1,16 +1,16 @@
-import { Button, List, ListItem, Theme, withStyles } from '@material-ui/core';
+import { Button, createStyles, List, ListItem, withStyles } from '@material-ui/core';
 import React, { PureComponent } from 'react';
 import { IExercise, ISection } from '../DataInterfaces';
 import SectionListItem from './SectionListItem';
 
-const styles = (theme: Theme) => ({
+const styles = createStyles({
   listItem: {
     justifyContent: 'center',
     textAlign: 'center',
   },
   root: {
     // height: '100%',
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
   }
 });
@@ -37,7 +37,6 @@ class SectionListTab extends PureComponent<IProps>{
       moveUp,
       moveDown,
       deleteSection,
-      update,
       handleSectionEditToggle } = props;
 
     this.sections = exercise.defaultSections.map((sectionItem, index) => {
@@ -45,11 +44,10 @@ class SectionListTab extends PureComponent<IProps>{
       // MUI style elments
       return (
         <ListItem className={classes.listItem} key={inputBoxKey}>
-          <SectionListItem className={classes.listCard}
+          <SectionListItem 
             section={sectionItem}
             moveUp={moveUp}
             moveDown={moveDown}
-            update={update}
             deleteSection={deleteSection}
             handleSectionEditToggle={handleSectionEditToggle}
           />
@@ -58,7 +56,7 @@ class SectionListTab extends PureComponent<IProps>{
     })
   }
   public render() {
-
+    const {classes} = this.props;
     return (
       <div className={classes.root}>
         <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>

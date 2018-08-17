@@ -1,33 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Snackbar from 'material-ui/Snackbar';
-import IconButton from 'material-ui/IconButton';
-// import CloseIcon from 'material-ui-icons/Close';
+import {createStyles, IconButton, Snackbar, withStyles } from '@material-ui/core';
+import React, { PureComponent } from 'react';
 
-const styles = theme => ({
+const styles = createStyles({
   close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
+    // height: theme.spacing.unit * 4,
+    // width: theme.spacing.unit * 4,
   },
 });
 
-class NotificationSnackBar extends Component {
+interface IProps{
+  classes: {
+    close: string
+  },
+  handleHide: (event: any, reason?: string) => void,
+  open: boolean
+}
 
-  render() {
+class NotificationSnackBar extends PureComponent<IProps,{}> {
+
+  public render() {
     const { classes,handleHide,open } = this.props;
     return (
         <Snackbar
           anchorOrigin={{
-            vertical: 'top',
             horizontal: 'left',
+            vertical: 'top',
           }}
           open={open}
           autoHideDuration={4000}
           onClose={handleHide}
-          snackbarcontentprops={{
-            'aria-describedby': 'message-id',
-          }}
           message={<span id="message-id">Saved exercises</span>}
           action={[
             <IconButton
@@ -44,9 +45,5 @@ class NotificationSnackBar extends Component {
     );
   }
 }
-
-NotificationSnackBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(NotificationSnackBar);

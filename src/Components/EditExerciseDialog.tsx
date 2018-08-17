@@ -1,5 +1,6 @@
 import  {
   Button,
+  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,11 +12,12 @@ import  {
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise } from '../DataInterfaces';
 
-const styles = (theme: any) => ({
+const styles = createStyles({
   EditForm: {
     width: '75%'
   }
 })
+
 const emptyExercise = {
   defaultSections: [],
   name: '',
@@ -26,9 +28,13 @@ const emptyExercise = {
 interface IProps{
   open: boolean,
   exercise: IExercise,
-  handleToggle: () => void,
+  handleToggle: (exercise: IExercise) => void,
   handleSubmit: (oldExercise: IExercise, newExercise: IExercise) => void,
-  validateName: (name: string) => boolean
+  validateName: (name: string) => boolean,
+  // injected classes need to be declared in props!
+  classes: {
+    EditForm: string
+  }
 }
 
 interface IState{
@@ -38,7 +44,7 @@ interface IState{
 }
 
 
-export default withStyles(styles)(class EditExerciseDialog extends Component<IProps,IState> {
+class EditExerciseDialog extends Component<IProps,IState> {
 
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
@@ -153,19 +159,19 @@ export default withStyles(styles)(class EditExerciseDialog extends Component<IPr
   }
   
   private handleClose = () => {
-    this.props.handleToggle();
+    this.props.handleToggle(this.props.exercise);
     this.setState({
       open: false
     });
   };
 
-  private handleTimeChange = (time: Date) => {
-    const { exercise } = this.state;
-    exercise.startTime = time;
-    this.setState({
-      exercise
-    })
-  }
+  // private handleTimeChange = (time: Date) => {
+  //   const { exercise } = this.state;
+  //   exercise.startTime = time;
+  //   this.setState({
+  //     exercise
+  //   })
+  // }
   
   private updateName(event: ChangeEvent){
     // event.preventDefault()
@@ -195,4 +201,6 @@ export default withStyles(styles)(class EditExerciseDialog extends Component<IPr
       this.setState({ errorText: 'virheellinen nimi' })
     }
   }
-})
+}
+
+export default withStyles(styles)(EditExerciseDialog);

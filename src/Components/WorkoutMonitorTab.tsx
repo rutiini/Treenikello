@@ -1,31 +1,31 @@
 import {
   Button,
+  createStyles,
   Paper,
   Step,
   StepContent,
   StepLabel,
   Stepper,
-  Theme,
   Typography,
   withStyles
 } from '@material-ui/core';
 import React, { Component } from 'react';
 import { IExercise } from '../DataInterfaces';
 
-const styles = (theme: Theme) => ({
+const styles = createStyles({
   actionsContainer: {
-    marginBottom: theme.spacing.unit * 2,
+    // marginBottom: theme.spacing.unit * 2,
   },
   button: {
-    marginRight: theme.spacing.unit,
+    // marginRight: theme.spacing.unit,
   },
-  marginTop: theme.spacing.unit,
+  // marginTop: theme.spacing.unit,
   resetContainer: {
-    padding: theme.spacing.unit * 3,
+    // padding: theme.spacing.unit * 3,
   },
   root: {
     // height: '100%',
-    backgroundColor: theme.palette.background,
+    // backgroundColor: theme.palette.background,
     overflow: 'auto',
   },
 });

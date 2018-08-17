@@ -3,14 +3,14 @@ import {
   Card,
   CardActions,
   CardContent,
-  Theme,
+  createStyles,
   Typography,
   withStyles
 } from '@material-ui/core';
 import React, { PureComponent } from 'react';
 import { ISection } from '../DataInterfaces';
 
-const styles = (theme: Theme) => ({
+const styles = createStyles({
   button: {
     margin: 5,
   },
@@ -48,7 +48,7 @@ const styles = (theme: Theme) => ({
     cursor: 'pointer'
   },
   pos: {
-    color: theme.palette.text.secondary,
+    // color: theme.palette.text.secondary,
     // marginBottom: 12,
     marginTop: 12,
   },
@@ -58,7 +58,7 @@ const styles = (theme: Theme) => ({
     width: '60%',
   },
   title: {
-    color: theme.palette.text.secondary,
+    // color: theme.palette.text.secondary,
     fontSize: 14,
     marginBottom: 16,
   },

@@ -1,6 +1,4 @@
-import { withStyles } from '@material-ui/core';
-import blue from '@material-ui/core/colors/blue';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import './App.css';
 import BottomNavTabs from './Components/BottomNavTabs';
@@ -14,31 +12,34 @@ import { IExercise, ISection } from './DataInterfaces';
 import store, { exercises } from './Store';
 // import UniqueId from 'react-html-id';
 
-const theme = createMuiTheme({
-  palette: {
-    primary: blue
-    // error: {
-    //   dark: palette.error[700],
-    //   light: palette.error[300],
-    //   main: palette.error[500],
-    // },
-    // primary: {
-    //   dark: palette.primary[700],
-    //   light: palette.primary[300],
-    //   main: palette.primary[500],
-    // },
-    // secondary: {
-    //   dark: palette.secondary.A700,
-    //   light: palette.secondary.A200,
-    //   main: palette.secondary.A400,
-  },
-  shape: {
+// create themes?
 
-  },
-  zIndex:{
-    
-  }
-})
+const styles = createStyles({}
+  // palette: {
+  //   primary: blue,
+  //   error: {
+  //     dark: palette.error[700],
+  //     light: palette.error[300],
+  //     main: palette.error[500],
+  //   },
+  //   primary: {
+  //     dark: palette.primary[700],
+  //     light: palette.primary[300],
+  //     main: palette.primary[500],
+  //   },
+  //   secondary: {
+  //     dark: palette.secondary.A700,
+  //     light: palette.secondary.A200,
+  //     main: palette.secondary.A400,
+  //   },
+  //   shape: {
+
+  //   },
+  //   zIndex: {
+
+  //   }
+  // }
+);
 
 interface IState {
   activeSectionIndex: number,
@@ -406,7 +407,7 @@ class App extends Component<{}, IState> {
     stateExercises[selectedExerciseIndex].defaultSections.map((sectionItem) => {
       const inputBoxKey = sectionItem.key;
       // MUI style elments
-      return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp} moveDown={this.moveSectionDown} />
+      return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp} moveDown={this.moveSectionDown} deleteSection={this.deleteSection} handleSectionEditToggle={this.handleSectionEditToggle}/>
 
     })
   }
@@ -518,7 +519,7 @@ class App extends Component<{}, IState> {
           setActive={this.setActiveSection} />
         <BottomNavTabs
           // classes={classes}
-          theme={theme}
+          theme={styles}
           exercises={stateExercises}
           selectedExerciseIndex={selectedExerciseIndex}
           moveUp={this.moveSectionUp}
@@ -547,4 +548,4 @@ class App extends Component<{}, IState> {
   }
 }
 
-export default withStyles(theme)(App);
+export default withStyles(styles)(App);
