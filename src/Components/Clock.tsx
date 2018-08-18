@@ -90,6 +90,22 @@ class Clock extends Component<IProps, IState> {
         }
         this.Majors = majors;
 
+        // put the hands in correct time for initial render
+        const d = new Date()
+        const secRotation = 6 * d.getSeconds();
+        const minRotation = 6 * d.getMinutes();
+        const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2;
+
+        this.state =
+            {
+                activeSectionIndex: -1,
+                date: d.toLocaleString("fi"),
+                hourPosition: hourRotation,
+                minPosition: minRotation,
+                secPosition: secRotation,
+                timerEnabled: "hidden",
+            }
+
         // bindings
         this.cycleTimerFunctions = this.cycleTimerFunctions.bind(this);
     }
@@ -135,26 +151,6 @@ class Clock extends Component<IProps, IState> {
         hand.setAttribute("visibility", "visible")
 
         this.timerEnabled = true;
-    }
-
-    public componentWillMount() {
-
-        // put the hands in correct time for initial render
-        const d = new Date()
-        const secRotation = 6 * d.getSeconds();
-        const minRotation = 6 * d.getMinutes();
-        const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2;
-
-        this.setState(
-            {
-                activeSectionIndex: -1,
-                date: d.toLocaleString("fi"),
-                hourPosition: hourRotation,
-                minPosition: minRotation,
-                secPosition: secRotation,
-                timerEnabled: "hidden",
-            }
-        )
     }
 
     public render() {
@@ -353,15 +349,15 @@ class Clock extends Component<IProps, IState> {
                 // set the detected section to the info block? -> info block is at app though?
                 // this hack forces rerendering (changing keys..)
                 const sectionArcKey = "Arc-" + index + angle;
-                sectionItems.push(<SectionItem 
-                    cx={this.centerCoordinate} 
-                    cy={this.centerCoordinate} 
-                    radius={44.1} 
-                    startAngle={startAngle} 
-                    endAngle={angle} 
-                    thickness={3} 
-                    key={sectionArcKey} 
-                    color={sectionItem.color} 
+                sectionItems.push(<SectionItem
+                    cx={this.centerCoordinate}
+                    cy={this.centerCoordinate}
+                    radius={44.1}
+                    startAngle={startAngle}
+                    endAngle={angle}
+                    thickness={3}
+                    key={sectionArcKey}
+                    color={sectionItem.color}
                     class={sectionStyle} />)
             });
             // just check whether there is an active item set.

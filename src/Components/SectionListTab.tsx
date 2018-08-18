@@ -53,6 +53,7 @@ class SectionListTab extends PureComponent<IProps>{
         </ListItem>
       )
     })
+
   }
   public render() {
     const {classes} = this.props;
@@ -67,8 +68,9 @@ class SectionListTab extends PureComponent<IProps>{
       </div>
     );
   }
-
-  private addNewSection(){
+  
+  // binds automagically!
+  private addNewSection = () => {
     const newSection: ISection = {
       color: "",
       description: "",

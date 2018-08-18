@@ -40,11 +40,11 @@ interface IState{
 }
 
 class WorkoutMonitorTab extends Component<IProps, IState> {
-  
-  public componentWillMount(){
-    this.setState({
+  constructor(props: IProps){
+    super(props);
+    this.state = {
       activeStep: 0,
-    });
+    };
   }
 
   public render() {

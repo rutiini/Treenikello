@@ -59,63 +59,38 @@ class App extends Component<{}, IState> {
 
   constructor(props: any) {
     super(props);
-    // modify exercises with new unique ids
-    // UniqueId.enableUniqueIds(this);
-
-    // bindings..
-    this.moveSectionUp = this.moveSectionUp.bind(this);
-    this.moveSectionDown = this.moveSectionDown.bind(this);
-    this.deleteSection = this.deleteSection.bind(this);
-    this.updateSection = this.updateSection.bind(this);
-
-  }
-
-  /* Lifecycle hooks */
-
-  public componentWillMount() {
-    // destructure from state to ease the syntax
-
-    // const savedExercises = store.getSavedExercises() as IExercise[];
-
-    this.setState({
-      confirmationDialogOpen: false,
-      deleteExerciseIndex: -1,
-      editExerciseIndex: -1,
-      editExerciseOpen: false,
-      editSectionOpen: false,
-      exercises: [...exercises],
-      selectedExerciseIndex: 0,
-      selectedSectionIndex: 0,
-      snackBarOpen: false
-    })
-
-
-    // const { exercises: stateExercises } = this.state;
-
-    // // assign proper keys to exercises
-    // let newExercises = stateExercises.map(exercise => {
-    //   // need to restart sequence under each exercise
-    //   const rekeyedSections = this.reassignKeys(exercise.defaultSections, exercise.name);
-    //   exercise.defaultSections = rekeyedSections;
-    //   return exercise;
-    // })
+    
     let newExercises: IExercise[] = [...exercises];
-
+    
     // add exercises that the user has created locally
     const customExercises = store.getSessionExercises();
     if (customExercises !== null && customExercises !== undefined && customExercises.length > 0) {
       // console.log(`adding ${customExercises.length} custom exercises to list`)
       newExercises = newExercises.concat(customExercises);
     }
-
-    this.setState(
-      {
-        exercises: newExercises
-      }
-    )
-
-    this.updateExercisePresets();
+    
+    this.state = {
+      activeSectionIndex: 0,
+      confirmationDialogOpen: false,
+      deleteExerciseIndex: -1,
+      editExerciseIndex: -1,
+      editExerciseOpen: false,
+      editSectionOpen: false,
+      exercises: newExercises,
+      selectedExercise: exercises[0], // TODO: replaced by the index?
+      selectedExerciseIndex: 0,
+      selectedSectionIndex: 0,
+      snackBarOpen: false,
+    }
+    
+    // bindings..
+    this.moveSectionUp = this.moveSectionUp.bind(this);
+    this.moveSectionDown = this.moveSectionDown.bind(this);
+    this.deleteSection = this.deleteSection.bind(this);
+    this.updateSection = this.updateSection.bind(this);
   }
+
+  /* Lifecycle hooks */
 
   /* implement the new context api for state management! */
 
@@ -499,14 +474,7 @@ class App extends Component<{}, IState> {
 
   }
 
-  // specify the correct props and state for this! recieves old and new props?!
-  public componentWillUpdate(nextProps: never, nextState: IState) {
-    // updating sectioninput boxes should be called here
-    // console.log("App: componentWillUpdate ran");
-  }
-
   public render() {
-    // move to componentWillUpdate or componentWillrecieveprops?
     // console.log("rerendering app", new Date())
     this.updateExercisePresets();
     this.updateSectionInputBoxes();

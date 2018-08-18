@@ -77,12 +77,16 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
   public render() {
     const { open } = this.props;
-    const { exercise, errorText } = this.state;
+    let exerciseInEdit: IExercise = emptyExercise;
+    const { errorText } = this.state;
 
     let submitBtnText = 'Lisää'
     let titleText = 'Uusi harjoitus'
     let descriptionText = 'Lisää harjoituksen tiedot'
     // edit mode if
+    if(this.state.exercise){
+      exerciseInEdit = {...this.props.exercise}
+    }
     if (this.props.exercise) {
       submitBtnText = 'Päivitä';
       titleText = 'Muokkaa harjoitusta';
@@ -97,8 +101,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="name"
         label="Nimi"
         type="text"
-        value={exercise.name}
-        // onChange={this.handleChange('name')}
+        value={exerciseInEdit.name}
         onChange={this.updateName}
         helperText={errorText}
         fullWidth={true}
@@ -112,8 +115,8 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="name"
         label="Nimi"
         type="text"
-        value={exercise.name}
-        // onChange={this.handleChange('name')}
+        value={exerciseInEdit.name}
+        onChange={this.updateName}
         fullWidth={true}
       />
       }
@@ -136,6 +139,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         label="Alarm clock"
         type="time"
         defaultValue="07:30"
+        onChange={this.updateStart}
         // className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -143,8 +147,8 @@ class EditExerciseDialog extends Component<IProps,IState> {
         inputProps={{
           step: 300, // 5 min
         }}
-      />
-          {/* value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}  */}
+        />
+        {/* value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}  */}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
@@ -165,21 +169,24 @@ class EditExerciseDialog extends Component<IProps,IState> {
     });
   };
 
-  // private handleTimeChange = (time: Date) => {
-  //   const { exercise } = this.state;
-  //   exercise.startTime = time;
-  //   this.setState({
-  //     exercise
-  //   })
-  // }
+  private updateStart = (event: ChangeEvent<HTMLInputElement>) => {
+    
+    const time = new Date(event.target.value);
+
+    this.setState({
+      exercise: {
+        ...this.state.exercise,
+        startTime: time
+      }
+    })
+  }
   
-  private updateName(event: ChangeEvent){
-    // event.preventDefault()
+  private updateName = (event: ChangeEvent<HTMLInputElement>) => {
     
     this.setState({
       exercise: {
         ...this.state.exercise,
-        name
+        name: event.target.value
       }
     })
   }

@@ -13,7 +13,7 @@ import {
   Theme,
   withStyles
 } from '@material-ui/core';
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import { IExercise, ISection } from '../DataInterfaces';
 // store
 import { colorOptions } from '../Store';
@@ -112,7 +112,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             label="Nimi"
             type="text"
             value={activeSection.name}
-            // onChange={this.handleChange('name')}
+            onChange={this.updateName}
             fullWidth={true}
           />
           <br />
@@ -181,14 +181,14 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     })
   }
 
-  // magical generic prop handling:
-  // private handleChange = name => ({ target: { value } }) => {
-  //   this.setState({
-  //     section: {
-  //       ...this.state.section,
-  //       [name]: value
-  //     }
-  //   })
+  private updateName = (event: ChangeEvent<HTMLInputElement>) => {
+    
+    this.setState({
+      section: {
+        ...this.state.section,
+        name: event.target.value
+      }
+    })
+  }
 
-  // }
 })

@@ -74,16 +74,11 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
     );
   }
   
-  private setTimeNow(){
+  private setTimeNow = () => {
     this.props.setTime(new Date());
   }
 
-  private saveAllExercises(){
+  private saveAllExercises = () => {
     this.props.saveExercises(this.props.exercises)
   }
-  // private handleToggle = () => {
-  //   this.setState({
-  //     open: !this.state.open
-  //   })
-  // }
 });
