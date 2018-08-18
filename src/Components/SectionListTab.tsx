@@ -21,7 +21,6 @@ interface IProps {
   moveUp: (section: ISection) => void,
   moveDown: (section: ISection) => void,
   deleteSection: (section: ISection) => void,
-  update: (section: ISection) => void,
   handleSectionEditToggle: (section: ISection) => void
 }
 

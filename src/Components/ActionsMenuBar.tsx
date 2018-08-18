@@ -1,6 +1,6 @@
 import { AppBar, Button, createStyles, Toolbar, Typography, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExercise, ISection } from '../DataInterfaces';
+import { IExercise } from '../DataInterfaces';
 
 const styles = createStyles({
   button: {
@@ -29,8 +29,8 @@ interface IProps {
   selectedExerciseIndex: number,
   setTime: (time: Date) => void,
   title: string,
-  handleSubmit: (section: ISection) => void,
-  saveExercises: () => void
+  // handleSubmit: (oldSection: ISection, newSection: ISection) => void,
+  saveExercises: (exercises: IExercise[]) => void
 }
 
 interface IState {
@@ -54,14 +54,15 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
       // setTime, 
       // handleSubmit, 
       title, 
-      saveExercises } = this.props;
+      // saveExercises 
+    } = this.props;
     // const { open } = this.state;
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Button variant="fab" mini={true} color="inherit" onClick={saveExercises}><i className="material-icons">save</i></Button>
+            <Button variant="fab" mini={true} color="inherit" onClick={this.saveAllExercises}><i className="material-icons">save</i></Button>
             <Typography variant="title" color="inherit" className={classes.flex}>
               {title}
             </Typography>
@@ -77,6 +78,9 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
     this.props.setTime(new Date());
   }
 
+  private saveAllExercises(){
+    this.props.saveExercises(this.props.exercises)
+  }
   // private handleToggle = () => {
   //   this.setState({
   //     open: !this.state.open

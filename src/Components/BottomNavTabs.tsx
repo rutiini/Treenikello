@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core';
+import { createStyles, withStyles } from '@material-ui/core';
 import { AppBar, Tab, Tabs, Typography } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
@@ -40,16 +40,16 @@ interface IProps {
   handleSubmit: (oldsection: ISection, newsection: ISection) => void,
   handleExerciseEditToggle: (exercise: IExercise) => void,
   deleteExercise: (exercise: IExercise) => void,
-  saveExercises: (exercise: IExercise) => void,
+  saveExercises: (exercise: IExercise[]) => void,
   editSectionOpen: boolean
 }
 
-const styles = (theme: any) => ({
+const styles =createStyles({
   buttonRight: {
     flex: 1
   },
   root: {
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
   },
   tabContent: {
     alignContent: 'center'
@@ -75,7 +75,7 @@ class BottomNavTabs extends Component<IProps, IState> {
 
   public render() {
     const {
-      classes,
+      // classes,
       theme,
       exercises,
       selectedExerciseIndex,
@@ -86,7 +86,7 @@ class BottomNavTabs extends Component<IProps, IState> {
       selectExercise,
       activeSectionIndex,
       handleSectionEditToggle,
-      handleSubmit,
+      // handleSubmit,
       handleExerciseEditToggle,
       deleteExercise,
       saveExercises
@@ -104,7 +104,7 @@ class BottomNavTabs extends Component<IProps, IState> {
           exercises={exercises}
           selectedExerciseIndex={selectedExerciseIndex}
           setTime={setTime}
-          handleSubmit={handleSubmit}
+          // handleSubmit={handleSubmit}
           saveExercises={saveExercises} />
         <div className="controlsContainer">
           <SwipeableViews
@@ -117,7 +117,8 @@ class BottomNavTabs extends Component<IProps, IState> {
               <WorkoutMonitorTab
                 exercise={exercises[selectedExerciseIndex]}
                 activeSectionIndex={activeSectionIndex}
-                className={classes.tabContent} />
+                // className={classes.tabContent} 
+                />
             </TabContainer>
             <TabContainer dir={theme.direction}>
               <SectionListTab
