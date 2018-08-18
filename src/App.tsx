@@ -68,34 +68,38 @@ class App extends Component<{}, IState> {
     this.deleteSection = this.deleteSection.bind(this);
     this.updateSection = this.updateSection.bind(this);
 
-    // to componentwillmount
-    this.setState(
-      {
-        confirmationDialogOpen: false,
-        deleteExerciseIndex: -1,
-        editExerciseIndex: -1,
-        editExerciseOpen: false,
-        editSectionOpen: false,
-        exercises: [...exercises],
-        selectedExerciseIndex: 0,
-        selectedSectionIndex: 0,
-        snackBarOpen: false
-      })
   }
 
   /* Lifecycle hooks */
 
   public componentWillMount() {
     // destructure from state to ease the syntax
-    const { exercises: stateExercises } = this.state;
 
-    // assign proper keys to exercises
-    let newExercises = stateExercises.map(exercise => {
-      // need to restart sequence under each exercise
-      const rekeyedSections = this.reassignKeys(exercise.defaultSections, exercise.name);
-      exercise.defaultSections = rekeyedSections;
-      return exercise;
+    // const savedExercises = store.getSavedExercises() as IExercise[];
+
+    this.setState({
+      confirmationDialogOpen: false,
+      deleteExerciseIndex: -1,
+      editExerciseIndex: -1,
+      editExerciseOpen: false,
+      editSectionOpen: false,
+      exercises: [...exercises],
+      selectedExerciseIndex: 0,
+      selectedSectionIndex: 0,
+      snackBarOpen: false
     })
+
+
+    // const { exercises: stateExercises } = this.state;
+
+    // // assign proper keys to exercises
+    // let newExercises = stateExercises.map(exercise => {
+    //   // need to restart sequence under each exercise
+    //   const rekeyedSections = this.reassignKeys(exercise.defaultSections, exercise.name);
+    //   exercise.defaultSections = rekeyedSections;
+    //   return exercise;
+    // })
+    let newExercises: IExercise[] = [...exercises];
 
     // add exercises that the user has created locally
     const customExercises = store.getSessionExercises();
@@ -377,55 +381,64 @@ class App extends Component<{}, IState> {
 
   }
 
-  public handleDeleteExercise = () => {
-    const { exercises: stateExercises, deleteExerciseIndex } = this.state;
+  public handleDeleteExercise() {
+    if (this.state) {
 
-    if (deleteExerciseIndex !== -1) {
-      console.log(`deleting exercise at ${deleteExerciseIndex}`)
-      const newExercises = [...stateExercises];
-      // set selected to first in list (presets should always exist)
-      this.setState({
-        selectedExerciseIndex: 0
-      })
+      const { exercises: stateExercises, deleteExerciseIndex } = this.state;
 
-      newExercises.splice(deleteExerciseIndex, 1)
+      if (deleteExerciseIndex !== -1) {
+        console.log(`deleting exercise at ${deleteExerciseIndex}`)
+        const newExercises = [...stateExercises];
+        // set selected to first in list (presets should always exist)
+        this.setState({
+          selectedExerciseIndex: 0
+        })
 
-      this.setState(
-        {
-          deleteExerciseIndex: -1,
-          exercises: newExercises
-        },
-        () => store.saveSessionExercises(newExercises)
-      )
+        newExercises.splice(deleteExerciseIndex, 1)
+
+        this.setState(
+          {
+            deleteExerciseIndex: -1,
+            exercises: newExercises
+          },
+          () => store.saveSessionExercises(newExercises)
+        )
+      }
     }
   }
 
   // use as callback for setState
-  public updateSectionInputBoxes = () => {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  public updateSectionInputBoxes() {
+    if (this.state) {
 
-    stateExercises[selectedExerciseIndex].defaultSections.map((sectionItem) => {
-      const inputBoxKey = sectionItem.key;
-      // MUI style elments
-      return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp} moveDown={this.moveSectionDown} deleteSection={this.deleteSection} handleSectionEditToggle={this.handleSectionEditToggle}/>
+      const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    })
+      stateExercises[selectedExerciseIndex].defaultSections.map((sectionItem) => {
+        const inputBoxKey = sectionItem.key;
+        // MUI style elments
+        return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp} moveDown={this.moveSectionDown} deleteSection={this.deleteSection} handleSectionEditToggle={this.handleSectionEditToggle} />
+
+      })
+    }
   }
 
-  public updateExercisePresets = () => {
-    const { exercises: stateExercises } = this.state;
+  public updateExercisePresets() {
+    if (this.state) {
 
-    const exercisePresets = stateExercises.map((exercise, index) => {
-      // we should not have undefined exercises in the memory
-      if (exercise !== undefined) {
-        // console.log(`exercise  added to menu `, exercise)
-        return <option key={index} value={exercise.name}>{exercise.name}</option>
-      } else {
-        return null;
-      }
-    })
+      const { exercises: stateExercises } = this.state;
 
-    exercisePresets.push(<option key="addNewexercise">+ new exercise</option>)
+      const exercisePresets = stateExercises.map((exercise, index) => {
+        // we should not have undefined exercises in the memory
+        if (exercise !== undefined) {
+          // console.log(`exercise  added to menu `, exercise)
+          return <option key={index} value={exercise.name}>{exercise.name}</option>
+        } else {
+          return null;
+        }
+      })
+
+      exercisePresets.push(<option key="addNewexercise">+ new exercise</option>)
+    }
   }
 
   public handleSectionEditToggle = (section: ISection) => {

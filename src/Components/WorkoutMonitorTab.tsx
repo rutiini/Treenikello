@@ -41,7 +41,7 @@ interface IState{
 
 class WorkoutMonitorTab extends Component<IProps, IState> {
   
-  public componentDidMount(){
+  public componentWillMount(){
     this.setState({
       activeStep: 0,
     });
@@ -50,7 +50,8 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
   public render() {
     const { classes, exercise, activeSectionIndex } = this.props;
     const steps = exercise.defaultSections.map(section => section.name);
-    const { activeStep } = this.state;
+    
+    const {activeStep} = this.state;
 
     return (
       <div className={classes.root}>

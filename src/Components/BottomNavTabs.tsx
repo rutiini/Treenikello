@@ -1,5 +1,9 @@
 import { createStyles, withStyles } from '@material-ui/core';
-import { AppBar, Tab, Tabs, Typography } from '@material-ui/core';
+import { AppBar, 
+  Tab, 
+  Tabs, 
+  // Typography 
+} from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { IExercise, ISection } from '../DataInterfaces';
@@ -7,19 +11,14 @@ import ActionsMenuBar from './ActionsMenuBar';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';
-// import AppBar from 'material-ui/AppBar';
-// import Tabs, { Tab } from 'material-ui/Tabs';
-// import Typography from 'material-ui/Typography';
 
-const TabContainer = (children: any) => {
-  return (
-    <Typography component="div" dir={"ltr"}
-    // style={{height: '100%'}} 
-    >
-      {children}
-    </Typography>
-  );
-}
+// const TabContainer = (children: any) => {
+//   return (
+//     <Typography component="div" dir={"ltr"}>
+//       {children}
+//     </Typography>
+//   );
+// }
 
 interface IState {
   value: number
@@ -113,29 +112,30 @@ class BottomNavTabs extends Component<IProps, IState> {
             index={this.state.value}
             onChangeIndex={this.handleChangeIndex}
           >
-            <TabContainer dir={theme.direction}>
+            {/* <TabContainer dir={theme.direction}> */}
               <WorkoutMonitorTab
                 exercise={exercises[selectedExerciseIndex]}
                 activeSectionIndex={activeSectionIndex}
                 // className={classes.tabContent} 
                 />
-            </TabContainer>
-            <TabContainer dir={theme.direction}>
+            {/* </TabContainer> */}
+            {/* <TabContainer dir={theme.direction}> */}
               <SectionListTab
                 exercise={exercises[selectedExerciseIndex]}
                 moveUp={moveUp}
                 moveDown={moveDown}
                 deleteSection={deleteSection}
                 handleSectionEditToggle={handleSectionEditToggle}
-              /></TabContainer>
-            <TabContainer dir={theme.direction}>
+              />
+              {/* </TabContainer> */}
+            {/* <TabContainer dir={theme.direction}> */}
               <ExerciseListTab
                 exercises={exercises}
                 selectedExerciseIndex={selectedExerciseIndex}
                 selectExercise={selectExercise}
                 handleExerciseEditToggle={handleExerciseEditToggle}
                 deleteExercise={deleteExercise} />
-            </TabContainer>
+            {/* </TabContainer> */}
           </SwipeableViews>
         </div>
         <AppBar

@@ -5,22 +5,22 @@ module.exports = {
   module: {
     rules: [
       {
+        exclude: /node_modules/,
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/
       },
       {
+        exclude: /node_modules/,
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ],
-        exclude: /node_modules/
       }
     ]
-  },
-  resolve: {
-    extensions: [ '.tsx', '.ts', '.js' ]
   },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, '../build/dist')
-  }
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ]
+  },
 };

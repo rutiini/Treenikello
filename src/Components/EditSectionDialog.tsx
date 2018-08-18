@@ -1,4 +1,5 @@
-import { Button,
+import {
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -30,56 +31,59 @@ const emptySection: ISection = {
   name: '',
 }
 
-interface IProps{
-  exercise: IExercise, 
-  classes: any, 
-  open: boolean, 
+interface IProps {
+  exercise: IExercise,
+  classes: any,
+  open: boolean,
   section: ISection,
   handleToggle: (section: ISection) => void, // review the necessity of this!
   handleSubmit: (oldSection: ISection, newSection: ISection) => void
 }
 
-interface IState{
+interface IState {
   section: ISection,
   open: boolean
 }
 
-export default withStyles(styles)(class EditSectionDialog extends Component<IProps,IState> {
+export default withStyles(styles)(class EditSectionDialog extends Component<IProps, IState> {
 
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
+  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
     // opening the dialog
-    if(!prevState.open && nextProps.open){
-      if(nextProps.section){
-        return {
-          open: true,
-          section: {...nextProps.section}
-        };
-      }else{
-        return {
-          open: true,
-          section: {...emptySection}
-        };
+    if (prevState) {
+      if (!prevState.open && nextProps.open) {
+        if (nextProps.section) {
+          return {
+            open: true,
+            section: { ...nextProps.section }
+          };
+        } else {
+          return {
+            open: true,
+            section: { ...emptySection }
+          };
+        }
+        // default.
+      } else {
+        return null;
       }
-    // default.
-    }else{
+    } else {
       return null;
     }
   }
-  
-  // constructor(super){
-    private colorOptions = colorOptions.map(optionItem => {
-      const colorCode = optionItem.colorValue;
-      const colorName = optionItem.colorName;
 
-      return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
-    })
-  
-  public componentDidMount(){
-    
-    this.setState({
+  private colorOptions = colorOptions.map(optionItem => {
+    const colorCode = optionItem.colorValue;
+    const colorName = optionItem.colorName;
+
+    return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
+  })
+
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
       open: false,
-      section: {...emptySection}
-    });
+      section: { ...emptySection }
+    };
   }
 
   public render() {
@@ -88,6 +92,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
     const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercise.name}` : `Muokkaa osiota`;
     const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
+    const activeSection = this.state.section ? this.state.section : emptySection;
 
     return (
       <Dialog
@@ -106,7 +111,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             id="name"
             label="Nimi"
             type="text"
-            value={this.state.section.name}
+            value={activeSection.name}
             // onChange={this.handleChange('name')}
             fullWidth={true}
           />
@@ -118,14 +123,14 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             type="text"
             multiline={true}
             rows="2"
-            value={this.state.section.description}
+            value={activeSection.description}
             // onChange={this.handleChange('description')}
             fullWidth={true}
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
             <Select
-              value={this.state.section.color}
+              value={activeSection.color}
               // onChange={this.handleChange('color')}
               inputProps={{
                 id: 'item-color',
@@ -143,8 +148,8 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             id="duration"
             label="Kesto"
             type="number"
-            value={this.state.section.duration}
-            // onChange={this.handleChange('duration')}
+            value={activeSection.duration}
+          // onChange={this.handleChange('duration')}
           />
         </DialogContent>
         <DialogActions>
@@ -163,7 +168,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     this.props.handleToggle(this.state.section);
     this.setState({
       open: false,
-      section: {...emptySection}
+      section: { ...emptySection }
     })
   };
 
@@ -172,7 +177,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     this.props.handleToggle(this.state.section);
     this.setState({
       open: false,
-      section: {...emptySection}
+      section: { ...emptySection }
     })
   }
 

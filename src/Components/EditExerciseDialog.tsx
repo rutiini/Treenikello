@@ -66,13 +66,13 @@ class EditExerciseDialog extends Component<IProps,IState> {
     }
 
   }
-  
-  public ComponentDidMount(){
-    this.setState({
+  constructor(props: IProps){
+    super(props);
+    this.state = {
       errorText: '',
       exercise: {...emptyExercise},
       open: false,
-    });
+    };
   }
 
   public render() {
