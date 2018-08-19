@@ -9,6 +9,7 @@ import  {
   TextField,
   withStyles,
 } from '@material-ui/core';
+import { TimePicker } from 'material-ui-pickers';
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise } from '../DataInterfaces';
 
@@ -134,21 +135,13 @@ class EditExerciseDialog extends Component<IProps,IState> {
           </DialogContentText>
           {nameInput}
           <i className="material-icons">access_time</i>
-          {/* <TimeInput color="inherit" id="TimeInput" mode="24h" value={exercise.startTime} onChange={this.handleTimeChange} /> */}
-          <TextField id="time"
-        label="Alarm clock"
-        type="time"
-        defaultValue="07:30"
-        onChange={this.updateStart}
-        // className={classes.textField}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 min
-        }}
-        />
-        {/* value={exercises[selectedExerciseIndex].startTime} onChange={setTime} className={classes.flex}  */}
+          <TimePicker
+          clearable={true}
+          ampm={false}
+          label="aseta"
+          value={exerciseInEdit.startTime}
+          onChange={this.updateStart}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
@@ -171,14 +164,14 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
   private updateStart = (event: ChangeEvent<HTMLInputElement>) => {
     
-    const time = new Date(event.target.value);
+    // const time = new Date(event.target.value);
 
-    this.setState({
-      exercise: {
-        ...this.state.exercise,
-        startTime: time
-      }
-    })
+    // this.setState({
+    //   exercise: {
+    //     ...this.state.exercise,
+    //     startTime: time
+    //   }
+    // })
   }
   
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {

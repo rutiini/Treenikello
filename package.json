@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^1.5.0",
     "@types/react-swipeable-views": "^0.12.2",
+    "material-ui-pickers": "^1.0.0-rc.12",
     "npm": "^6.3.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
