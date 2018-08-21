@@ -1,4 +1,3 @@
-// import { withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { ISection } from '../DataInterfaces';
 import './Clock.css';
@@ -6,17 +5,6 @@ import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
 
 // TODO use withstyles..
-// const styles: any = theme => ({
-//     clock: {
-//         [theme.breakpoints.up('sm')]: {
-//             width: 1000,
-//         },
-//         [theme.breakpoints.down('xs')]: {
-//             width: 500,
-//         }
-//     }
-
-// })
 
 interface IProps {
     sectionItems: ISection[],
@@ -32,7 +20,8 @@ interface IState {
     secPosition: number,
     minPosition: number,
     hourPosition: number,
-    timerEnabled: string
+    timerEnabled: string,
+    stopWatchSeconds: number
 }
 
 class Clock extends Component<IProps, IState> {
@@ -46,18 +35,10 @@ class Clock extends Component<IProps, IState> {
     private timerEnabled = false;
     private timerStarted = false;
     private timerFinished = false;
-    private stopWatchSeconds = 0;
 
     private stopwatchInterval: any;
     // private interval: any;
     private sectionItems: JSX.Element[];
-
-    // static clock elements for the object
-    private hourHand = <rect id="hour" x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
-    private minHand = <rect id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
-    private secHand = <g id="secHand">
-        <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
-    </g>
 
     // draw hours and minutes to the clock face
     private Majors: JSX.Element[] = [];
@@ -103,6 +84,7 @@ class Clock extends Component<IProps, IState> {
                 hourPosition: hourRotation,
                 minPosition: minRotation,
                 secPosition: secRotation,
+                stopWatchSeconds: 0,
                 timerEnabled: "hidden",
             }
 
@@ -126,22 +108,15 @@ class Clock extends Component<IProps, IState> {
 
     public updateTime = () => {
         const d = new Date()
-        const secRotation = 6 * d.getSeconds();
-        const minRotation = 6 * d.getMinutes();
-        const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2;
 
         this.setState(
             {
                 date: d.toLocaleString("fi"),
-                hourPosition: hourRotation,
-                minPosition: minRotation,
-                secPosition: secRotation,
+                hourPosition: 30 * (d.getHours() % 12) + d.getMinutes() / 2,
+                minPosition: 6 * d.getMinutes(),
+                secPosition: 6 * d.getSeconds(),
             }
         )
-
-        this.rotateHand(this.secHand, this.state.secPosition);
-        this.rotateHand(this.minHand, this.state.minPosition);
-        this.rotateHand(this.hourHand, this.state.hourPosition);
     }
 
     // dont bind to wrong "this"!
@@ -155,6 +130,7 @@ class Clock extends Component<IProps, IState> {
 
     public render() {
         this.sectionItems = this.updateFaceElements();
+        console.log('rendered clock')
         return (
             <div className="clockContainer" onClick={this.cycleTimerFunctions}>
 
@@ -165,10 +141,13 @@ class Clock extends Component<IProps, IState> {
                         {this.Majors}
                     </g>
                     <g id="hands">
-                        {this.hourHand}
-                        {this.minHand}
-                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} color="yellow" tipColor="red" />
-                        {this.secHand}
+                        {/* we can have hand components here if we dont want to rerender the clock face? */}
+                        <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
+                        <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
+                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} color="yellow" tipColor="red" />
+                        <g transform={`rotate(${this.state.secPosition} 50 50)`} id="secHand">
+                            <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
+                        </g>;
                     </g>
                     <circle id="midPoint" cx="50" cy="50" r="3" />
                 </svg>
@@ -190,7 +169,6 @@ class Clock extends Component<IProps, IState> {
     public componentDidMount() {
 
         setInterval(() => {
-            const { secPosition, minPosition, hourPosition } = this.state;
             const d = new Date()
             const secRotation = 6 * d.getSeconds();
             const minRotation = 6 * d.getMinutes();
@@ -204,10 +182,6 @@ class Clock extends Component<IProps, IState> {
                     secPosition: secRotation
                 }
             )
-
-            this.rotateHand(document.getElementById('secHand'), secPosition)
-            this.rotateHand(document.getElementById('min'), minPosition)
-            this.rotateHand(document.getElementById('hour'), hourPosition)
         }, 1000)
 
         const timerHand = document.getElementById("timerHand") as HTMLElement;
@@ -216,14 +190,13 @@ class Clock extends Component<IProps, IState> {
     }
 
     private disableTimerHand = () => {
-        // read if this is ok to do..
+        // have all the hands as private props.
         const hand: HTMLElement = document.getElementById("timerHand") as HTMLElement;
 
-        // remove and create hand instead of manipulating it?
-        // hand.remove();
-
-        this.stopWatchSeconds = 0;
-        // hand.setAttribute('transition','none')
+        this.setState({
+            stopWatchSeconds: 0
+        })
+        
         hand.setAttribute("visibility", "hidden")
         if (hand.classList.contains("timerOn")) {
             hand.classList.remove("timerOn")
@@ -231,19 +204,16 @@ class Clock extends Component<IProps, IState> {
         if (!hand.classList.contains("timerOff")) {
             hand.classList.add("timerOff")
         }
-        this.rotateHand(hand, 0)
+        
         this.timerEnabled = false;
     }
 
-    private rotateHand = (el: any, seconds: number) => {
-        // make the stopwatch run with smooth movement
-        // interval is 0,5s to support more "instant" stopping
-        el.setAttribute('transform', 'rotate(' + seconds * 3 + ' 50 50)');
-    }
+
     private updateStopwatch = () => {
-        const hand = document.getElementById("timerHand") as HTMLElement;
-        this.stopWatchSeconds++;
-        this.rotateHand(hand, this.stopWatchSeconds);
+        const nextStep = this.state.stopWatchSeconds + 1;
+        this.setState({
+            stopWatchSeconds: nextStep
+        })
     }
 
     // cycle on tap -> make visible -> start -> stop -> hide and reset
@@ -256,8 +226,8 @@ class Clock extends Component<IProps, IState> {
         // case visible and stopped start timer
         else if (this.timerEnabled && !this.timerStarted && !this.timerFinished) {
             // startTimer
-            this.stopWatchSeconds = 1
-            this.rotateHand(document.getElementById("timerHand") as HTMLElement, this.stopWatchSeconds)
+            // this.stopWatchSeconds = 1
+            // this.rotateHand(document.getElementById("timerHand") as HTMLElement, this.stopWatchSeconds)
             this.stopwatchInterval = setInterval(this.updateStopwatch, 500);
             this.timerStarted = true;
         }
@@ -278,9 +248,6 @@ class Clock extends Component<IProps, IState> {
     }
 
     // static elements -> timerhand should be created on-demand!
-
-
-
 
     private getActiveSectionIndex = (sections: ISection[]) => {
         const { startTime } = this.props;
@@ -367,6 +334,6 @@ class Clock extends Component<IProps, IState> {
 
 }
 
-export default Clock as React.ComponentClass<IProps>;
+export default Clock;
 
 // export default withStyles(styles)(Clock);

@@ -500,7 +500,7 @@ class App extends Component<{}, IState> {
           setActive={this.setActiveSection} />
         <BottomNavTabs
           // classes={classes}
-          theme={styles}
+          // theme={styles}
           exercises={stateExercises}
           selectedExerciseIndex={selectedExerciseIndex}
           moveUp={this.moveSectionUp}
