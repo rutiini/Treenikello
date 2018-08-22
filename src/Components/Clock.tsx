@@ -20,7 +20,7 @@ interface IState {
     secPosition: number,
     minPosition: number,
     hourPosition: number,
-    timerEnabled: string,
+    timerEnabled: boolean,
     stopWatchSeconds: number
 }
 
@@ -32,7 +32,6 @@ class Clock extends Component<IProps, IState> {
     private faceRadius = 100 / 2 - (100 / 20);
     // private initialRotation: number = 0; // TODO: check whether this needs an actual value
 
-    private timerEnabled = false;
     private timerStarted = false;
     private timerFinished = false;
 
@@ -85,7 +84,7 @@ class Clock extends Component<IProps, IState> {
                 minPosition: minRotation,
                 secPosition: secRotation,
                 stopWatchSeconds: 0,
-                timerEnabled: "hidden",
+                timerEnabled: false,
             }
 
         // bindings
@@ -121,11 +120,7 @@ class Clock extends Component<IProps, IState> {
 
     // dont bind to wrong "this"!
     public enableTimerHand = () => {
-
-        const hand: HTMLElement = document.getElementById("timerHand") as HTMLElement;
-        hand.setAttribute("visibility", "visible")
-
-        this.timerEnabled = true;
+        this.setState({ timerEnabled: true })
     }
 
     public render() {
@@ -144,7 +139,7 @@ class Clock extends Component<IProps, IState> {
                         {/* we can have hand components here if we dont want to rerender the clock face? */}
                         <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
                         <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
-                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} color="yellow" tipColor="red" />
+                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} visible={this.state.timerEnabled} color="yellow" tipColor="red" />
                         <g transform={`rotate(${this.state.secPosition} 50 50)`} id="secHand">
                             <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
                         </g>;
@@ -184,8 +179,8 @@ class Clock extends Component<IProps, IState> {
             )
         }, 1000)
 
-        const timerHand = document.getElementById("timerHand") as HTMLElement;
-        timerHand.setAttribute("visibility", "hidden");
+        // const timerHand = document.getElementById("timerHand") as HTMLElement;
+        // timerHand.setAttribute("visibility", "hidden");
 
     }
 
@@ -196,7 +191,7 @@ class Clock extends Component<IProps, IState> {
         this.setState({
             stopWatchSeconds: 0
         })
-        
+
         hand.setAttribute("visibility", "hidden")
         if (hand.classList.contains("timerOn")) {
             hand.classList.remove("timerOn")
@@ -204,8 +199,8 @@ class Clock extends Component<IProps, IState> {
         if (!hand.classList.contains("timerOff")) {
             hand.classList.add("timerOff")
         }
-        
-        this.timerEnabled = false;
+
+        this.setState({timerEnabled: true})
     }
 
 
@@ -219,12 +214,12 @@ class Clock extends Component<IProps, IState> {
     // cycle on tap -> make visible -> start -> stop -> hide and reset
     private cycleTimerFunctions = () => {
         // case hidden set to visible and reset position to 0
-        if (!this.timerEnabled && !this.timerFinished) {
+        if (!this.state.timerEnabled && !this.timerFinished) {
             this.enableTimerHand();
-            this.timerEnabled = true;
+            this.setState({timerEnabled: true})
         }
         // case visible and stopped start timer
-        else if (this.timerEnabled && !this.timerStarted && !this.timerFinished) {
+        else if (this.state.timerEnabled && !this.timerStarted && !this.timerFinished) {
             // startTimer
             // this.stopWatchSeconds = 1
             // this.rotateHand(document.getElementById("timerHand") as HTMLElement, this.stopWatchSeconds)
@@ -232,7 +227,7 @@ class Clock extends Component<IProps, IState> {
             this.timerStarted = true;
         }
         // case visible and stated stop timer
-        else if (this.timerEnabled && this.timerStarted) {
+        else if (this.state.timerEnabled && this.timerStarted) {
             // stopTimer
             clearInterval(this.stopwatchInterval);
             this.timerFinished = true;
@@ -241,9 +236,9 @@ class Clock extends Component<IProps, IState> {
         // case visible and stopped (and used) set to hidden
         else {
             this.disableTimerHand();
-            this.timerEnabled = false;
             this.timerStarted = false;
             this.timerFinished = false;
+            this.setState({timerEnabled: false})
         }
     }
 

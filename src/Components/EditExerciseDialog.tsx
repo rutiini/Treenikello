@@ -139,7 +139,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
           clearable={true}
           ampm={false}
           label="aseta"
-          value={exerciseInEdit.startTime}
+          value={this.state.exercise.startTime}
           onChange={this.updateStart}
           />
         </DialogContent>
@@ -162,16 +162,17 @@ class EditExerciseDialog extends Component<IProps,IState> {
     });
   };
 
-  private updateStart = (event: ChangeEvent<HTMLInputElement>) => {
-    
+  private updateStart = (newStart: Date) => {
+    console.log('time set: ', newStart);
+
     // const time = new Date(event.target.value);
 
-    // this.setState({
-    //   exercise: {
-    //     ...this.state.exercise,
-    //     startTime: time
-    //   }
-    // })
+    this.setState({
+      exercise: {
+        ...this.state.exercise,
+        startTime: newStart
+      }
+    })
   }
   
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {

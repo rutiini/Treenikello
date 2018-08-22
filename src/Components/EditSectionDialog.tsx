@@ -72,10 +72,8 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   }
 
   private colorOptions = colorOptions.map(optionItem => {
-    const colorCode = optionItem.colorValue;
-    const colorName = optionItem.colorName;
-
-    return <MenuItem key={colorName} value={colorCode}>{colorName}</MenuItem>;
+    
+    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue}>{optionItem.colorName}</MenuItem>;
   })
 
   constructor(props: IProps) {
@@ -123,15 +121,15 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             type="text"
             multiline={true}
             rows="2"
-            value={activeSection.description}
-            // onChange={this.handleChange('description')}
+            value={this.state.section.description}
+            onChange={this.updateDescription}
             fullWidth={true}
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
             <Select
-              value={activeSection.color}
-              // onChange={this.handleChange('color')}
+              value={this.state.section.color}
+              onChange={this.updateColor}
               inputProps={{
                 id: 'item-color',
                 name: 'color',
@@ -191,4 +189,23 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     })
   }
 
+  private updateDescription = (event: ChangeEvent<HTMLInputElement>) => {
+    
+    this.setState({
+      section: {
+        ...this.state.section,
+        description: event.target.value
+      }
+    })
+  }
+
+  private updateColor = (event: ChangeEvent<HTMLSelectElement>) => {
+    
+    this.setState({
+      section: {
+        ...this.state.section,
+        color: event.target.value
+      }
+    })
+  }
 })

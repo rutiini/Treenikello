@@ -1,4 +1,6 @@
 import { createStyles, withStyles } from '@material-ui/core';
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import React, { Component } from 'react';
 import './App.css';
 import BottomNavTabs from './Components/BottomNavTabs';
@@ -59,16 +61,16 @@ class App extends Component<{}, IState> {
 
   constructor(props: any) {
     super(props);
-    
+
     let newExercises: IExercise[] = [...exercises];
-    
+
     // add exercises that the user has created locally
     const customExercises = store.getSessionExercises();
     if (customExercises !== null && customExercises !== undefined && customExercises.length > 0) {
       // console.log(`adding ${customExercises.length} custom exercises to list`)
       newExercises = newExercises.concat(customExercises);
     }
-    
+
     this.state = {
       activeSectionIndex: 0,
       confirmationDialogOpen: false,
@@ -82,7 +84,7 @@ class App extends Component<{}, IState> {
       selectedSectionIndex: 0,
       snackBarOpen: false,
     }
-    
+
     // bindings..
     this.moveSectionUp = this.moveSectionUp.bind(this);
     this.moveSectionDown = this.moveSectionDown.bind(this);
@@ -356,29 +358,25 @@ class App extends Component<{}, IState> {
 
   }
 
-  public handleDeleteExercise() {
-    if (this.state) {
+  public handleDeleteExercise = (exercise: IExercise) => {
+    const { exercises: stateExercises } = this.state;
+    const deleteIndex = stateExercises.indexOf(exercise);
+    if (deleteIndex !== -1) {
+      console.log(`deleting exercise at ${deleteIndex}`)
+      const newExercises = [...stateExercises];
+      // set selected to first in list (presets should always exist)
+      this.setState({
+        selectedExerciseIndex: 0
+      })
 
-      const { exercises: stateExercises, deleteExerciseIndex } = this.state;
+      newExercises.splice(deleteIndex, 1)
 
-      if (deleteExerciseIndex !== -1) {
-        console.log(`deleting exercise at ${deleteExerciseIndex}`)
-        const newExercises = [...stateExercises];
-        // set selected to first in list (presets should always exist)
-        this.setState({
-          selectedExerciseIndex: 0
-        })
-
-        newExercises.splice(deleteExerciseIndex, 1)
-
-        this.setState(
-          {
-            deleteExerciseIndex: -1,
-            exercises: newExercises
-          },
-          () => store.saveSessionExercises(newExercises)
-        )
-      }
+      this.setState(
+        {
+          exercises: newExercises
+        },
+        () => store.saveSessionExercises(newExercises)
+      )
     }
   }
 
@@ -459,16 +457,12 @@ class App extends Component<{}, IState> {
     this.setState({ snackBarOpen: false });
   };
 
-  public handleToggleCofirmationDialog = (exercise: IExercise) => {
-    const { exercises: stateExercises } = this.state;
-
-    const deleteIndex = stateExercises.indexOf(exercise);
+  public handleToggleCofirmationDialog = () => {
 
     const { confirmationDialogOpen } = this.state;
     this.setState(
       {
-        confirmationDialogOpen: !confirmationDialogOpen,
-        deleteExerciseIndex: deleteIndex
+        confirmationDialogOpen: !confirmationDialogOpen
       }
     );
 
@@ -490,41 +484,43 @@ class App extends Component<{}, IState> {
       snackBarOpen } = this.state;
 
     return (
-      <div className="App">
-        <Clock
-          // className='clock'
-          sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
-          startTime={stateExercises[selectedExerciseIndex].startTime}
-          canvasSide={100}
-          activeSection={activeSectionIndex}
-          setActive={this.setActiveSection} />
-        <BottomNavTabs
-          // classes={classes}
-          // theme={styles}
-          exercises={stateExercises}
-          selectedExerciseIndex={selectedExerciseIndex}
-          moveUp={this.moveSectionUp}
-          moveDown={this.moveSectionDown}
-          deleteSection={this.deleteSection}
-          setTime={this.timeChanged}
-          selectExercise={this.selectExercise}
-          activeSectionIndex={activeSectionIndex}
-          editSectionOpen={editSectionOpen}
-          handleSectionEditToggle={this.handleSectionEditToggle}
-          handleSubmit={this.updateSection}
-          handleExerciseEditToggle={this.handleExerciseEditToggle}
-          saveExercises={this.saveExercises}
-          deleteExercise={this.handleToggleCofirmationDialog} />
-        {/* host the forms on the app level to have them and the state available? */}
-        <EditSectionDialog exercise={stateExercises[selectedExerciseIndex]} open={editSectionOpen} section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection} />
-        <EditExerciseDialog exercise={stateExercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
-        <ConfirmationDialog open={confirmationDialogOpen}
-          exercise={stateExercises[selectedExerciseIndex]}
-          handleToggle={this.handleToggleCofirmationDialog}
-        // handleAccept={this.handleDeleteExercise} 
-        />
-        <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
-      </div>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <div className="App">
+          <Clock
+            // className='clock'
+            sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
+            startTime={stateExercises[selectedExerciseIndex].startTime}
+            canvasSide={100}
+            activeSection={activeSectionIndex}
+            setActive={this.setActiveSection} />
+          <BottomNavTabs
+            // classes={classes}
+            // theme={styles}
+            exercises={stateExercises}
+            selectedExerciseIndex={selectedExerciseIndex}
+            moveUp={this.moveSectionUp}
+            moveDown={this.moveSectionDown}
+            deleteSection={this.deleteSection}
+            setTime={this.timeChanged}
+            selectExercise={this.selectExercise}
+            activeSectionIndex={activeSectionIndex}
+            editSectionOpen={editSectionOpen}
+            handleSectionEditToggle={this.handleSectionEditToggle}
+            handleSubmit={this.updateSection}
+            handleExerciseEditToggle={this.handleExerciseEditToggle}
+            saveExercises={this.saveExercises}
+            deleteExercise={this.handleToggleCofirmationDialog} />
+          {/* host the forms on the app level to have them and the state available? */}
+          <EditSectionDialog exercise={stateExercises[selectedExerciseIndex]} open={editSectionOpen} section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection} />
+          <EditExerciseDialog exercise={stateExercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
+          <ConfirmationDialog open={confirmationDialogOpen}
+            exercise={stateExercises[selectedExerciseIndex]}
+            handleToggle={this.handleToggleCofirmationDialog}
+            handleAccept={this.handleDeleteExercise}
+          />
+          <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
+        </div>
+      </MuiPickersUtilsProvider>
     );
   }
 }
