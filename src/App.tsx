@@ -9,7 +9,7 @@ import ConfirmationDialog from './Components/ConfirmationDialog';
 import EditExerciseDialog from './Components/EditExerciseDialog';
 import EditSectionDialog from './Components/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
-import SectionListItem from './Components/SectionListItem';
+// import SectionListItem from './Components/SectionListItem';
 import { IExercise, ISection } from './DataInterfaces';
 import store, { exercises } from './Store';
 // import UniqueId from 'react-html-id';
@@ -127,19 +127,13 @@ class App extends Component<{}, IState> {
     const targetSectionIndex = stateExercises[selectedExerciseIndex].defaultSections.indexOf(oldSection);
     if (targetSectionIndex > -1) {
 
-      const newexercise = stateExercises[selectedExerciseIndex];
-      const newSections = newexercise.defaultSections;
-
-      newSections[targetSectionIndex] = newSection;
-      newexercise.defaultSections = newSections;
-      const newExercises = [...stateExercises]
-      newExercises[selectedExerciseIndex].defaultSections = newSections;
+      const newExercises = [...stateExercises];
+      newExercises[selectedExerciseIndex].defaultSections[targetSectionIndex] = newSection;
 
       this.setState(
         {
           exercises: newExercises,
         },
-
         () => store.saveSessionExercises(newExercises)
       )
     } else {
@@ -149,14 +143,14 @@ class App extends Component<{}, IState> {
     }
   }
 
-  public reassignKeys = (itemArr: ISection[], groupId: string) => {
+  // public reassignKeys = (itemArr: ISection[], groupId: string) => {
 
-    const rekeyedArr = itemArr.map((item, index) => {
-      item.key = groupId + `-${index}-`; // this.nextUniqueId(groupId);
-      return item;
-    })
-    return rekeyedArr;
-  }
+  //   const rekeyedArr = itemArr.map((item, index) => {
+  //     item.key = groupId + `-${index}-`;
+  //     return item;
+  //   })
+  //   return rekeyedArr;
+  // }
 
   // TODO: refactor all of these to store?
   public addSection(section: ISection) {
@@ -168,15 +162,8 @@ class App extends Component<{}, IState> {
       console.log("template modified, create a new exercise based on the selected one!");
     }
 
-    const newSection = this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.name)
-    // + this.nextUniqueId())
-
-    // rekey sections
-    const newSections = this.reassignKeys([...prevSelectedexercise.defaultSections, newSection], prevSelectedexercise.name)
-    // console.log("adding: ", section);
-
     const newExercises = [...stateExercises]
-    newExercises[selectedExerciseIndex].defaultSections = newSections;
+    newExercises[selectedExerciseIndex].defaultSections = [...prevSelectedexercise.defaultSections, this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.defaultSections.length.toString())];
 
     this.setState(
       {
@@ -377,40 +364,6 @@ class App extends Component<{}, IState> {
     }
   }
 
-  // use as callback for setState
-  public updateSectionInputBoxes() {
-    if (this.state) {
-
-      const { exercises: stateExercises, selectedExerciseIndex } = this.state;
-
-      stateExercises[selectedExerciseIndex].defaultSections.map((sectionItem) => {
-        const inputBoxKey = sectionItem.key;
-        // MUI style elments
-        return <SectionListItem key={inputBoxKey} section={sectionItem} moveUp={this.moveSectionUp} moveDown={this.moveSectionDown} deleteSection={this.deleteSection} handleSectionEditToggle={this.handleSectionEditToggle} />
-
-      })
-    }
-  }
-
-  public updateExercisePresets() {
-    if (this.state) {
-
-      const { exercises: stateExercises } = this.state;
-
-      const exercisePresets = stateExercises.map((exercise, index) => {
-        // we should not have undefined exercises in the memory
-        if (exercise !== undefined) {
-          // console.log(`exercise  added to menu `, exercise)
-          return <option key={index} value={exercise.name}>{exercise.name}</option>
-        } else {
-          return null;
-        }
-      })
-
-      exercisePresets.push(<option key="addNewexercise">+ new exercise</option>)
-    }
-  }
-
   public handleSectionEditToggle = (section: ISection) => {
 
     const { editSectionOpen, exercises: stateExercises, selectedExerciseIndex } = this.state;
@@ -467,10 +420,7 @@ class App extends Component<{}, IState> {
   }
 
   public render() {
-    // console.log("rerendering app", new Date())
-    this.updateExercisePresets();
-    this.updateSectionInputBoxes();
-    // deconstruct state for simpler syntax
+    
     const { exercises: stateExercises,
       selectedExerciseIndex,
       activeSectionIndex,
@@ -485,7 +435,6 @@ class App extends Component<{}, IState> {
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className="App">
           <Clock
-            // className='clock'
             sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
             startTime={stateExercises[selectedExerciseIndex].startTime}
             canvasSide={100}

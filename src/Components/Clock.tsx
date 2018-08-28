@@ -149,17 +149,6 @@ class Clock extends Component<IProps, IState> {
             </div>
         )
     }
-    // udpate active section to parent?
-    public componentDidUpdate() {
-        const index = this.getActiveSectionIndex(this.props.sectionItems)
-
-        if (this.state.activeSectionIndex !== index) {
-            this.setState({
-                activeSectionIndex: index
-            })
-            this.props.setActive(index);
-        }
-    }
 
     public componentDidMount() {
 
@@ -179,9 +168,6 @@ class Clock extends Component<IProps, IState> {
             )
         }, 1000)
 
-        // const timerHand = document.getElementById("timerHand") as HTMLElement;
-        // timerHand.setAttribute("visibility", "hidden");
-
     }
 
     private disableTimerHand = () => {
@@ -200,7 +186,7 @@ class Clock extends Component<IProps, IState> {
             hand.classList.add("timerOff")
         }
 
-        this.setState({timerEnabled: true})
+        this.setState({ timerEnabled: true })
     }
 
 
@@ -216,7 +202,7 @@ class Clock extends Component<IProps, IState> {
         // case hidden set to visible and reset position to 0
         if (!this.state.timerEnabled && !this.timerFinished) {
             this.enableTimerHand();
-            this.setState({timerEnabled: true})
+            this.setState({ timerEnabled: true })
         }
         // case visible and stopped start timer
         else if (this.state.timerEnabled && !this.timerStarted && !this.timerFinished) {
@@ -238,31 +224,29 @@ class Clock extends Component<IProps, IState> {
             this.disableTimerHand();
             this.timerStarted = false;
             this.timerFinished = false;
-            this.setState({timerEnabled: false})
+            this.setState({ timerEnabled: false })
         }
     }
-
-    // static elements -> timerhand should be created on-demand!
-
-    private getActiveSectionIndex = (sections: ISection[]) => {
-        const { startTime } = this.props;
+    // fix this.
+    private getActiveSectionIndex = () => {
+        const { startTime, sectionItems } = this.props;
         const d = new Date();
         const currentPosition = d.getMinutes() * 6 + d.getHours() * 360; // "absolute minute position"
         const startPosition = startTime.getMinutes() * 6 + startTime.getHours() * 360;
         let angle = startPosition;
         let index = -1;
 
-        if (sections.length > 0 && currentPosition >= startPosition) {
+        if (sectionItems.length > 0 && currentPosition >= startPosition) {
 
-            for (let i = 0; i < sections.length; i++) {
-                const sectionAngle = sections[i].duration * 6;
+            for (let i = 0; i < sectionItems.length; i++) {
+                const sectionAngle = sectionItems[i].duration * 6;
                 if (angle <= currentPosition && currentPosition <= angle + sectionAngle) {
                     index = i;
                     break;
                 }
                 angle = angle + sectionAngle;
             }
-            if (currentPosition >= (angle + sections[sections.length - 1].duration * 6)) {
+            if (currentPosition >= (angle + sectionItems[sectionItems.length - 1].duration * 6)) {
                 index++;
             }
         }
@@ -299,15 +283,26 @@ class Clock extends Component<IProps, IState> {
                     stopDrawAngle = stopDrawAngle + currentPosition;
                 }
                 else {
-
                     if (startAngle <= currentPosition && currentPosition < angle) {
-                    sectionStyle = "ActiveSection"
+                        sectionStyle = "ActiveSection";
+
+                        // mark this as activeSection in app
+                        
+                        // this.props.setActive(index);
+                        
+                        const activeIndex = this.getActiveSectionIndex()
+                        if (this.state.activeSectionIndex !== activeIndex) {
+                            this.setState({
+                                activeSectionIndex: activeIndex
+                            })
+                            this.props.setActive(activeIndex);
+                        }
                     }
-    
+
                     if (angle > stopDrawAngle + startPosition) {
                         angle = stopDrawAngle + startPosition;
                     }
-    
+
                     // set the detected section to the info block? -> info block is at app though?
                     // this hack forces rerendering (changing keys..)
                     const sectionArcKey = "Arc-" + index + angle;
@@ -321,9 +316,9 @@ class Clock extends Component<IProps, IState> {
                         key={sectionArcKey}
                         color={sectionItem.color}
                         class={sectionStyle} />)
-                        // just check whether there is an active item set.
-                    } 
-                });
+                    // just check whether there is an active item set.
+                }
+            });
         }
         return sectionItems;
     }
