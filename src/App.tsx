@@ -48,7 +48,6 @@ interface IState {
   exercises: IExercise[],
   selectedExerciseIndex: number,
   editSectionOpen: boolean,
-  selectedExercise: IExercise,
   selectedSectionIndex: number,
   editExerciseOpen: boolean,
   editExerciseIndex: number,
@@ -79,7 +78,6 @@ class App extends Component<{}, IState> {
       editExerciseOpen: false,
       editSectionOpen: false,
       exercises: newExercises,
-      selectedExercise: exercises[0], // TODO: replaced by the index?
       selectedExerciseIndex: 0,
       selectedSectionIndex: 0,
       snackBarOpen: false,
@@ -140,7 +138,6 @@ class App extends Component<{}, IState> {
       this.setState(
         {
           exercises: newExercises,
-          selectedExercise: newexercise
         },
 
         () => store.saveSessionExercises(newExercises)
@@ -265,9 +262,10 @@ class App extends Component<{}, IState> {
 
     const newExercise = stateExercises[selectedExerciseIndex];
     newExercise.startTime = new Date();
+
     this.setState(
       {
-        selectedExercise: newExercise
+        // selectedExercise: newExercise
       },
       () => store.saveSessionExercises(stateExercises)
     )
@@ -358,18 +356,17 @@ class App extends Component<{}, IState> {
 
   }
 
-  public handleDeleteExercise = (exercise: IExercise) => {
-    const { exercises: stateExercises } = this.state;
-    const deleteIndex = stateExercises.indexOf(exercise);
-    if (deleteIndex !== -1) {
-      console.log(`deleting exercise at ${deleteIndex}`)
+  public handleDeleteExercise = () => {
+    const { exercises: stateExercises, deleteExerciseIndex } = this.state;
+    if (deleteExerciseIndex !== -1) {
+      console.log(`deleting exercise at ${deleteExerciseIndex}`)
       const newExercises = [...stateExercises];
       // set selected to first in list (presets should always exist)
       this.setState({
         selectedExerciseIndex: 0
       })
 
-      newExercises.splice(deleteIndex, 1)
+      newExercises.splice(deleteExerciseIndex, 1)
 
       this.setState(
         {
@@ -457,12 +454,13 @@ class App extends Component<{}, IState> {
     this.setState({ snackBarOpen: false });
   };
 
-  public handleToggleCofirmationDialog = () => {
+  public handleToggleCofirmationDialog = (deleteIndex: number) => {
 
     const { confirmationDialogOpen } = this.state;
     this.setState(
       {
-        confirmationDialogOpen: !confirmationDialogOpen
+        confirmationDialogOpen: !confirmationDialogOpen,
+        deleteExerciseIndex: deleteIndex
       }
     );
 

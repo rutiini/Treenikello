@@ -21,7 +21,7 @@ interface IProps{
   exercises: IExercise[], 
   selectExercise: (exerciseName: string) => void,
   handleExerciseEditToggle: (exercise?: IExercise) => void,
-  deleteExercise: (exercise: IExercise) => void,
+  deleteExercise: (deleteIndex: number) => void,
   selectedExerciseIndex: number
 }
 
@@ -44,7 +44,7 @@ const ExerciseListTab: SFC<IProps> = (props) => {
   }
   const deleteClicked = (exercise: IExercise) => () => {
     // confirmation prompt?
-    deleteExercise(exercise);
+    deleteExercise(exercises.indexOf(exercise));
   }
 
   const exerciseItems = exercises.map((exercise, index) => {

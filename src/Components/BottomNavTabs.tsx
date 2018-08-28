@@ -18,7 +18,7 @@ interface IState {
 
 interface IProps {
   classes: any, // TODO find out type
-  theme: any,
+  // theme: any,
   exercises: IExercise[],
   selectedExerciseIndex: number,
   moveUp: (section: ISection) => void,
@@ -30,7 +30,7 @@ interface IProps {
   handleSectionEditToggle: (section: ISection) => void,
   handleSubmit: (oldsection: ISection, newsection: ISection) => void,
   handleExerciseEditToggle: (exercise: IExercise) => void,
-  deleteExercise: (exercise: IExercise) => void,
+  deleteExercise: (deleteIndex: number) => void,
   saveExercises: (exercise: IExercise[]) => void,
   editSectionOpen: boolean
 }
@@ -66,7 +66,7 @@ class BottomNavTabs extends Component<IProps, IState> {
   public render() {
     const {
       // classes,
-      theme,
+      // theme,
       exercises,
       selectedExerciseIndex,
       moveUp,
@@ -99,7 +99,8 @@ class BottomNavTabs extends Component<IProps, IState> {
         <div className="controlsContainer">
           <SwipeableViews
             style={{ height: '100%' }}
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            axis={'x'}
             index={this.state.value}
             onChangeIndex={this.handleChangeIndex}
           >

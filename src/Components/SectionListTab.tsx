@@ -1,5 +1,5 @@
 import { Button, createStyles, List, ListItem, withStyles } from '@material-ui/core';
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { IExercise, ISection } from '../DataInterfaces';
 import SectionListItem from './SectionListItem';
 
@@ -24,25 +24,25 @@ interface IProps {
   handleSectionEditToggle: (section: ISection) => void
 }
 
-class SectionListTab extends PureComponent<IProps>{
-
-  private sections: JSX.Element[];
+class SectionListTab extends Component<IProps>{
 
   constructor(props: IProps) {
     super(props);
 
+  }
+
+  public render() {
     const { classes,
       exercise,
       moveUp,
       moveDown,
       deleteSection,
-      handleSectionEditToggle } = props;
+      handleSectionEditToggle } = this.props;
 
-    this.sections = exercise.defaultSections.map((sectionItem, index) => {
-      const inputBoxKey = sectionItem.key;
+    const sections = exercise.defaultSections.map((sectionItem, index) => {
       // MUI style elments
       return (
-        <ListItem className={classes.listItem} key={inputBoxKey}>
+        <ListItem className={classes.listItem} key={index}>
           <SectionListItem 
             section={sectionItem}
             moveUp={moveUp}
@@ -54,13 +54,10 @@ class SectionListTab extends PureComponent<IProps>{
       )
     })
 
-  }
-  public render() {
-    const {classes} = this.props;
     return (
       <div className={classes.root}>
         <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {this.sections}
+          {sections}
           <ListItem className={classes.listItem} key="add-section-button">
             <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
           </ListItem>

@@ -72,7 +72,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   }
 
   private colorOptions = colorOptions.map(optionItem => {
-    
+
     return <MenuItem key={optionItem.colorName} value={optionItem.colorValue}>{optionItem.colorName}</MenuItem>;
   })
 
@@ -147,7 +147,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
             label="Kesto"
             type="number"
             value={activeSection.duration}
-          // onChange={this.handleChange('duration')}
+            onChange={this.updateDuration}
           />
         </DialogContent>
         <DialogActions>
@@ -180,7 +180,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   }
 
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {
-    
+
     this.setState({
       section: {
         ...this.state.section,
@@ -190,7 +190,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   }
 
   private updateDescription = (event: ChangeEvent<HTMLInputElement>) => {
-    
+
     this.setState({
       section: {
         ...this.state.section,
@@ -200,11 +200,22 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   }
 
   private updateColor = (event: ChangeEvent<HTMLSelectElement>) => {
-    
+
     this.setState({
       section: {
         ...this.state.section,
         color: event.target.value
+      }
+    })
+  }
+
+  private updateDuration = (event: ChangeEvent<HTMLSelectElement>) => {
+
+    const newDuration = parseInt(event.target.value,10);
+    this.setState({
+      section: {
+        ...this.state.section,
+        duration: newDuration
       }
     })
   }

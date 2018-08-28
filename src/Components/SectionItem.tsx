@@ -14,24 +14,13 @@ interface IProps{
 
 class SectionItem extends PureComponent<IProps> {
     
-    private d: string;
-
-    public omponentWillUpdate(){
-        // console.log("sectionItem will update.")
-        this.d = this.getPath();
-    }
-    
     public render() {
-        // console.log("drawing arc: " + this.props.start_angle + " -> " + this.props.end_angle)
+        const pathString: string = this.getPath();
         return (
-            <path id="arc" className={this.props.class} fill={this.props.color} fillRule="evenodd" d={this.d}/>
+            <path id="arc" className={this.props.class} fill={this.props.color} fillRule="evenodd" d={pathString}/>
         )   
     }
     
-    public componentDidMount(){
-        // here we draw it..
-        this.d = this.getPath()
-    }
     
     private polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
         
@@ -43,10 +32,7 @@ class SectionItem extends PureComponent<IProps> {
         };
     }
 
-    // arc -> these are the props required.
     private getPath(){
-        
-        // fix the outer edge black gap by increasing radius by 0.1px
         
         const start = this.polarToCartesian( this.props.cx,  this.props.cy,  this.props.radius,  this.props.endAngle);
         const end = this.polarToCartesian( this.props.cx,  this.props.cy,  this.props.radius,  this.props.startAngle);

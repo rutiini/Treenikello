@@ -10,8 +10,8 @@ import { IExercise } from '../DataInterfaces';
 
 interface IProps{
   exercise: IExercise,
-  handleToggle: () => void,
-  handleAccept: (exercise: IExercise) => void,
+  handleToggle: (deleteIndex: number) => void,
+  handleAccept: () => void,
   open: boolean
 }
 
@@ -44,11 +44,11 @@ class ConfirmationDialog extends PureComponent<IProps, {}> {
   }
   
   private accept = () => {
-    this.props.handleAccept(this.props.exercise);
-    this.props.handleToggle();
+    this.props.handleAccept();
+    this.props.handleToggle(-1);
   }
   private cancel = () => {
-    this.props.handleToggle();
+    this.props.handleToggle(-1);
   }
 }
 

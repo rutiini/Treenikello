@@ -298,31 +298,32 @@ class Clock extends Component<IProps, IState> {
                     // "extend" full circle by new minutes
                     stopDrawAngle = stopDrawAngle + currentPosition;
                 }
-                // should not be done during render since it updates state.
-                // TODO. set active to full opacity others slightly less.
-                else if (startAngle <= currentPosition && currentPosition < angle) {
+                else {
+
+                    if (startAngle <= currentPosition && currentPosition < angle) {
                     sectionStyle = "ActiveSection"
-                }
-
-                if (angle > stopDrawAngle + startPosition) {
-                    angle = stopDrawAngle + startPosition;
-                }
-
-                // set the detected section to the info block? -> info block is at app though?
-                // this hack forces rerendering (changing keys..)
-                const sectionArcKey = "Arc-" + index + angle;
-                sectionItems.push(<SectionItem
-                    cx={this.centerCoordinate}
-                    cy={this.centerCoordinate}
-                    radius={44.1}
-                    startAngle={startAngle}
-                    endAngle={angle}
-                    thickness={3}
-                    key={sectionArcKey}
-                    color={sectionItem.color}
-                    class={sectionStyle} />)
-            });
-            // just check whether there is an active item set.
+                    }
+    
+                    if (angle > stopDrawAngle + startPosition) {
+                        angle = stopDrawAngle + startPosition;
+                    }
+    
+                    // set the detected section to the info block? -> info block is at app though?
+                    // this hack forces rerendering (changing keys..)
+                    const sectionArcKey = "Arc-" + index + angle;
+                    sectionItems.push(<SectionItem
+                        cx={this.centerCoordinate}
+                        cy={this.centerCoordinate}
+                        radius={44.1}
+                        startAngle={startAngle}
+                        endAngle={angle}
+                        thickness={3}
+                        key={sectionArcKey}
+                        color={sectionItem.color}
+                        class={sectionStyle} />)
+                        // just check whether there is an active item set.
+                    } 
+                });
         }
         return sectionItems;
     }
