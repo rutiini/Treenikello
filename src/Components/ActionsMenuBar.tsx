@@ -62,11 +62,11 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <Button variant="fab" mini={true} color="inherit" onClick={this.saveAllExercises}><i className="material-icons">save</i></Button>
+            <Button variant="fab" mini={true} color="secondary" onClick={this.saveAllExercises}><i className="material-icons">save</i></Button>
             <Typography variant="title" color="inherit" className={classes.flex}>
               {title}
             </Typography>
-            <Button variant="fab" mini={true} color="inherit" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Button>
+            <Button variant="fab" mini={true} color="secondary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Button>
             {/* <EditSectionDialog exercise={exercises[selectedExerciseIndex]} open={open} handleToggle={this.handleToggle} handleSubmit={handleSubmit} /> */}
           </Toolbar>
         </AppBar>

@@ -47,6 +47,7 @@ interface IState{
 
 class EditExerciseDialog extends Component<IProps,IState> {
 
+  // just initialize the controlled state from props and save that object on the save method, no need for this hook.
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
     if(!prevState.open && nextProps.open){

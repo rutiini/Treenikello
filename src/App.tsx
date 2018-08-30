@@ -1,4 +1,3 @@
-import { createStyles, withStyles } from '@material-ui/core';
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import React, { Component } from 'react';
@@ -9,39 +8,9 @@ import ConfirmationDialog from './Components/ConfirmationDialog';
 import EditExerciseDialog from './Components/EditExerciseDialog';
 import EditSectionDialog from './Components/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
-// import SectionListItem from './Components/SectionListItem';
 import { IExercise, ISection } from './DataInterfaces';
+import { Provider } from './ExerciseContext';
 import store, { exercises } from './Store';
-// import UniqueId from 'react-html-id';
-
-// create themes?
-
-const styles = createStyles({}
-  // palette: {
-  //   primary: blue,
-  //   error: {
-  //     dark: palette.error[700],
-  //     light: palette.error[300],
-  //     main: palette.error[500],
-  //   },
-  //   primary: {
-  //     dark: palette.primary[700],
-  //     light: palette.primary[300],
-  //     main: palette.primary[500],
-  //   },
-  //   secondary: {
-  //     dark: palette.secondary.A700,
-  //     light: palette.secondary.A200,
-  //     main: palette.secondary.A400,
-  //   },
-  //   shape: {
-
-  //   },
-  //   zIndex: {
-
-  //   }
-  // }
-);
 
 interface IState {
   activeSectionIndex: number,
@@ -90,6 +59,9 @@ class App extends Component<{}, IState> {
     this.updateSection = this.updateSection.bind(this);
   }
 
+  public getContext = () => ({
+    ...this.state,
+  })
   /* Lifecycle hooks */
 
   /* implement the new context api for state management! */
@@ -420,7 +392,6 @@ class App extends Component<{}, IState> {
   }
 
   public render() {
-    
     const { exercises: stateExercises,
       selectedExerciseIndex,
       activeSectionIndex,
@@ -432,6 +403,7 @@ class App extends Component<{}, IState> {
       snackBarOpen } = this.state;
 
     return (
+      <Provider value={this.getContext()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className="App">
           <Clock
@@ -468,8 +440,9 @@ class App extends Component<{}, IState> {
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
       </MuiPickersUtilsProvider>
+      </Provider>
     );
   }
 }
 
-export default withStyles(styles)(App);
+export default App;

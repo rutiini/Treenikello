@@ -1,6 +1,6 @@
-import { createStyles, withStyles } from '@material-ui/core';
-import { AppBar, 
-  Tab, 
+import { Theme, withStyles } from '@material-ui/core';
+import { AppBar,
+  Tab,
   Tabs
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
@@ -35,9 +35,29 @@ interface IProps {
   editSectionOpen: boolean
 }
 
-const styles =createStyles({
+const styles = (theme: Theme) =>({
   buttonRight: {
     flex: 1
+  },
+  controlsContainer:{
+    overflow: "auto",
+    [theme.breakpoints.between("md","xl")]: {
+      height: "calc(100vh - 64px - 72px)",
+      width:"50vw",
+    },
+    [theme.breakpoints.up('sm')]: {
+      height: "calc(55vh - 64px - 72px - 4px)"
+    },
+    [theme.breakpoints.down('xs')]: {
+      height: "calc(55vh - 56px - 72px - 4px)"
+    }
+  },
+  menuBlock: {
+    [theme.breakpoints.between("md","xl")]: {
+    // float: "right",
+    height: "100vh",
+    width: "50vw",
+    }
   },
   root: {
     // backgroundColor: theme.palette.background.paper,
@@ -65,8 +85,7 @@ class BottomNavTabs extends Component<IProps, IState> {
 
   public render() {
     const {
-      // classes,
-      // theme,
+      classes,
       exercises,
       selectedExerciseIndex,
       moveUp,
@@ -88,7 +107,8 @@ class BottomNavTabs extends Component<IProps, IState> {
     const exercisesIcon = <i className="material-icons">fitness_center</i>
 
     return (
-      <div className="menuBlock">
+      // <div className="menuBlock">
+      <div className={classes.menuBlock}>
         <ActionsMenuBar
           title={tabLabels[this.state.value]}
           exercises={exercises}
@@ -96,7 +116,8 @@ class BottomNavTabs extends Component<IProps, IState> {
           setTime={setTime}
           // handleSubmit={handleSubmit}
           saveExercises={saveExercises} />
-        <div className="controlsContainer">
+        {/* <div className="controlsContainer"> */}
+        <div className={classes.controlsContainer}>
           <SwipeableViews
             style={{ height: '100%' }}
             // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -107,7 +128,7 @@ class BottomNavTabs extends Component<IProps, IState> {
               <WorkoutMonitorTab
                 exercise={exercises[selectedExerciseIndex]}
                 activeSectionIndex={activeSectionIndex}
-                // className={classes.tabContent} 
+                // className={classes.tabContent}
                 />
               <SectionListTab
                 exercise={exercises[selectedExerciseIndex]}
