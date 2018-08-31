@@ -15,5 +15,22 @@ interface IExercise {
   startTime: Date,
 }
 
+interface IExerciseContext {
+  exercises: IExercise[],
+  activeSectionIndex: number,
+  selectedExerciseIndex: number,
+  editSectionOpen: boolean,
+  selectedSectionIndex: number,
+  editExerciseOpen: boolean,
+  editExerciseIndex: number,
+  confirmationDialogOpen: boolean,
+  deleteExerciseIndex: number,
+  snackBarOpen: boolean,
 
-export { ISection, IExercise }
+  moveSectionUp: (section: ISection) => void,
+  moveSectionDown: (section: ISection) => void,
+  submitSection: (oldSection: ISection, newSection: ISection) => void,
+  deleteSection: (section: ISection) => void,
+}
+
+export { ISection, IExercise, IExerciseContext}

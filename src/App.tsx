@@ -9,7 +9,7 @@ import EditExerciseDialog from './Components/EditExerciseDialog';
 import EditSectionDialog from './Components/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
 import { IExercise, ISection } from './DataInterfaces';
-import { Provider } from './ExerciseContext';
+import { ExerciseContextProvider } from './ExerciseContext';
 import store, { exercises } from './Store';
 
 interface IState {
@@ -61,6 +61,10 @@ class App extends Component<{}, IState> {
 
   public getContext = () => ({
     ...this.state,
+    deleteSection: this.deleteSection,
+    moveSectionDown: this.moveSectionDown,
+    moveSectionUp: this.moveSectionUp,
+    submitSection: this.updateSection,
   })
   /* Lifecycle hooks */
 
@@ -403,7 +407,7 @@ class App extends Component<{}, IState> {
       snackBarOpen } = this.state;
 
     return (
-      <Provider value={this.getContext()}>
+      <ExerciseContextProvider value={this.getContext()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className="App">
           <Clock
@@ -430,7 +434,13 @@ class App extends Component<{}, IState> {
             saveExercises={this.saveExercises}
             deleteExercise={this.handleToggleCofirmationDialog} />
           {/* host the forms on the app level to have them and the state available? */}
-          <EditSectionDialog exercise={stateExercises[selectedExerciseIndex]} open={editSectionOpen} section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} handleToggle={this.handleSectionEditToggle} handleSubmit={this.updateSection} />
+          <EditSectionDialog 
+          exercise={stateExercises[selectedExerciseIndex]} 
+          open={editSectionOpen} 
+          section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} 
+          handleToggle={this.handleSectionEditToggle} 
+          // handleSubmit={this.updateSection} 
+          />
           <EditExerciseDialog exercise={stateExercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
           <ConfirmationDialog open={confirmationDialogOpen}
             exercise={stateExercises[selectedExerciseIndex]}
@@ -440,7 +450,7 @@ class App extends Component<{}, IState> {
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
       </MuiPickersUtilsProvider>
-      </Provider>
+      </ExerciseContextProvider>
     );
   }
 }

@@ -14,7 +14,8 @@ import {
   withStyles
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
-import { IExercise, ISection } from '../DataInterfaces';
+import { IExercise, IExerciseContext, ISection } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 // store
 import { colorOptions } from '../Store';
 
@@ -32,12 +33,13 @@ const emptySection: ISection = {
 }
 
 interface IProps {
+  exerciseContext?: IExerciseContext,
   exercise: IExercise,
   classes: any,
   open: boolean,
   section: ISection,
   handleToggle: (section: ISection) => void, // review the necessity of this!
-  handleSubmit: (oldSection: ISection, newSection: ISection) => void
+  // handleSubmit: (oldSection: ISection, newSection: ISection) => void
 }
 
 interface IState {
@@ -45,7 +47,7 @@ interface IState {
   open: boolean
 }
 
-export default withStyles(styles)(class EditSectionDialog extends Component<IProps, IState> {
+class EditSectionDialog extends Component<IProps, IState> {
 
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
     // opening the dialog
@@ -82,6 +84,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
       open: false,
       section: { ...emptySection }
     };
+
   }
 
   public render() {
@@ -93,72 +96,72 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
     const activeSection = this.state.section ? this.state.section : emptySection;
 
     return (
-      <Dialog
-        open={open}
-        onClose={this.handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {dialogDescription}
-          </DialogContentText>
-          <TextField
-            autoFocus={true}
-            margin="dense"
-            id="name"
-            label="Nimi"
-            type="text"
-            value={activeSection.name}
-            onChange={this.updateName}
-            fullWidth={true}
-          />
-          <br />
-          <TextField
-            margin="dense"
-            id="description"
-            label="Sisältö"
-            type="text"
-            multiline={true}
-            rows="2"
-            value={this.state.section.description}
-            onChange={this.updateDescription}
-            fullWidth={true}
-          />
-          <FormControl className={classes.EditSectionDialog}>
-            <InputLabel htmlFor="item-color">Väri</InputLabel>
-            <Select
-              value={this.state.section.color}
-              onChange={this.updateColor}
-              inputProps={{
-                id: 'item-color',
-                name: 'color',
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {this.colorOptions};
+          <Dialog
+          open={open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {dialogDescription}
+            </DialogContentText>
+            <TextField
+              autoFocus={true}
+              margin="dense"
+              id="name"
+              label="Nimi"
+              type="text"
+              value={activeSection.name}
+              onChange={this.updateName}
+              fullWidth={true}
+            />
+            <br />
+            <TextField
+              margin="dense"
+              id="description"
+              label="Sisältö"
+              type="text"
+              multiline={true}
+              rows="2"
+              value={this.state.section.description}
+              onChange={this.updateDescription}
+              fullWidth={true}
+            />
+            <FormControl className={classes.EditSectionDialog}>
+              <InputLabel htmlFor="item-color">Väri</InputLabel>
+              <Select
+                value={this.state.section.color}
+                onChange={this.updateColor}
+                inputProps={{
+                  id: 'item-color',
+                  name: 'color',
+                }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {this.colorOptions};
       </Select>
-          </FormControl>
-          <br />
-          <TextField margin="dense"
-            id="duration"
-            label="Kesto"
-            type="number"
-            value={activeSection.duration}
-            onChange={this.updateDuration}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
-            Peruuta
+            </FormControl>
+            <br />
+            <TextField margin="dense"
+              id="duration"
+              label="Kesto"
+              type="number"
+              value={activeSection.duration}
+              onChange={this.updateDuration}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Peruuta
       </Button>
-          <Button onClick={this.handleSubmit} color="primary">
-            {acceptBtnText}
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <Button onClick={this.handleSubmit} color="primary">
+              {acceptBtnText}
+            </Button>
+          </DialogActions>
+        </Dialog>
     );
   }
 
@@ -171,12 +174,17 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
   };
 
   private handleSubmit = () => {
-    this.props.handleSubmit(this.props.section, this.state.section);
-    this.props.handleToggle(this.state.section);
-    this.setState({
-      open: false,
-      section: { ...emptySection }
-    })
+    // context must not be nullable.
+    // if(this.props.exerciseContext){
+      const { submitSection } = this.props.exerciseContext as IExerciseContext;
+      // this.props.exerciseContext.submitSection(this.props.section, this.state.section);
+      submitSection(this.props.section, this.state.section);
+      this.props.handleToggle(this.state.section);
+      this.setState({
+        open: false,
+        section: { ...emptySection }
+      })
+    // }
   }
 
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -211,7 +219,7 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
 
   private updateDuration = (event: ChangeEvent<HTMLSelectElement>) => {
 
-    const newDuration = parseInt(event.target.value,10);
+    const newDuration = parseInt(event.target.value, 10);
     this.setState({
       section: {
         ...this.state.section,
@@ -219,4 +227,6 @@ export default withStyles(styles)(class EditSectionDialog extends Component<IPro
       }
     })
   }
-})
+}
+
+export default withExerciseContext(withStyles(styles)(EditSectionDialog));
