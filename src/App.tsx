@@ -65,6 +65,7 @@ class App extends Component<{}, IState> {
     moveSectionDown: this.moveSectionDown,
     moveSectionUp: this.moveSectionUp,
     submitSection: this.updateSection,
+    toggleSectionDialog: this.handleSectionEditToggle
   })
   /* Lifecycle hooks */
 
@@ -417,8 +418,6 @@ class App extends Component<{}, IState> {
             activeSection={activeSectionIndex}
             setActive={this.setActiveSection} />
           <BottomNavTabs
-            // classes={classes}
-            // theme={styles}
             exercises={stateExercises}
             selectedExerciseIndex={selectedExerciseIndex}
             moveUp={this.moveSectionUp}
@@ -434,14 +433,17 @@ class App extends Component<{}, IState> {
             saveExercises={this.saveExercises}
             deleteExercise={this.handleToggleCofirmationDialog} />
           {/* host the forms on the app level to have them and the state available? */}
-          <EditSectionDialog 
-          exercise={stateExercises[selectedExerciseIndex]} 
+          <EditSectionDialog
           open={editSectionOpen} 
           section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} 
-          handleToggle={this.handleSectionEditToggle} 
-          // handleSubmit={this.updateSection} 
           />
-          <EditExerciseDialog exercise={stateExercises[editExerciseIndex]} open={editExerciseOpen} handleToggle={this.handleExerciseEditToggle} handleSubmit={this.submitExerciseEditDialog} validateName={this.validateExerciseName} />
+          <EditExerciseDialog 
+          exercise={stateExercises[editExerciseIndex]} 
+          open={editExerciseOpen} 
+          handleToggle={this.handleExerciseEditToggle} 
+          handleSubmit={this.submitExerciseEditDialog} 
+          validateName={this.validateExerciseName} 
+          />
           <ConfirmationDialog open={confirmationDialogOpen}
             exercise={stateExercises[selectedExerciseIndex]}
             handleToggle={this.handleToggleCofirmationDialog}

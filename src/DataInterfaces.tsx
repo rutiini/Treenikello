@@ -31,6 +31,7 @@ interface IExerciseContext {
   moveSectionDown: (section: ISection) => void,
   submitSection: (oldSection: ISection, newSection: ISection) => void,
   deleteSection: (section: ISection) => void,
+  toggleSectionDialog: (section: ISection) => void,
 }
 
 export { ISection, IExercise, IExerciseContext}
