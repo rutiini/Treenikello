@@ -32,6 +32,10 @@ interface IExerciseContext {
   submitSection: (oldSection: ISection, newSection: ISection) => void,
   deleteSection: (section: ISection) => void,
   toggleSectionDialog: (section: ISection) => void,
+  toggleExerciseDialog: (section: IExercise) => void,
+  submitExercise: (oldExercise: IExercise, newExercise: IExercise) => void,
+  validateExerciseName: (name: string) => boolean,
+  deleteExercise: () => void
 }
 
 export { ISection, IExercise, IExerciseContext}

@@ -61,11 +61,15 @@ class App extends Component<{}, IState> {
 
   public getContext = () => ({
     ...this.state,
+    deleteExercise: this.handleDeleteExercise,
     deleteSection: this.deleteSection,
     moveSectionDown: this.moveSectionDown,
     moveSectionUp: this.moveSectionUp,
+    submitExercise: this.submitExerciseEditDialog,
     submitSection: this.updateSection,
-    toggleSectionDialog: this.handleSectionEditToggle
+    toggleExerciseDialog: this.handleExerciseEditToggle,
+    toggleSectionDialog: this.handleSectionEditToggle,
+    validateExerciseName: this.validateExerciseName
   })
   /* Lifecycle hooks */
 
@@ -439,10 +443,7 @@ class App extends Component<{}, IState> {
           />
           <EditExerciseDialog 
           exercise={stateExercises[editExerciseIndex]} 
-          open={editExerciseOpen} 
-          handleToggle={this.handleExerciseEditToggle} 
-          handleSubmit={this.submitExerciseEditDialog} 
-          validateName={this.validateExerciseName} 
+          open={editExerciseOpen}
           />
           <ConfirmationDialog open={confirmationDialogOpen}
             exercise={stateExercises[selectedExerciseIndex]}

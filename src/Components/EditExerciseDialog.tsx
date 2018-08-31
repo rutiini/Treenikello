@@ -11,7 +11,8 @@ import  {
 } from '@material-ui/core';
 import { TimePicker } from 'material-ui-pickers';
 import React, { ChangeEvent, Component } from 'react';
-import { IExercise } from '../DataInterfaces';
+import { IExercise, IExerciseContext } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 
 const styles = createStyles({
   EditForm: {
@@ -27,11 +28,12 @@ const emptyExercise = {
 }
 
 interface IProps{
+  exerciseContext?: IExerciseContext,
   open: boolean,
   exercise: IExercise,
-  handleToggle: (exercise: IExercise) => void,
-  handleSubmit: (oldExercise: IExercise, newExercise: IExercise) => void,
-  validateName: (name: string) => boolean,
+  // handleToggle: (exercise: IExercise) => void,
+  // handleSubmit: (oldExercise: IExercise, newExercise: IExercise) => void,
+  // validateName: (name: string) => boolean,
   // injected classes need to be declared in props!
   classes: {
     EditForm: string
@@ -156,8 +158,10 @@ class EditExerciseDialog extends Component<IProps,IState> {
     );
   }
   
+  private ctxt = () => this.props.exerciseContext as IExerciseContext;
+
   private handleClose = () => {
-    this.props.handleToggle(this.props.exercise);
+    this.ctxt().toggleExerciseDialog(this.props.exercise);
     this.setState({
       open: false
     });
@@ -187,13 +191,13 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 
   private handleSubmit = () => {
-    const { handleSubmit, validateName } = this.props;
+    
     const { exercise } = this.state;
     // validate that the name is unique
     // for updates the same name should be allowed
-    const nameOK = validateName(exercise.name);
+    const nameOK = this.ctxt().validateExerciseName(exercise.name);
     if ((nameOK || this.props.exercise ) && exercise.name !== '') {
-      handleSubmit(this.props.exercise, exercise);
+      this.ctxt().submitExercise(this.props.exercise, exercise);
       this.handleClose();
       this.setState({
         open: false
@@ -205,4 +209,4 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 }
 
-export default withStyles(styles)(EditExerciseDialog);
+export default withExerciseContext(withStyles(styles)(EditExerciseDialog));
