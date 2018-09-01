@@ -1,12 +1,12 @@
+import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { ISection } from '../DataInterfaces';
-import './Clock.css';
 import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
 
 // TODO use withstyles..
 
-interface IProps {
+interface IProps extends WithStyles<typeof styles> {
     sectionItems: ISection[],
     startTime: Date,
     canvasSide: number,
@@ -23,6 +23,46 @@ interface IState {
     timerEnabled: boolean,
     stopWatchSeconds: number
 }
+
+const styles = createStyles({
+    activeSection: {
+        opacity: 1
+    },
+    bigHourMarker: {
+        stroke: '#ffffff',
+        strokeWidth: 2
+    },
+    face: {
+        fill: '#000000',
+        stroke: '#bebebe', // colorings in to the theme?
+        strokeWidth: 2,
+    },
+    hourMarker: {
+        stroke: '#ffffff',
+        strokeWidth: 1
+    },
+    hourMin: {
+        fill: '#333',
+        stroke: '#ffffff',
+        strokeWidth: 1,
+    },
+    inactiveSection: {
+        opacity: 0.65
+    },
+    midPoint: {
+        fill: '#ffffff'
+    },
+    minor: {
+        fill: '#3f3f3f',
+    },
+    minuteMarker: {
+        stroke: '#ffffff',
+        strokeWidth: 1,
+    },
+    sec: {
+        stroke: '#ffffff'
+    }
+})
 
 class Clock extends Component<IProps, IState> {
 
@@ -53,19 +93,20 @@ class Clock extends Component<IProps, IState> {
             this.faceRadius = this.canvasSide / 2 - (this.canvasSide / 20)
         }
         const majors = [];
+        const { classes } = this.props;
 
         for (let i = 0; i < 60; i++) {
             // the "big hours"
             if (i % 15 === 0) {
-                majors.push(this.createMarker(i, 5, "bigHourMarker"))
+                majors.push(this.createMarker(i, 5, classes.bigHourMarker))
             }
             // lesser markers
             else if (i % 5 === 0) {
-                majors.push(this.createMarker(i, 5, "hourMarker"))
+                majors.push(this.createMarker(i, 5, classes.hourMarker))
             }
             // minutes
             else {
-                majors.push(this.createMarker(i, 3, "minuteMarker"))
+                majors.push(this.createMarker(i, 3, classes.minuteMarker))
             }
         }
         this.Majors = majors;
@@ -126,25 +167,26 @@ class Clock extends Component<IProps, IState> {
     public render() {
         this.sectionItems = this.updateFaceElements();
         console.log('rendered clock')
+        const { classes } = this.props;
         return (
             <div className="clockContainer" onClick={this.cycleTimerFunctions}>
 
                 <svg id="clock" className="clock" viewBox="0 0 100 100">
-                    <circle id="face" cx="50" cy="50" r="45" />
+                    <circle className={classes.face} cx="50" cy="50" r="45" />
                     {this.sectionItems}
                     <g id="minuteMarkers">
                         {this.Majors}
                     </g>
                     <g id="hands">
                         {/* we can have hand components here if we dont want to rerender the clock face? */}
-                        <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
-                        <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
+                        <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" className={classes.hourMin} x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
+                        <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" className={classes.hourMin} x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
                         <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} visible={this.state.timerEnabled} color="yellow" tipColor="red" />
                         <g transform={`rotate(${this.state.secPosition} 50 50)`} id="secHand">
                             <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
                         </g>;
                     </g>
-                    <circle id="midPoint" cx="50" cy="50" r="3" />
+                    <circle className={classes.midPoint} cx="50" cy="50" r="3" />
                 </svg>
             </div>
         )
@@ -268,12 +310,11 @@ class Clock extends Component<IProps, IState> {
 
         if (this.props.sectionItems) {
             // calculate from start time
-
+            const {classes} = this.props;
             let angle = startPosition;
             // console.log(`sections starting angle: ${angle} current time angle: ${currentPosition} `)
             this.props.sectionItems.map((sectionItem, index) => {
-
-                let sectionStyle = "InactiveSection";
+                let sectionStyle = classes.inactiveSection;
                 const startAngle = angle;
                 angle += sectionItem.duration * 6; // transform minutes to degrees
 
@@ -284,12 +325,12 @@ class Clock extends Component<IProps, IState> {
                 }
                 else {
                     if (startAngle <= currentPosition && currentPosition < angle) {
-                        sectionStyle = "ActiveSection";
+                        sectionStyle = classes.activeSection;
 
                         // mark this as activeSection in app
-                        
+
                         // this.props.setActive(index);
-                        
+
                         const activeIndex = this.getActiveSectionIndex()
                         if (this.state.activeSectionIndex !== activeIndex) {
                             this.setState({
@@ -325,6 +366,4 @@ class Clock extends Component<IProps, IState> {
 
 }
 
-export default Clock;
-
-// export default withStyles(styles)(Clock);
+export default withStyles(styles)(Clock);

@@ -1,5 +1,6 @@
 import {
   Button,
+  createStyles,
   Dialog,
   DialogActions,
   DialogContent,
@@ -10,8 +11,8 @@ import {
   MenuItem,
   Select,
   TextField,
-  Theme,
-  withStyles
+  withStyles,
+  WithStyles
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import { IExerciseContext, ISection } from '../DataInterfaces';
@@ -19,8 +20,8 @@ import { withExerciseContext } from '../ExerciseContext';
 // store
 import { colorOptions } from '../Store';
 
-const styles = (theme: Theme) => ({
-  EditSectionForm: {
+const styles = createStyles({
+  EditSectionDialog: {
     width: '75%'
   }
 })
@@ -32,9 +33,8 @@ const emptySection: ISection = {
   name: '',
 }
 
-interface IProps {
-  exerciseContext?: IExerciseContext,
-  classes: any,
+interface IProps extends WithStyles<typeof styles>{
+  exerciseContext?: IExerciseContext
   open: boolean,
   section: ISection,
 }

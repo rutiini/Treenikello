@@ -8,6 +8,7 @@ import  {
   DialogTitle,
   TextField,
   withStyles,
+  WithStyles,
 } from '@material-ui/core';
 import { TimePicker } from 'material-ui-pickers';
 import React, { ChangeEvent, Component } from 'react';
@@ -27,17 +28,10 @@ const emptyExercise = {
   startTime: new Date(),
 }
 
-interface IProps{
+interface IProps extends WithStyles<typeof styles>{
   exerciseContext?: IExerciseContext,
   open: boolean,
-  exercise: IExercise,
-  // handleToggle: (exercise: IExercise) => void,
-  // handleSubmit: (oldExercise: IExercise, newExercise: IExercise) => void,
-  // validateName: (name: string) => boolean,
-  // injected classes need to be declared in props!
-  classes: {
-    EditForm: string
-  }
+  exercise: IExercise
 }
 
 interface IState{

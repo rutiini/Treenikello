@@ -1,7 +1,7 @@
+import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import React, { Component } from 'react';
-import './App.css';
 import BottomNavTabs from './Components/BottomNavTabs';
 import Clock from './Components/Clock';
 import ConfirmationDialog from './Components/ConfirmationDialog';
@@ -11,6 +11,10 @@ import NotificationSnackBar from './Components/NotificationSnackBar';
 import { IExercise, ISection } from './DataInterfaces';
 import { ExerciseContextProvider } from './ExerciseContext';
 import store, { exercises } from './Store';
+
+interface IProps extends WithStyles<typeof styles>{
+  // just for style injection
+}
 
 interface IState {
   activeSectionIndex: number,
@@ -25,7 +29,13 @@ interface IState {
   snackBarOpen: boolean
 }
 
-class App extends Component<{}, IState> {
+const styles = createStyles({
+  App:{
+    textAlign: 'center'
+  }
+})
+
+class App extends Component<IProps, IState> {
 
   constructor(props: any) {
     super(props);
@@ -410,11 +420,12 @@ class App extends Component<{}, IState> {
       editExerciseIndex,
       confirmationDialogOpen,
       snackBarOpen } = this.state;
+      const {classes} = this.props;
 
     return (
       <ExerciseContextProvider value={this.getContext()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <div className="App">
+        <div className={classes.App}>
           <Clock
             sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
             startTime={stateExercises[selectedExerciseIndex].startTime}
@@ -458,4 +469,4 @@ class App extends Component<{}, IState> {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
