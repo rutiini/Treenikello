@@ -26,16 +26,17 @@ interface IExerciseContext {
   confirmationDialogOpen: boolean,
   deleteExerciseIndex: number,
   snackBarOpen: boolean,
-
+  // section controls
   moveSectionUp: (section: ISection) => void,
   moveSectionDown: (section: ISection) => void,
   submitSection: (oldSection: ISection, newSection: ISection) => void,
   deleteSection: (section: ISection) => void,
   toggleSectionDialog: (section: ISection) => void,
   toggleExerciseDialog: (section: IExercise) => void,
+  // exercise controls
   submitExercise: (oldExercise: IExercise, newExercise: IExercise) => void,
   validateExerciseName: (name: string) => boolean,
-  deleteExercise: () => void
+  deleteExercise: (deleteIndex: number ) => void
 }
 
 export { ISection, IExercise, IExerciseContext}

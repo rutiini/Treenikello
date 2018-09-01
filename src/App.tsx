@@ -32,7 +32,7 @@ interface IState {
 const styles = createStyles({
   App:{
     textAlign: 'center'
-  }
+  },
 })
 
 class App extends Component<IProps, IState> {
@@ -71,7 +71,7 @@ class App extends Component<IProps, IState> {
 
   public getContext = () => ({
     ...this.state,
-    deleteExercise: this.handleDeleteExercise,
+    deleteExercise: this.handleToggleCofirmationDialog,
     deleteSection: this.deleteSection,
     moveSectionDown: this.moveSectionDown,
     moveSectionUp: this.moveSectionUp,
@@ -81,17 +81,11 @@ class App extends Component<IProps, IState> {
     toggleSectionDialog: this.handleSectionEditToggle,
     validateExerciseName: this.validateExerciseName
   })
-  /* Lifecycle hooks */
-
-  /* implement the new context api for state management! */
-
-  /* Section manipulation */
 
   public setActiveSection = (sectionIndex: number) => {
     if (sectionIndex < 0) {
       console.log("no active section");
     } else {
-      // console.log("active section: " + sectionIndex);
       this.setState({
         activeSectionIndex: sectionIndex
       })
@@ -435,19 +429,13 @@ class App extends Component<IProps, IState> {
           <BottomNavTabs
             exercises={stateExercises}
             selectedExerciseIndex={selectedExerciseIndex}
-            moveUp={this.moveSectionUp}
-            moveDown={this.moveSectionDown}
-            deleteSection={this.deleteSection}
             setTime={this.timeChanged}
             selectExercise={this.selectExercise}
             activeSectionIndex={activeSectionIndex}
             editSectionOpen={editSectionOpen}
-            handleSectionEditToggle={this.handleSectionEditToggle}
-            handleSubmit={this.updateSection}
             handleExerciseEditToggle={this.handleExerciseEditToggle}
             saveExercises={this.saveExercises}
             deleteExercise={this.handleToggleCofirmationDialog} />
-          {/* host the forms on the app level to have them and the state available? */}
           <EditSectionDialog
           open={editSectionOpen} 
           section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} 

@@ -1,4 +1,4 @@
-import { createStyles, WithStyles, withStyles } from '@material-ui/core';
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { ISection } from '../DataInterfaces';
 import SectionItem from './SectionItem';
@@ -24,13 +24,28 @@ interface IState {
     stopWatchSeconds: number
 }
 
-const styles = createStyles({
+const styles = (theme: Theme) => createStyles({
     activeSection: {
         opacity: 1
     },
     bigHourMarker: {
         stroke: '#ffffff',
         strokeWidth: 2
+    },
+    clock:{
+        height: "45vh",
+        [theme.breakpoints.between("md","xl")]: {
+            height: "99vh",
+            width:"49vw",
+          }
+    },
+    clockContainer:{
+        height: "45vh",
+        [theme.breakpoints.between("md","xl")]: {
+            float: 'left',
+            height: "99vh",
+            width:"49vw",
+          }
     },
     face: {
         fill: '#000000',
@@ -169,9 +184,9 @@ class Clock extends Component<IProps, IState> {
         console.log('rendered clock')
         const { classes } = this.props;
         return (
-            <div className="clockContainer" onClick={this.cycleTimerFunctions}>
+            <div className={classes.clockContainer} onClick={this.cycleTimerFunctions}>
 
-                <svg id="clock" className="clock" viewBox="0 0 100 100">
+                <svg id="clock" className={classes.clock} viewBox="0 0 100 100">
                     <circle className={classes.face} cx="50" cy="50" r="45" />
                     {this.sectionItems}
                     <g id="minuteMarkers">

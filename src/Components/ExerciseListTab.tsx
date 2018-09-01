@@ -1,8 +1,9 @@
-import { createStyles, withStyles } from '@material-ui/core';
+import { createStyles, withStyles, WithStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
-import { IExercise } from '../DataInterfaces';
+import { IExercise, IExerciseContext } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 
 const styles = createStyles({
   listItem: {
@@ -16,20 +17,26 @@ const styles = createStyles({
   }
 });
 
-interface IProps{
-  classes: any, 
-  exercises: IExercise[], 
+interface IProps extends WithStyles {
+  exerciseContext?: IExerciseContext,
+  exercises: IExercise[],
   selectExercise: (exerciseName: string) => void,
   handleExerciseEditToggle: (exercise?: IExercise) => void,
-  deleteExercise: (deleteIndex: number) => void,
   selectedExerciseIndex: number
 }
 
 const ExerciseListTab: SFC<IProps> = (props) => {
-  const { classes, exercises, selectExercise, handleExerciseEditToggle, deleteExercise } = props;
+  const { 
+    classes, 
+    exercises, 
+    selectExercise, 
+    // handleExerciseEditToggle,
+  } = props;
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
+
+  const ctxt = () => props.exerciseContext as IExerciseContext;
 
   // const clicked = ()  => ({target: { value }}) => {
   const clicked = (exercise: IExercise) => () => {
@@ -37,32 +44,40 @@ const ExerciseListTab: SFC<IProps> = (props) => {
   }
 
   const addClicked = () => {
-    handleExerciseEditToggle();
+    const newExercise: IExercise = {
+      defaultSections: [],
+      name: "",
+      preset: false,
+      startTime: new Date()
+    }
+    ctxt().toggleExerciseDialog(newExercise);
+    // handleExerciseEditToggle();
   }
   const editClicked = (exercise: IExercise) => () => {
-    handleExerciseEditToggle(exercise);
+    ctxt().toggleExerciseDialog(exercise);
+    // handleExerciseEditToggle(exercise);
   }
   const deleteClicked = (exercise: IExercise) => () => {
     // confirmation prompt?
-    deleteExercise(exercises.indexOf(exercise));
+    ctxt().deleteExercise(exercises.indexOf(exercise));
   }
 
   const exerciseItems = exercises.map((exercise, index) => {
-    
+
     // add in visual indicator to selected exercise!
     const selected = props.selectedExerciseIndex === index;
     const backgroundColor = selected ? 'lightgrey' : 'white';
-    
-    let duration =  0;
-    
+
+    let duration = 0;
+
     exercise.defaultSections.forEach(element => {
       duration = duration + element.duration;
     });
-    
+
     // parse timestamps for start and stop
-    const starts = `${exercise.startTime.toLocaleTimeString('FI', {hour: '2-digit', minute:'2-digit'})}`;
-    const stopTime = new Date(exercise.startTime.getTime() + duration*60000);
-    const stops = `${stopTime.toLocaleTimeString('FI', {hour: '2-digit', minute:'2-digit'})}`;
+    const starts = `${exercise.startTime.toLocaleTimeString('FI', { hour: '2-digit', minute: '2-digit' })}`;
+    const stopTime = new Date(exercise.startTime.getTime() + duration * 60000);
+    const stops = `${stopTime.toLocaleTimeString('FI', { hour: '2-digit', minute: '2-digit' })}`;
 
     // buttons disabled for presets.
     let deleteBtn;
@@ -89,13 +104,13 @@ const ExerciseListTab: SFC<IProps> = (props) => {
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)} style={{backgroundColor}} button={true}>
+      <ListItem className={classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)} style={{ backgroundColor }} button={true}>
         <ListItemIcon className={classes.listItemIcon}>
           {placeHolderIcon}
         </ListItemIcon>
-        <ListItemText 
-        primary={exercise.name} 
-        secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`} />
+        <ListItemText
+          primary={exercise.name}
+          secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`} />
         <ListItemSecondaryAction>
           {deleteBtn}
           {editBtn}
@@ -106,7 +121,7 @@ const ExerciseListTab: SFC<IProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <List component="nav" style={{height: '100%', paddingTop: 0, paddingBottom: 0}}>
+      <List component="nav" style={{ height: '100%', paddingTop: 0, paddingBottom: 0 }}>
         {exerciseItems}
         <ListItem className={classes.listItem} key='add-exercise-btn'>
           <Button variant="fab" mini={true} color="secondary" aria-label="add" onClick={addClicked}>
@@ -118,4 +133,5 @@ const ExerciseListTab: SFC<IProps> = (props) => {
   );
 }
 
-export default withStyles(styles)(ExerciseListTab);
+
+export default withExerciseContext(withStyles(styles)(ExerciseListTab));

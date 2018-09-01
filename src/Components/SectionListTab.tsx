@@ -1,6 +1,7 @@
-import { Button, createStyles, List, ListItem, withStyles } from '@material-ui/core';
+import { Button, createStyles, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExercise, ISection } from '../DataInterfaces';
+import { IExerciseContext, ISection } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 import SectionListItem from './SectionListItem';
 
 const styles = createStyles({
@@ -9,19 +10,12 @@ const styles = createStyles({
     textAlign: 'center',
   },
   root: {
-    // height: '100%',
-    // backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
   }
 });
 
-interface IProps {
-  classes: any,
-  exercise: IExercise,
-  moveUp: (section: ISection) => void,
-  moveDown: (section: ISection) => void,
-  deleteSection: (section: ISection) => void,
-  handleSectionEditToggle: (section: ISection) => void
+interface IProps extends WithStyles{
+  exerciseContext?: IExerciseContext
 }
 
 class SectionListTab extends Component<IProps>{
@@ -33,22 +27,18 @@ class SectionListTab extends Component<IProps>{
 
   public render() {
     const { classes,
-      exercise,
-      moveUp,
-      moveDown,
-      deleteSection,
-      handleSectionEditToggle } = this.props;
+    } = this.props;
 
-    const sections = exercise.defaultSections.map((sectionItem, index) => {
+    const sections = this.ctxt().exercises[this.ctxt().selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
       // MUI style elments
       return (
         <ListItem className={classes.listItem} key={index}>
-          <SectionListItem 
+          <SectionListItem
             section={sectionItem}
-            moveUp={moveUp}
-            moveDown={moveDown}
-            deleteSection={deleteSection}
-            handleSectionEditToggle={handleSectionEditToggle}
+            moveUp={this.ctxt().moveSectionUp}
+            moveDown={this.ctxt().moveSectionDown}
+            deleteSection={this.ctxt().deleteSection}
+            handleSectionEditToggle={this.ctxt().toggleSectionDialog}
           />
         </ListItem>
       )
@@ -65,7 +55,9 @@ class SectionListTab extends Component<IProps>{
       </div>
     );
   }
-  
+
+  private ctxt = () => this.props.exerciseContext as IExerciseContext;
+
   // binds automagically!
   private addNewSection = () => {
     const newSection: ISection = {
@@ -75,8 +67,9 @@ class SectionListTab extends Component<IProps>{
       key: "",
       name: "",
     }
-    this.props.handleSectionEditToggle(newSection);
+    this.ctxt().toggleSectionDialog(newSection);
   }
 }
 
-export default withStyles(styles)(SectionListTab);
+
+export default withExerciseContext(withStyles(styles)(SectionListTab));
