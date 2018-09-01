@@ -6,7 +6,8 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { IExercise } from '../DataInterfaces';
+import { IExerciseContext } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 import ActionsMenuBar from './ActionsMenuBar';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
@@ -18,15 +19,7 @@ interface IState {
 }
 
 interface IProps extends WithStyles {
-  exercises: IExercise[],
-  selectedExerciseIndex: number,
-  setTime: (time: Date) => void,
-  selectExercise: (name: string) => void,
-  activeSectionIndex: number,
-  handleExerciseEditToggle: (exercise: IExercise) => void,
-  deleteExercise: (deleteIndex: number) => void,
-  saveExercises: (exercise: IExercise[]) => void,
-  editSectionOpen: boolean
+  exerciseContext?: IExerciseContext
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -77,17 +70,14 @@ class BottomNavTabs extends Component<IProps, IState> {
   };
 
   public render() {
+    const { classes } = this.props;
     const {
-      classes,
       exercises,
       selectedExerciseIndex,
-      setTime,
-      selectExercise,
       activeSectionIndex,
-      handleExerciseEditToggle,
-      deleteExercise,
+      setTime, 
       saveExercises
-    } = this.props;
+    } = this.ctxt();
 
     const tabLabels = ["Treeni", "Osiot", "Harjoitukset"]
     const workoutIcon = <i className="material-icons">timer</i>
@@ -115,12 +105,7 @@ class BottomNavTabs extends Component<IProps, IState> {
               activeSectionIndex={activeSectionIndex}
             />
             <SectionListTab/>
-            <ExerciseListTab
-              exercises={exercises}
-              selectedExerciseIndex={selectedExerciseIndex}
-              selectExercise={selectExercise}
-              handleExerciseEditToggle={handleExerciseEditToggle}
-              deleteExercise={deleteExercise} />
+            <ExerciseListTab/>
           </SwipeableViews>
         </div>
         <AppBar
@@ -142,6 +127,8 @@ class BottomNavTabs extends Component<IProps, IState> {
       </div>
     );
   }
+  
+  private ctxt = () => this.props.exerciseContext as IExerciseContext;
 }
 
-export default withStyles(styles, { withTheme: true })(BottomNavTabs);
+export default withExerciseContext(withStyles(styles, { withTheme: true })(BottomNavTabs));

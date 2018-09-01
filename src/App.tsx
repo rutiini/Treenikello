@@ -42,10 +42,8 @@ class App extends Component<IProps, IState> {
 
     let newExercises: IExercise[] = [...exercises];
 
-    // add exercises that the user has created locally
     const customExercises = store.getSessionExercises();
     if (customExercises !== null && customExercises !== undefined && customExercises.length > 0) {
-      // console.log(`adding ${customExercises.length} custom exercises to list`)
       newExercises = newExercises.concat(customExercises);
     }
 
@@ -71,15 +69,20 @@ class App extends Component<IProps, IState> {
 
   public getContext = () => ({
     ...this.state,
+    acceptDeleteExercise: this.handleDeleteExercise,
     deleteExercise: this.handleToggleCofirmationDialog,
     deleteSection: this.deleteSection,
     moveSectionDown: this.moveSectionDown,
     moveSectionUp: this.moveSectionUp,
+    saveExercises: this.saveExercises,
+    selectExercise: this.selectExercise,
+    setActiveSection: this.setActiveSection,
+    setTime: this.timeChanged,
     submitExercise: this.submitExerciseEditDialog,
     submitSection: this.updateSection,
     toggleExerciseDialog: this.handleExerciseEditToggle,
     toggleSectionDialog: this.handleSectionEditToggle,
-    validateExerciseName: this.validateExerciseName
+    validateExerciseName: this.validateExerciseName,
   })
 
   public setActiveSection = (sectionIndex: number) => {
@@ -127,15 +130,6 @@ class App extends Component<IProps, IState> {
       this.addSection(newSection);
     }
   }
-
-  // public reassignKeys = (itemArr: ISection[], groupId: string) => {
-
-  //   const rekeyedArr = itemArr.map((item, index) => {
-  //     item.key = groupId + `-${index}-`;
-  //     return item;
-  //   })
-  //   return rekeyedArr;
-  // }
 
   // TODO: refactor all of these to store?
   public addSection(section: ISection) {
@@ -405,50 +399,18 @@ class App extends Component<IProps, IState> {
   }
 
   public render() {
-    const { exercises: stateExercises,
-      selectedExerciseIndex,
-      activeSectionIndex,
-      editSectionOpen,
-      selectedSectionIndex,
-      editExerciseOpen,
-      editExerciseIndex,
-      confirmationDialogOpen,
-      snackBarOpen } = this.state;
-      const {classes} = this.props;
+    const { snackBarOpen } = this.state;
+    const { classes } = this.props;
 
     return (
       <ExerciseContextProvider value={this.getContext()}>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className={classes.App}>
-          <Clock
-            sectionItems={stateExercises[selectedExerciseIndex].defaultSections}
-            startTime={stateExercises[selectedExerciseIndex].startTime}
-            canvasSide={100}
-            activeSection={activeSectionIndex}
-            setActive={this.setActiveSection} />
-          <BottomNavTabs
-            exercises={stateExercises}
-            selectedExerciseIndex={selectedExerciseIndex}
-            setTime={this.timeChanged}
-            selectExercise={this.selectExercise}
-            activeSectionIndex={activeSectionIndex}
-            editSectionOpen={editSectionOpen}
-            handleExerciseEditToggle={this.handleExerciseEditToggle}
-            saveExercises={this.saveExercises}
-            deleteExercise={this.handleToggleCofirmationDialog} />
-          <EditSectionDialog
-          open={editSectionOpen} 
-          section={stateExercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]} 
-          />
-          <EditExerciseDialog 
-          exercise={stateExercises[editExerciseIndex]} 
-          open={editExerciseOpen}
-          />
-          <ConfirmationDialog open={confirmationDialogOpen}
-            exercise={stateExercises[selectedExerciseIndex]}
-            handleToggle={this.handleToggleCofirmationDialog}
-            handleAccept={this.handleDeleteExercise}
-          />
+          <Clock canvasSide={100}/>
+          <BottomNavTabs/>
+          <EditSectionDialog/>
+          <EditExerciseDialog/>
+          <ConfirmationDialog/>
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
       </MuiPickersUtilsProvider>

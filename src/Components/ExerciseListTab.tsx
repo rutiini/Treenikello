@@ -18,29 +18,19 @@ const styles = createStyles({
 });
 
 interface IProps extends WithStyles {
-  exerciseContext?: IExerciseContext,
-  exercises: IExercise[],
-  selectExercise: (exerciseName: string) => void,
-  handleExerciseEditToggle: (exercise?: IExercise) => void,
-  selectedExerciseIndex: number
+  exerciseContext?: IExerciseContext
 }
 
 const ExerciseListTab: SFC<IProps> = (props) => {
-  const { 
-    classes, 
-    exercises, 
-    selectExercise, 
-    // handleExerciseEditToggle,
-  } = props;
+  const { classes } = props;
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
 
   const ctxt = () => props.exerciseContext as IExerciseContext;
 
-  // const clicked = ()  => ({target: { value }}) => {
   const clicked = (exercise: IExercise) => () => {
-    selectExercise(exercise.name);
+    ctxt().selectExercise(exercise.name)
   }
 
   const addClicked = () => {
@@ -51,21 +41,19 @@ const ExerciseListTab: SFC<IProps> = (props) => {
       startTime: new Date()
     }
     ctxt().toggleExerciseDialog(newExercise);
-    // handleExerciseEditToggle();
   }
   const editClicked = (exercise: IExercise) => () => {
     ctxt().toggleExerciseDialog(exercise);
-    // handleExerciseEditToggle(exercise);
   }
   const deleteClicked = (exercise: IExercise) => () => {
     // confirmation prompt?
-    ctxt().deleteExercise(exercises.indexOf(exercise));
+    ctxt().deleteExercise(ctxt().exercises.indexOf(exercise));
   }
 
-  const exerciseItems = exercises.map((exercise, index) => {
+  const exerciseItems = ctxt().exercises.map((exercise, index) => {
 
     // add in visual indicator to selected exercise!
-    const selected = props.selectedExerciseIndex === index;
+    const selected = ctxt().selectedExerciseIndex === index;
     const backgroundColor = selected ? 'lightgrey' : 'white';
 
     let duration = 0;

@@ -35,8 +35,6 @@ const emptySection: ISection = {
 
 interface IProps extends WithStyles<typeof styles>{
   exerciseContext?: IExerciseContext
-  open: boolean,
-  section: ISection,
 }
 
 interface IState {
@@ -50,22 +48,32 @@ class EditSectionDialog extends Component<IProps, IState> {
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
     // opening the dialog
     if (prevState) {
-      
-      if (!prevState.open && nextProps.open) {
-        // const {  exercises, selectedExerciseIndex, selectedSectionIndex } =  nextProps.exerciseContext as IExerciseContext;
-        // const section = exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex]
-        if (nextProps.section) {
+
+      const ctx = () => nextProps.exerciseContext as IExerciseContext;
+      const {exercises,editSectionOpen} = ctx();
+      let section = exercises[ctx().selectedExerciseIndex].defaultSections[ctx().selectedSectionIndex]
+
+      // if (!prevState.open && nextProps.open) {
+      if (!prevState.open && editSectionOpen) {
+
+        if (section) {
           return {
             open: true,
-            section: { ...nextProps.section }
+            section
           };
         } else {
+          section = {
+            color: '',
+            description: '',
+            duration: 0,
+            key: '',
+            name: '',
+          }
           return {
             open: true,
-            section: { ...emptySection }
+            section
           };
         }
-        // default.
       } else {
         return null;
       }
@@ -88,17 +96,19 @@ class EditSectionDialog extends Component<IProps, IState> {
   }
 
   public render() {
-    const { classes, open, section } = this.props;
+    const { classes} = this.props;
+    const { exercises, selectedExerciseIndex, selectedSectionIndex, editSectionOpen } = this.ctxt();
+    const section = exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex];
 
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
     // does not update the exercise index correctly.
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${this.ctxt().exercises[this.ctxt().selectedExerciseIndex].name}` : `Muokkaa osiota`;
+    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercises[selectedExerciseIndex].name}` : `Muokkaa osiota`;
     const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
     const activeSection = this.state.section ? this.state.section : emptySection;
 
     return (
       <Dialog
-        open={open}
+        open={editSectionOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
@@ -177,7 +187,8 @@ class EditSectionDialog extends Component<IProps, IState> {
   };
 
   private handleSubmit = () => {
-    this.ctxt().submitSection(this.props.section, this.state.section);
+    const {exercises, selectedExerciseIndex,selectedSectionIndex} = this.ctxt();
+    this.ctxt().submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
     this.ctxt().toggleSectionDialog(this.state.section);
 
     this.setState({

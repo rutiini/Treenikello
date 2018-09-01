@@ -29,9 +29,7 @@ const emptyExercise = {
 }
 
 interface IProps extends WithStyles<typeof styles>{
-  exerciseContext?: IExerciseContext,
-  open: boolean,
-  exercise: IExercise
+  exerciseContext?: IExerciseContext
 }
 
 interface IState{
@@ -46,15 +44,26 @@ class EditExerciseDialog extends Component<IProps,IState> {
   // just initialize the controlled state from props and save that object on the save method, no need for this hook.
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
-    if(!prevState.open && nextProps.open){
-      if(nextProps.exercise){
+    const ctx = () => nextProps.exerciseContext as IExerciseContext;
+    const { exercises,editExerciseOpen, editExerciseIndex } = ctx();
+    
+    let exercise: IExercise = exercises[editExerciseIndex];
+    
+    if(!prevState.open && editExerciseOpen){
+      if(exercise){
         return {
-          exercise: {...nextProps.exercise},
+          exercise: {...exercise},
           open: true
         };
       }else{
+        exercise = {
+          defaultSections: [],
+          name: '',
+          preset: false,
+          startTime: new Date(),
+        }
         return{
-          exercise: {...emptyExercise},
+          exercise: {...exercise},
           open: true
         };
       }
@@ -74,7 +83,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 
   public render() {
-    const { open } = this.props;
+    const { exercises, editExerciseIndex, editExerciseOpen } = this.ctxt();
     let exerciseInEdit: IExercise = emptyExercise;
     const { errorText } = this.state;
 
@@ -83,9 +92,9 @@ class EditExerciseDialog extends Component<IProps,IState> {
     let descriptionText = 'Lisää harjoituksen tiedot'
     // edit mode if
     if(this.state.exercise){
-      exerciseInEdit = {...this.props.exercise}
+      exerciseInEdit = {...exercises[editExerciseIndex]}
     }
-    if (this.props.exercise) {
+    if (exercises[editExerciseIndex]) {
       submitBtnText = 'Päivitä';
       titleText = 'Muokkaa harjoitusta';
       descriptionText = 'Päivitä harjoituksen tiedot';
@@ -121,7 +130,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
     return (
       <Dialog
-        open={open}
+        open={editExerciseOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
@@ -155,7 +164,8 @@ class EditExerciseDialog extends Component<IProps,IState> {
   private ctxt = () => this.props.exerciseContext as IExerciseContext;
 
   private handleClose = () => {
-    this.ctxt().toggleExerciseDialog(this.props.exercise);
+    const {exercises, editExerciseIndex} = this.ctxt();
+    this.ctxt().toggleExerciseDialog(exercises[editExerciseIndex]);
     this.setState({
       open: false
     });
@@ -187,11 +197,12 @@ class EditExerciseDialog extends Component<IProps,IState> {
   private handleSubmit = () => {
     
     const { exercise } = this.state;
+    const { exercises, editExerciseIndex, validateExerciseName } = this.ctxt();
     // validate that the name is unique
     // for updates the same name should be allowed
-    const nameOK = this.ctxt().validateExerciseName(exercise.name);
-    if ((nameOK || this.props.exercise ) && exercise.name !== '') {
-      this.ctxt().submitExercise(this.props.exercise, exercise);
+    const nameOK = validateExerciseName(exercise.name);
+    if ((nameOK || exercises[editExerciseIndex] ) && exercise.name !== '') {
+      this.ctxt().submitExercise(exercises[editExerciseIndex], exercise);
       this.handleClose();
       this.setState({
         open: false

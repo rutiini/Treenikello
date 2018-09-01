@@ -1,17 +1,15 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { ISection } from '../DataInterfaces';
+import { IExerciseContext } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
 
 // TODO use withstyles..
 
 interface IProps extends WithStyles<typeof styles> {
-    sectionItems: ISection[],
-    startTime: Date,
-    canvasSide: number,
-    activeSection: number,
-    setActive: (sectionIndex: number) => void
+    exerciseContext: IExerciseContext,
+    canvasSide: number
 }
 
 interface IState {
@@ -193,7 +191,6 @@ class Clock extends Component<IProps, IState> {
                         {this.Majors}
                     </g>
                     <g id="hands">
-                        {/* we can have hand components here if we dont want to rerender the clock face? */}
                         <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" className={classes.hourMin} x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
                         <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" className={classes.hourMin} x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
                         <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} visible={this.state.timerEnabled} color="yellow" tipColor="red" />
@@ -226,6 +223,8 @@ class Clock extends Component<IProps, IState> {
         }, 1000)
 
     }
+
+    private ctxt = () => this.props.exerciseContext;
 
     private disableTimerHand = () => {
         // have all the hands as private props.
@@ -263,9 +262,6 @@ class Clock extends Component<IProps, IState> {
         }
         // case visible and stopped start timer
         else if (this.state.timerEnabled && !this.timerStarted && !this.timerFinished) {
-            // startTimer
-            // this.stopWatchSeconds = 1
-            // this.rotateHand(document.getElementById("timerHand") as HTMLElement, this.stopWatchSeconds)
             this.stopwatchInterval = setInterval(this.updateStopwatch, 500);
             this.timerStarted = true;
         }
@@ -284,9 +280,11 @@ class Clock extends Component<IProps, IState> {
             this.setState({ timerEnabled: false })
         }
     }
-    // fix this.
+    // fix this, the last active section stays active even when the exercise should be finished
     private getActiveSectionIndex = () => {
-        const { startTime, sectionItems } = this.props;
+        const { exercises, selectedExerciseIndex } = this.ctxt();
+        const { startTime, defaultSections: sectionItems } = exercises[selectedExerciseIndex];
+
         const d = new Date();
         const currentPosition = d.getMinutes() * 6 + d.getHours() * 360; // "absolute minute position"
         const startPosition = startTime.getMinutes() * 6 + startTime.getHours() * 360;
@@ -314,21 +312,22 @@ class Clock extends Component<IProps, IState> {
 
     private updateFaceElements() {
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
-        const d = new Date();
+        const { exercises, selectedExerciseIndex, setActiveSection } = this.ctxt();
+        const { startTime, defaultSections } = exercises[selectedExerciseIndex];
 
+        const d = new Date();
         const sectionItems: JSX.Element[] = [];
 
         // change to absolute
         const currentPosition = d.getMinutes() * 6 + d.getHours() * 360; // "absolute minute position"
-        const startPosition = this.props.startTime.getMinutes() * 6 + this.props.startTime.getHours() * 360;
+        const startPosition = startTime.getMinutes() * 6 + startTime.getHours() * 360;
         let stopDrawAngle = 360; // opacity of sections is a good way of communication where we start and are..
 
-        if (this.props.sectionItems) {
+        if (defaultSections) {
             // calculate from start time
             const {classes} = this.props;
             let angle = startPosition;
-            // console.log(`sections starting angle: ${angle} current time angle: ${currentPosition} `)
-            this.props.sectionItems.map((sectionItem, index) => {
+            defaultSections.map((sectionItem, index) => {
                 let sectionStyle = classes.inactiveSection;
                 const startAngle = angle;
                 angle += sectionItem.duration * 6; // transform minutes to degrees
@@ -342,16 +341,12 @@ class Clock extends Component<IProps, IState> {
                     if (startAngle <= currentPosition && currentPosition < angle) {
                         sectionStyle = classes.activeSection;
 
-                        // mark this as activeSection in app
-
-                        // this.props.setActive(index);
-
                         const activeIndex = this.getActiveSectionIndex()
                         if (this.state.activeSectionIndex !== activeIndex) {
                             this.setState({
                                 activeSectionIndex: activeIndex
                             })
-                            this.props.setActive(activeIndex);
+                            setActiveSection(activeIndex);
                         }
                     }
 
@@ -359,8 +354,6 @@ class Clock extends Component<IProps, IState> {
                         angle = stopDrawAngle + startPosition;
                     }
 
-                    // set the detected section to the info block? -> info block is at app though?
-                    // this hack forces rerendering (changing keys..)
                     const sectionArcKey = "Arc-" + index + angle;
                     sectionItems.push(<SectionItem
                         cx={this.centerCoordinate}
@@ -381,4 +374,4 @@ class Clock extends Component<IProps, IState> {
 
 }
 
-export default withStyles(styles)(Clock);
+export default withExerciseContext(withStyles(styles)(Clock));

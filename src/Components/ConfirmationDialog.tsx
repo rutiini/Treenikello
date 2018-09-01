@@ -6,29 +6,26 @@ import  { Dialog,
   DialogTitle,
 } from '@material-ui/core';
 import React, { PureComponent } from 'react';
-import { IExercise } from '../DataInterfaces';
+import { IExerciseContext } from '../DataInterfaces';
+import { withExerciseContext } from '../ExerciseContext';
 
 interface IProps{
-  exercise: IExercise,
-  handleToggle: (deleteIndex: number) => void,
-  handleAccept: () => void,
-  open: boolean
+  exerciseContext?: IExerciseContext
 }
 
 class ConfirmationDialog extends PureComponent<IProps, {}> {
 
   public render() {
-    const { open } = this.props;
     return (
         <Dialog
-          open={open}
+          open={this.ctxt().confirmationDialogOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
           <DialogTitle id="alert-dialog-title">Vahvista</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Haluatko varmasti poistaa valitun harjoituksen?
+              {`Haluatko varmasti poistaa valitun harjoituksen ${this.ctxt().deleteExerciseIndex !== -1 ? this.ctxt().exercises[this.ctxt().deleteExerciseIndex].name : ''}?`}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -43,13 +40,18 @@ class ConfirmationDialog extends PureComponent<IProps, {}> {
     );
   }
   
+  private ctxt = () => this.props.exerciseContext as IExerciseContext;
+
   private accept = () => {
-    this.props.handleAccept();
-    this.props.handleToggle(-1);
+    this.ctxt().acceptDeleteExercise();
+    this.ctxt().deleteExercise(-1);
+    // this.props.handleAccept();
+    // this.props.handleToggle(-1);
   }
   private cancel = () => {
-    this.props.handleToggle(-1);
+    // this.props.handleToggle(-1);
+    this.ctxt().deleteExercise(-1);
   }
 }
 
-export default ConfirmationDialog;
+export default withExerciseContext(ConfirmationDialog);

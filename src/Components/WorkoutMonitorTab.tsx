@@ -67,8 +67,6 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
                   <Typography>
                     {exercise.defaultSections[index].duration} min
           </Typography>
-                  {/* <div className={classes.actionsContainer}>
-          </div> */}
                 </StepContent>
               </Step>
             );
@@ -86,18 +84,6 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
       </div>
     );
   }
-
-  // private handleNext = () => {
-  //   this.setState({
-  //     activeStep: this.state.activeStep + 1,
-  //   });
-  // };
-
-  // private handleBack = () => {
-  //   this.setState({
-  //     activeStep: this.state.activeStep - 1,
-  //   });
-  // };
 
   private handleReset = () => {
     this.setState({
