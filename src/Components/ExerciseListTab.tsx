@@ -13,7 +13,7 @@ const styles = (theme: Theme) => createStyles({
     width: '100%',
   },
   selectedListItem: {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.action.selected,
     justifyContent: 'center',
     textAlign: 'center',
     width: '100%'

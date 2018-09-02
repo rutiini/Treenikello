@@ -82,7 +82,9 @@ class EditSectionDialog extends Component<IProps, IState> {
 
   private colorOptions = colorOptions.map(optionItem => {
 
-    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue}>{optionItem.colorName}</MenuItem>;
+    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{backgroundColor: optionItem.colorValue}}>
+    {/* {optionItem.colorName} */}
+    </MenuItem>;
   })
 
   constructor(props: IProps) {
@@ -139,7 +141,7 @@ class EditSectionDialog extends Component<IProps, IState> {
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
-            <Select
+            <Select style={{backgroundColor: this.state.section.color}}
               value={this.state.section.color}
               onChange={this.updateColor}
               inputProps={{

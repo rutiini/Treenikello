@@ -25,7 +25,7 @@ const styles = (theme: Theme) => createStyles({
         opacity: 1
     },
     bigHourMarker: {
-        stroke: '#ffffff',
+        stroke: theme.palette.action.active,
         strokeWidth: 2
     },
     clock:{
@@ -49,29 +49,29 @@ const styles = (theme: Theme) => createStyles({
         strokeWidth: 2,
     },
     hourMarker: {
-        stroke: '#ffffff',
+        stroke: theme.palette.action.active,
         strokeWidth: 1
     },
     hourMin: {
-        fill: '#333',
-        stroke: '#ffffff',
+        fill: theme.palette.action.hover,
+        stroke: theme.palette.action.active,
         strokeWidth: 1,
     },
     inactiveSection: {
         opacity: 0.65
     },
     midPoint: {
-        fill: '#ffffff'
+        fill: theme.palette.action.active,
     },
     minor: {
         fill: '#3f3f3f',
     },
     minuteMarker: {
-        stroke: '#ffffff',
+        stroke: theme.palette.action.active,
         strokeWidth: 1,
     },
     sec: {
-        stroke: '#ffffff'
+        stroke: theme.palette.action.active,
     }
 })
 
