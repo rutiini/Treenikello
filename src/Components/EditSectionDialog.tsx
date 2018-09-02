@@ -34,7 +34,7 @@ const emptySection: ISection = {
 }
 
 interface IProps extends WithStyles<typeof styles>{
-  exerciseContext?: IExerciseContext
+  exerciseContext: IExerciseContext
 }
 
 interface IState {
@@ -49,11 +49,9 @@ class EditSectionDialog extends Component<IProps, IState> {
     // opening the dialog
     if (prevState) {
 
-      const ctx = () => nextProps.exerciseContext as IExerciseContext;
-      const {exercises,editSectionOpen} = ctx();
-      let section = exercises[ctx().selectedExerciseIndex].defaultSections[ctx().selectedSectionIndex]
+      let section = nextProps.exerciseContext.exercises[nextProps.exerciseContext.selectedExerciseIndex].defaultSections[nextProps.exerciseContext.selectedSectionIndex]
+      const{ editSectionOpen } = nextProps.exerciseContext
 
-      // if (!prevState.open && nextProps.open) {
       if (!prevState.open && editSectionOpen) {
 
         if (section) {
@@ -97,7 +95,7 @@ class EditSectionDialog extends Component<IProps, IState> {
 
   public render() {
     const { classes} = this.props;
-    const { exercises, selectedExerciseIndex, selectedSectionIndex, editSectionOpen } = this.ctxt();
+    const { exercises, selectedExerciseIndex, selectedSectionIndex, editSectionOpen } = this.props.exerciseContext;
     const section = exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex];
 
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
@@ -176,10 +174,10 @@ class EditSectionDialog extends Component<IProps, IState> {
     );
   }
 
-  private ctxt = () => this.props.exerciseContext as IExerciseContext;
 
   private handleClose = () => {
-    this.ctxt().toggleSectionDialog(this.state.section);
+
+    this.props.exerciseContext.toggleSectionDialog(this.state.section);
     this.setState({
       open: false,
       section: { ...emptySection }
@@ -187,9 +185,10 @@ class EditSectionDialog extends Component<IProps, IState> {
   };
 
   private handleSubmit = () => {
-    const {exercises, selectedExerciseIndex,selectedSectionIndex} = this.ctxt();
-    this.ctxt().submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
-    this.ctxt().toggleSectionDialog(this.state.section);
+
+    const {exercises, selectedExerciseIndex,selectedSectionIndex} = this.props.exerciseContext;
+    this.props.exerciseContext.submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
+    this.props.exerciseContext.toggleSectionDialog(this.state.section);
 
     this.setState({
       open: false,

@@ -15,7 +15,7 @@ const styles = createStyles({
 });
 
 interface IProps extends WithStyles{
-  exerciseContext?: IExerciseContext
+  exerciseContext: IExerciseContext
 }
 
 class SectionListTab extends Component<IProps>{
@@ -28,17 +28,25 @@ class SectionListTab extends Component<IProps>{
   public render() {
     const { classes,
     } = this.props;
+    const { 
+      exercises, 
+      selectedExerciseIndex, 
+      moveSectionUp, 
+      moveSectionDown, 
+      deleteSection, 
+      toggleSectionDialog 
+    } = this.props.exerciseContext;
 
-    const sections = this.ctxt().exercises[this.ctxt().selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
+    const sections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
       // MUI style elments
       return (
         <ListItem className={classes.listItem} key={index}>
           <SectionListItem
             section={sectionItem}
-            moveUp={this.ctxt().moveSectionUp}
-            moveDown={this.ctxt().moveSectionDown}
-            deleteSection={this.ctxt().deleteSection}
-            handleSectionEditToggle={this.ctxt().toggleSectionDialog}
+            moveUp={moveSectionUp}
+            moveDown={moveSectionDown}
+            deleteSection={deleteSection}
+            handleSectionEditToggle={toggleSectionDialog}
           />
         </ListItem>
       )
@@ -56,8 +64,6 @@ class SectionListTab extends Component<IProps>{
     );
   }
 
-  private ctxt = () => this.props.exerciseContext as IExerciseContext;
-
   // binds automagically!
   private addNewSection = () => {
     const newSection: ISection = {
@@ -67,7 +73,7 @@ class SectionListTab extends Component<IProps>{
       key: "",
       name: "",
     }
-    this.ctxt().toggleSectionDialog(newSection);
+    this.props.exerciseContext.toggleSectionDialog(newSection);
   }
 }
 

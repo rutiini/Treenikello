@@ -67,7 +67,27 @@ class App extends Component<IProps, IState> {
     this.updateSection = this.updateSection.bind(this);
   }
 
-  public getContext = () => ({
+  public render() {
+    const { snackBarOpen } = this.state;
+    const { classes } = this.props;
+
+    return (
+      <ExerciseContextProvider value={this.getContext()}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <div className={classes.App}>
+          <Clock canvasSide={100}/>
+          <BottomNavTabs/>
+          <EditSectionDialog/>
+          <EditExerciseDialog/>
+          <ConfirmationDialog/>
+          <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
+        </div>
+      </MuiPickersUtilsProvider>
+      </ExerciseContextProvider>
+    );
+  }
+
+  private getContext = () => ({
     ...this.state,
     acceptDeleteExercise: this.handleDeleteExercise,
     deleteExercise: this.handleToggleCofirmationDialog,
@@ -85,7 +105,7 @@ class App extends Component<IProps, IState> {
     validateExerciseName: this.validateExerciseName,
   })
 
-  public setActiveSection = (sectionIndex: number) => {
+  private setActiveSection = (sectionIndex: number) => {
     if (sectionIndex < 0) {
       console.log("no active section");
     } else {
@@ -97,7 +117,7 @@ class App extends Component<IProps, IState> {
   }
 
   // returns a section with generated key.
-  public createSection(name: string, description: string, duration: number, color: string, key: string) {
+  private createSection(name: string, description: string, duration: number, color: string, key: string) {
 
     const section: ISection = {
       color,
@@ -109,7 +129,7 @@ class App extends Component<IProps, IState> {
     return section;
   }
 
-  public updateSection(oldSection: ISection, newSection: ISection) {
+  private updateSection(oldSection: ISection, newSection: ISection) {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
     const targetSectionIndex = stateExercises[selectedExerciseIndex].defaultSections.indexOf(oldSection);
@@ -132,7 +152,7 @@ class App extends Component<IProps, IState> {
   }
 
   // TODO: refactor all of these to store?
-  public addSection(section: ISection) {
+  private addSection(section: ISection) {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
     const prevSelectedexercise = stateExercises[selectedExerciseIndex];
@@ -153,7 +173,7 @@ class App extends Component<IProps, IState> {
     )
   }
 
-  public deleteSection(section: ISection) {
+  private deleteSection(section: ISection) {
     // prompt user for confirmation?
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
@@ -174,7 +194,7 @@ class App extends Component<IProps, IState> {
   }
 
 
-  public moveSectionUp = (section: ISection) => {
+  private moveSectionUp = (section: ISection) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
     const exercise = stateExercises[selectedExerciseIndex];
@@ -197,7 +217,7 @@ class App extends Component<IProps, IState> {
     }
   }
 
-  public moveSectionDown = (section: ISection) => {
+  private moveSectionDown = (section: ISection) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
     const exercise = stateExercises[selectedExerciseIndex];
@@ -221,23 +241,7 @@ class App extends Component<IProps, IState> {
     }
   }
 
-  /* helper functions */
-
-  public applyCurrentTime = () => {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
-
-    const newExercise = stateExercises[selectedExerciseIndex];
-    newExercise.startTime = new Date();
-
-    this.setState(
-      {
-        // selectedExercise: newExercise
-      },
-      () => store.saveSessionExercises(stateExercises)
-    )
-  }
-
-  public timeChanged = (time: Date) => {
+  private timeChanged = (time: Date) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
     console.log(time)
@@ -252,7 +256,7 @@ class App extends Component<IProps, IState> {
     )
   }
 
-  public selectExercise = (name: string) => {
+  private selectExercise = (name: string) => {
 
     const arrayIndex = this.state.exercises.map(exercise => exercise.name).indexOf(name);
 
@@ -267,7 +271,7 @@ class App extends Component<IProps, IState> {
   }
 
   // form submit action handler
-  public submitExerciseEditDialog = (oldExercise: IExercise, newExercise: IExercise) => {
+  private submitExerciseEditDialog = (oldExercise: IExercise, newExercise: IExercise) => {
     const { exercises: stateExercises } = this.state;
     // check indexof old ex and replace with new, if -1 add new
     const editIndex = stateExercises.indexOf(oldExercise);
@@ -301,7 +305,7 @@ class App extends Component<IProps, IState> {
   }
 
   // pass custom exercises for store to be saved
-  public saveExercises = () => {
+  private saveExercises = () => {
     const { exercises: stateExercises } = this.state;
     const nonPresets = stateExercises.filter(x => x.preset !== true)
     // save only here..
@@ -310,7 +314,7 @@ class App extends Component<IProps, IState> {
   }
 
   // return true for valid new name
-  public validateExerciseName = (name: string) => {
+  private validateExerciseName = (name: string) => {
 
     const position = this.state.exercises.map(exercise => exercise.name).indexOf(name);
 
@@ -322,7 +326,7 @@ class App extends Component<IProps, IState> {
 
   }
 
-  public handleDeleteExercise = () => {
+  private handleDeleteExercise = () => {
     const { exercises: stateExercises, deleteExerciseIndex } = this.state;
     if (deleteExerciseIndex !== -1) {
       console.log(`deleting exercise at ${deleteExerciseIndex}`)
@@ -343,7 +347,7 @@ class App extends Component<IProps, IState> {
     }
   }
 
-  public handleSectionEditToggle = (section: ISection) => {
+  private handleSectionEditToggle = (section: ISection) => {
 
     const { editSectionOpen, exercises: stateExercises, selectedExerciseIndex } = this.state;
 
@@ -358,7 +362,7 @@ class App extends Component<IProps, IState> {
     })
   }
 
-  public handleExerciseEditToggle = (exercise: IExercise) => {
+  private handleExerciseEditToggle = (exercise: IExercise) => {
     const { editExerciseOpen, exercises: stateExercises } = this.state;
 
     // open for edit
@@ -374,11 +378,11 @@ class App extends Component<IProps, IState> {
 
   }
 
-  public handleShowSnackbar = () => {
+  private handleShowSnackbar = () => {
     this.setState({ snackBarOpen: true });
   };
 
-  public handleCloseSnackbar = (event: Event, reason: string) => {
+  private handleCloseSnackbar = (event: Event, reason: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -386,7 +390,7 @@ class App extends Component<IProps, IState> {
     this.setState({ snackBarOpen: false });
   };
 
-  public handleToggleCofirmationDialog = (deleteIndex: number) => {
+  private handleToggleCofirmationDialog = (deleteIndex: number) => {
 
     const { confirmationDialogOpen } = this.state;
     this.setState(
@@ -398,25 +402,6 @@ class App extends Component<IProps, IState> {
 
   }
 
-  public render() {
-    const { snackBarOpen } = this.state;
-    const { classes } = this.props;
-
-    return (
-      <ExerciseContextProvider value={this.getContext()}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <div className={classes.App}>
-          <Clock canvasSide={100}/>
-          <BottomNavTabs/>
-          <EditSectionDialog/>
-          <EditExerciseDialog/>
-          <ConfirmationDialog/>
-          <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
-        </div>
-      </MuiPickersUtilsProvider>
-      </ExerciseContextProvider>
-    );
-  }
 }
 
 export default withStyles(styles)(App);

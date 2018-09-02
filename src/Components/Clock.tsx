@@ -5,8 +5,6 @@ import { withExerciseContext } from '../ExerciseContext';
 import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
 
-// TODO use withstyles..
-
 interface IProps extends WithStyles<typeof styles> {
     exerciseContext: IExerciseContext,
     canvasSide: number

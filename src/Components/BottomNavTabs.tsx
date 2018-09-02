@@ -28,6 +28,10 @@ const styles = (theme: Theme) => createStyles({
   },
   controlsContainer: {
     height: "100%",
+    [theme.breakpoints.between("md", "xl")]: {
+      borderLeftStyle: 'solid',
+      borderLeftWidth: 2,
+  }
   },
   menuBlock: {
     [theme.breakpoints.up('sm')]: {
@@ -37,9 +41,6 @@ const styles = (theme: Theme) => createStyles({
       height: "calc(55vh - 56px - 72px)"
     },
     [theme.breakpoints.between("md", "xl")]: {
-      // borderLeftColor: '#3f51b5',
-      borderLeftStyle: 'solid',
-      borderLeftWidth: 2,
       float: "right",
       height: "calc(100vh - 64px - 72px)",
       width: "49vw",

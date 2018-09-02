@@ -1,4 +1,10 @@
-import { AppBar, Button, createStyles, Toolbar, Typography, withStyles } from '@material-ui/core';
+import { 
+  AppBar, 
+  Button, 
+  createStyles, 
+  Toolbar, 
+  Typography, 
+  withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { IExercise } from '../DataInterfaces';
 
@@ -29,7 +35,6 @@ interface IProps {
   selectedExerciseIndex: number,
   setTime: (time: Date) => void,
   title: string,
-  // handleSubmit: (oldSection: ISection, newSection: ISection) => void,
   saveExercises: (exercises: IExercise[]) => void
 }
 
@@ -48,15 +53,9 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
 
   public render() {
     const { 
-      classes, 
-      // exercises, 
-      // selectedExerciseIndex, 
-      // setTime, 
-      // handleSubmit, 
-      title, 
-      // saveExercises 
+      classes,
+      title,
     } = this.props;
-    // const { open } = this.state;
 
     return (
       <div className={classes.root}>
@@ -67,7 +66,6 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
               {title}
             </Typography>
             <Button variant="fab" mini={true} color="secondary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Button>
-            {/* <EditSectionDialog exercise={exercises[selectedExerciseIndex]} open={open} handleToggle={this.handleToggle} handleSubmit={handleSubmit} /> */}
           </Toolbar>
         </AppBar>
       </div>

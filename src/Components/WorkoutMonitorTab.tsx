@@ -76,7 +76,6 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
           <Paper square={true} elevation={0} className={classes.resetContainer}>
             <Typography>Treeni suoritettu!</Typography>
             <Button onClick={this.handleReset} className={classes.button}>
-              {/* aseta aika tähän hetkeen? */}
               Aloita alusta
         </Button>
           </Paper>

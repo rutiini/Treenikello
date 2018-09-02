@@ -29,7 +29,7 @@ const emptyExercise = {
 }
 
 interface IProps extends WithStyles<typeof styles>{
-  exerciseContext?: IExerciseContext
+  exerciseContext: IExerciseContext
 }
 
 interface IState{
@@ -44,8 +44,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
   // just initialize the controlled state from props and save that object on the save method, no need for this hook.
   public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
-    const ctx = () => nextProps.exerciseContext as IExerciseContext;
-    const { exercises,editExerciseOpen, editExerciseIndex } = ctx();
+    const { exercises,editExerciseOpen, editExerciseIndex } = nextProps.exerciseContext;
     
     let exercise: IExercise = exercises[editExerciseIndex];
     
@@ -83,17 +82,13 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 
   public render() {
-    const { exercises, editExerciseIndex, editExerciseOpen } = this.ctxt();
-    let exerciseInEdit: IExercise = emptyExercise;
+    const { exercises, editExerciseIndex, editExerciseOpen } = this.props.exerciseContext;
     const { errorText } = this.state;
 
     let submitBtnText = 'Lisää'
     let titleText = 'Uusi harjoitus'
     let descriptionText = 'Lisää harjoituksen tiedot'
-    // edit mode if
-    if(this.state.exercise){
-      exerciseInEdit = {...exercises[editExerciseIndex]}
-    }
+    
     if (exercises[editExerciseIndex]) {
       submitBtnText = 'Päivitä';
       titleText = 'Muokkaa harjoitusta';
@@ -108,7 +103,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="name"
         label="Nimi"
         type="text"
-        value={exerciseInEdit.name}
+        value={this.state.exercise.name}
         onChange={this.updateName}
         helperText={errorText}
         fullWidth={true}
@@ -122,7 +117,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="name"
         label="Nimi"
         type="text"
-        value={exerciseInEdit.name}
+        value={this.state.exercise.name}
         onChange={this.updateName}
         fullWidth={true}
       />
@@ -160,12 +155,10 @@ class EditExerciseDialog extends Component<IProps,IState> {
       </Dialog>
     );
   }
-  
-  private ctxt = () => this.props.exerciseContext as IExerciseContext;
 
   private handleClose = () => {
-    const {exercises, editExerciseIndex} = this.ctxt();
-    this.ctxt().toggleExerciseDialog(exercises[editExerciseIndex]);
+    const {exercises, editExerciseIndex, toggleExerciseDialog} = this.props.exerciseContext;
+    toggleExerciseDialog(exercises[editExerciseIndex]);
     this.setState({
       open: false
     });
@@ -197,12 +190,12 @@ class EditExerciseDialog extends Component<IProps,IState> {
   private handleSubmit = () => {
     
     const { exercise } = this.state;
-    const { exercises, editExerciseIndex, validateExerciseName } = this.ctxt();
+    const { exercises, editExerciseIndex, validateExerciseName, submitExercise } = this.props.exerciseContext;
     // validate that the name is unique
     // for updates the same name should be allowed
     const nameOK = validateExerciseName(exercise.name);
     if ((nameOK || exercises[editExerciseIndex] ) && exercise.name !== '') {
-      this.ctxt().submitExercise(exercises[editExerciseIndex], exercise);
+      submitExercise(exercises[editExerciseIndex], exercise);
       this.handleClose();
       this.setState({
         open: false

@@ -1,44 +1,32 @@
-import { BottomNavigationAction, withStyles } from '@material-ui/core';
+import { BottomNavigationAction } from '@material-ui/core';
 import { BottomNavigation } from 'material-ui';
 import React, { Component } from 'react';
 
-const styles = {
-  root: {
-    // width: 500,
-  },
-};
-
-interface IProps {
-  classes: any
-}
-
 interface IState {
-  value: number
+  selectedTab: number
 }
 
-class SimpleBottomNavigation extends Component<IProps, IState> {
+class SimpleBottomNavigation extends Component<{}, IState> {
 
   public componentDidMount() {
     this.setState({
-      value: 0,
+      selectedTab: 0,
     });
   }
 
-  public handleChange = (event: Event, value: number) => {
-    this.setState({ value });
+  public handleChange = (event: Event, selectedTab: number) => {
+    this.setState({ selectedTab });
   };
 
   public render() {
-    const { classes } = this.props;
-    const { value } = this.state;
+    const { selectedTab } = this.state;
     const workoutIcon = <i className="material-icons">timer</i>
     const sectionsIcon = <i className="material-icons">build</i>
     const exercisesIcon = <i className="material-icons">fitness_center</i>
 
     return (
       <BottomNavigation
-        selectedIndex={value}
-        className={classes.root}
+        selectedIndex={selectedTab}
       >
         <BottomNavigationAction label="Workout" icon={workoutIcon} />
         <BottomNavigationAction label="Sections" icon={sectionsIcon} />
@@ -49,4 +37,4 @@ class SimpleBottomNavigation extends Component<IProps, IState> {
 }
 
 
-export default withStyles(styles)(SimpleBottomNavigation);
+export default SimpleBottomNavigation;
