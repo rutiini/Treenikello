@@ -54,6 +54,5 @@ Pick a preset excercise or add a new one on the exercise tab. The user can also 
 ## Future plans
 
 - Include an optional set up time for sections to help estimate the real duration of excercises
-- Add theming support and move all theming to jss
 - Create a web service where users can get new presets and submit their exercises
 - Possibility to select multiple exercises, migrating to a more modular approach where users can compose their actual exercise from smaller parts.

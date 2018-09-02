@@ -1,19 +1,22 @@
-import { createStyles, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
 import { IExercise, IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
 
-const styles = createStyles({
+const styles = (theme: Theme) => createStyles({
   listItem: {
+    backgroundColor: theme.palette.primary.main[400],
+    justifyContent: 'center',
+    textAlign: 'center',
+    width: '100%',
+  },
+  selectedListItem: {
+    backgroundColor: theme.palette.secondary.main,
     justifyContent: 'center',
     textAlign: 'center',
     width: '100%'
-  },
-  root: {
-    // height: '100%',
-    // backgroundColor: theme.palette.background.paper,
   }
 });
 
@@ -23,18 +26,18 @@ interface IProps extends WithStyles {
 
 const ExerciseListTab: SFC<IProps> = (props) => {
   const { classes } = props;
-  const { 
-    exercises, 
-    selectExercise, 
-    toggleExerciseDialog, 
-    deleteExercise, 
+  const {
+    exercises,
+    selectExercise,
+    toggleExerciseDialog,
+    deleteExercise,
     selectedExerciseIndex
   } = props.exerciseContext;
-  
+
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
   const editIcon = <i className="material-icons">edit</i>
-  
+
   const clicked = (exercise: IExercise) => () => {
   selectExercise(exercise.name)
   }
@@ -60,7 +63,11 @@ const ExerciseListTab: SFC<IProps> = (props) => {
 
     // add in visual indicator to selected exercise!
     const selected = selectedExerciseIndex === index;
-    const backgroundColor = selected ? 'lightgrey' : 'white';
+    
+    // const backgroundColor = selected ? 'grey' : 'orange';
+    // from theme
+    // const backgroundColor = selected ? 'orange' : 'grey';
+    const styleClass = selected ? classes.selectedListItem : classes.listItem;
 
     let duration = 0;
 
@@ -98,7 +105,10 @@ const ExerciseListTab: SFC<IProps> = (props) => {
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)} style={{ backgroundColor }} button={true}>
+      <ListItem className={styleClass} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
+      // style={{ backgroundColor }}
+      // focusVisibleClassName='secondary'
+      button={true}>
         <ListItemIcon className={classes.listItemIcon}>
           {placeHolderIcon}
         </ListItemIcon>

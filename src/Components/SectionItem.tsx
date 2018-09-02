@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import './Sectionitem.css'
 
 interface IProps{
     cx: number,
@@ -20,7 +19,6 @@ class SectionItem extends PureComponent<IProps> {
             <path id="arc" className={this.props.class} fill={this.props.color} fillRule="evenodd" d={pathString}/>
         )   
     }
-    
     
     private polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
         
