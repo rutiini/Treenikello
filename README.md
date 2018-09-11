@@ -1,5 +1,7 @@
 # Treenikello training clock app
 
+[![Build Status](https://travis-ci.org/rutiini/Treenikello.svg?branch=master)](https://travis-ci.org/rutiini/Treenikello)
+
 ![Treenikello app view](./images/overview.png)
 
 This app is designed to help people keep track of their excercise plan by rendering a clock face which displays the planned exercise as sectors drawn to the clock face. The app also enables its users to write a more detailed description for each of their excercise segments.
