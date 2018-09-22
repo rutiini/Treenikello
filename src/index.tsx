@@ -10,11 +10,25 @@ const theme = createMuiTheme({
     // maybe we can include a set of the clock segment colors here?    
   },
   palette:{
+    action:{
+      hover: amber[900],
+      // selected: amber[900],
+    },
+    // primary: {
+    //   main: grey[900],
+    // },
+    // secondary: {
+    //   main: amber[900]
+    // },
     primary: {
-      main: grey[900],
+      main: amber[900]
     },
     secondary: {
-      main: amber[900]
+      main: grey[900],
+    },
+    text:{
+      // primary: amber[900],
+      // secondary : amber[900],
     },
     type: "dark",
   },

@@ -1,12 +1,25 @@
-import { BottomNavigationAction } from '@material-ui/core';
-import { BottomNavigation } from 'material-ui';
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction  from '@material-ui/core/BottomNavigationAction';
 import React, { Component } from 'react';
+
+interface IProps extends WithStyles<typeof styles> {
+}
 
 interface IState {
   selectedTab: number
 }
 
-class SimpleBottomNavigation extends Component<{}, IState> {
+const styles = (theme: Theme) => createStyles({
+  root: {
+    // '&$selected': {
+    //   color: theme.palette.primary.contrastText,
+    // },
+    color: theme.palette.primary.main,
+  },
+})
+
+class SimpleBottomNavigation extends Component<IProps, IState> {
 
   public componentDidMount() {
     this.setState({
@@ -19,22 +32,17 @@ class SimpleBottomNavigation extends Component<{}, IState> {
   };
 
   public render() {
-    const { selectedTab } = this.state;
-    const workoutIcon = <i className="material-icons">timer</i>
-    const sectionsIcon = <i className="material-icons">build</i>
-    const exercisesIcon = <i className="material-icons">fitness_center</i>
-
     return (
       <BottomNavigation
-        selectedIndex={selectedTab}
+        value={this.state.selectedTab}
       >
-        <BottomNavigationAction label="Workout" icon={workoutIcon} />
-        <BottomNavigationAction label="Sections" icon={sectionsIcon} />
-        <BottomNavigationAction label="Exercises" icon={exercisesIcon} />
+        <BottomNavigationAction classes={{root: this.props.classes.root}} label="Workout" icon={<i className="material-icons">timer</i>} />
+        <BottomNavigationAction classes={{root: this.props.classes.root}} label="Sections" icon={<i className="material-icons">build</i>} />
+        <BottomNavigationAction classes={{root: this.props.classes.root}} label="Exercises" icon={<i className="material-icons">fitness_center</i>} />
       </BottomNavigation>
     );
   }
 }
 
 
-export default SimpleBottomNavigation;
+export default withStyles(styles)(SimpleBottomNavigation);

@@ -51,7 +51,47 @@ const styles = (theme: Theme) => createStyles({
   },
   tabContent: {
     alignContent: 'center'
-  }
+  },
+  // check which of these properties are necessary
+  tabRoot: {
+    '&$tabSelected': {
+      color: theme.palette.primary.main,
+      // fontWeight: theme.typography.fontWeightMedium,
+    },
+    '&:focus': {
+      color: theme.palette.primary.main,
+    },
+    '&:hover': {
+      color: theme.palette.primary.main,
+      opacity: 1,
+    },
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    // fontWeight: theme.typography.fontWeightRegular,
+    // marginRight: theme.spacing.unit * 4,
+    // minWidth: 72,
+    // textTransform: 'initial',
+  },
+  tabSelected: {},
+  tabsIndicator: {
+    backgroundColor: theme.palette.primary.main,
+  },
+  tabsRoot: {
+    borderBottom: '1px solid #e8e8e8',
+  },
+  typography: {
+    padding: theme.spacing.unit * 3,
+  },
 });
 
 class BottomNavTabs extends Component<IProps, IState> {
@@ -120,15 +160,16 @@ class BottomNavTabs extends Component<IProps, IState> {
             fullWidth={true}
             centered={true}
           >
-            <Tab label={tabLabels[0]} icon={workoutIcon} />
-            <Tab label={tabLabels[1]} icon={sectionsIcon} />
-            <Tab label={tabLabels[2]} icon={exercisesIcon} />
+            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[0]} icon={workoutIcon} />
+            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[1]} icon={sectionsIcon} />
+            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[2]} icon={exercisesIcon} />
           </Tabs>
         </AppBar>
       </div>
     );
   }
   
+  // todo: refactor the context to come directly from props..
   private ctxt = () => this.props.exerciseContext as IExerciseContext;
 }
 
