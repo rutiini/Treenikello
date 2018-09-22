@@ -24,6 +24,13 @@ interface IProps extends WithStyles {
   exerciseContext: IExerciseContext
 }
 
+
+/**
+ * Props exercise list tab
+ * @type {React.SFC}
+ * @param props {IProps} dasda
+ * @returns Tab for managing exercises
+ */
 const ExerciseListTab: SFC<IProps> = (props) => {
   const { classes } = props;
   const {

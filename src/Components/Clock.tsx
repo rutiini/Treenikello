@@ -75,6 +75,12 @@ const styles = (theme: Theme) => createStyles({
     }
 })
 
+
+
+/**
+ * Clock component renders the clock face and arms, it uses ExerciseContext to 
+ * read and render exercise sections on the clock face.
+ */
 class Clock extends Component<IProps, IState> {
 
     // basic parameters for drawing
@@ -143,6 +149,11 @@ class Clock extends Component<IProps, IState> {
         this.cycleTimerFunctions = this.cycleTimerFunctions.bind(this);
     }
     // get stuff from sub function
+
+    
+    /**
+     * Creates minute and hour markers on the clock face
+     */
     public createMarker = (position: number, length: number, className: string) => {
 
         // lets not render too many objects here
@@ -170,7 +181,11 @@ class Clock extends Component<IProps, IState> {
         )
     }
 
-    // dont bind to wrong "this"!
+
+    
+    /**
+     * Enable timer hand of clock
+     */
     public enableTimerHand = () => {
         this.setState({ timerEnabled: true })
     }
@@ -222,8 +237,14 @@ class Clock extends Component<IProps, IState> {
 
     }
 
+    // TODO: refactor, context can be taken directly from props.
     private ctxt = () => this.props.exerciseContext;
 
+
+    
+    /**
+     * Disable timer hand of clock
+     */
     private disableTimerHand = () => {
         // have all the hands as private props.
         const hand: HTMLElement = document.getElementById("timerHand") as HTMLElement;
@@ -242,8 +263,10 @@ class Clock extends Component<IProps, IState> {
 
         this.setState({ timerEnabled: true })
     }
-
-
+  
+    /**
+     * Increases the stopWatchSeconds in state by one.
+     */
     private updateStopwatch = () => {
         const nextStep = this.state.stopWatchSeconds + 1;
         this.setState({
@@ -307,7 +330,11 @@ class Clock extends Component<IProps, IState> {
 
         return index;
     }
-
+    
+    /**
+     * Updates sections on the face.
+     * @returns {ISection} updated sections.
+     */
     private updateFaceElements() {
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
         const { exercises, selectedExerciseIndex, setActiveSection } = this.ctxt();
