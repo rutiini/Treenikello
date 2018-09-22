@@ -14,12 +14,6 @@ class Store{
         localStorage.clear();
         return null;
       }
-      
-      // need to parse the date objects sepaprately
-      // old implementation
-      // for(let i : number = 0; i < customs.length; i++){
-      //   customs[i].startTime = new Date(customs[i].startTime);
-      // }
 
       customs.map( (customExercise : IExercise) => {
         customExercise.startTime = new Date(customExercise.startTime);
@@ -55,7 +49,7 @@ class Store{
     }
     
     if(customsJSON !== undefined){
-      const customs : IExercise[] = JSON.parse(customsJSON as string);
+      const customs = JSON.parse(customsJSON as string);
       if(customs === undefined || customs == null){
         console.log("local storage corrupted. clearing cached data.")
         sessionStorage.clear();
@@ -72,26 +66,6 @@ class Store{
     
     return null;
   }
-  
-  // not necessary, we only load and save in the store, state management is in the app (for now)
-  // deleteexercise = () => {
-  //   const newExercises = [...this.state.exercises];
-  //   if(!newExercises[this.state.selectedExerciseIndex].preset){
-  //     // set selected to first in list (presets should always exist)
-  //     const deleteIndex = this.state.selectedExerciseIndex;
-  //     this.setState({
-  //       selectedExerciseIndex: 0
-  //     })
-  //     console.log(`deleting exercise ${newExercises[deleteIndex].name}`)
-  //     console.log(`exercises left:`,newExercises.splice(deleteIndex,1))
-  
-  //     this.setState(
-  //       {
-  //         exercises: newExercises
-  //       }
-  //     )
-  //   }
-  // }
   
 }
 

@@ -20,6 +20,10 @@ const styles = (theme: Theme) => createStyles({
   }
 });
 
+/**
+ * All the necessary props are available in the context
+ * {IExerciseContext}
+ */
 interface IProps extends WithStyles {
   exerciseContext: IExerciseContext
 }
@@ -27,8 +31,7 @@ interface IProps extends WithStyles {
 
 /**
  * Props exercise list tab
- * @type {React.SFC}
- * @param props {IProps} dasda
+ * @param props {IProps}
  * @returns Tab for managing exercises
  */
 const ExerciseListTab: SFC<IProps> = (props) => {
