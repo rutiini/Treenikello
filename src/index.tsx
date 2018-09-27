@@ -14,12 +14,6 @@ const theme = createMuiTheme({
       hover: amber[900],
       // selected: amber[900],
     },
-    // primary: {
-    //   main: grey[900],
-    // },
-    // secondary: {
-    //   main: amber[900]
-    // },
     primary: {
       main: amber[900]
     },
