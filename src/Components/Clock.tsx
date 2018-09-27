@@ -53,7 +53,7 @@ const styles = (theme: Theme) => createStyles({
         strokeWidth: 1
     },
     hourMin: {
-        fill: theme.palette.action.hover,
+        fill: theme.palette.secondary.main,
         stroke: theme.palette.action.active,
         strokeWidth: 1,
     },

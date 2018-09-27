@@ -138,7 +138,7 @@ const ExerciseListTab: SFC<IProps> = (props) => {
       <List component="nav" style={{ height: '100%', paddingTop: 0, paddingBottom: 0 }}>
         {exerciseItems}
         <ListItem className={classes.listItem} key='add-exercise-btn'>
-          <Button variant="fab" mini={true} color="secondary" aria-label="add" onClick={addClicked}>
+          <Button variant="fab" mini={true} color="primary" aria-label="add" onClick={addClicked}>
             <i className="material-icons">add</i>
           </Button>
         </ListItem>

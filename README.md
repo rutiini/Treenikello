@@ -55,6 +55,7 @@ Pick a preset excercise or add a new one on the exercise tab. The user can also 
 
 ## Future plans
 
+- Complete refactorings and cleanups and bump version to 1.0.0, update documentation, move modification work to branches
 - Include an optional set up time for sections to help estimate the real duration of excercises
 - Create a web service where users can get new presets and submit their exercises
 - Possibility to select multiple exercises, migrating to a more modular approach where users can compose their actual exercise from smaller parts.

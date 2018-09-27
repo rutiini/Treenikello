@@ -1,5 +1,9 @@
 // this file contains all the commonly used data interfaces needed for the project
 
+/**
+ * Section is the basic part of an exercise. It holds information used to draw a segment on the clock face
+ * as well as instructions and description what kind of exercise this section is.
+ */
 interface ISection {
   color: string
   description: string,
@@ -8,6 +12,10 @@ interface ISection {
   name: string,
 }
 
+/**
+ * Exercise is the container object for sections, it is used to manage which sections belong to which exercise
+ * and when the exercise is planned to start.
+ */
 interface IExercise {
   defaultSections: ISection[]
   name: string,
@@ -15,6 +23,11 @@ interface IExercise {
   startTime: Date,
 }
 
+/**
+ * The ExerciseContext is used for all data manipulation inside the app. It provides methods for exercise and section
+ * creation, deletion and modification. It also holds some app wide state information which is used to update different
+ * components in the app which are dependend on the same state variables.
+ */
 interface IExerciseContext {
   exercises: IExercise[],
   activeSectionIndex: number,

@@ -57,7 +57,7 @@ class SectionListTab extends Component<IProps>{
         <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
           {sections}
           <ListItem className={classes.listItem} key="add-section-button">
-            <Button variant="fab" size="medium" color="secondary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
+            <Button variant="fab" size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
           </ListItem>
         </List>
       </div>
