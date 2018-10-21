@@ -5,6 +5,15 @@ import React, { SFC } from 'react';
 import { IExercise, IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
 
+/**
+ * All the necessary props are available in the context
+ * {IExerciseContext}
+ */
+interface IProps extends WithStyles<typeof styles> {
+  exerciseContext: IExerciseContext,
+  theme: Theme
+}
+
 const styles = (theme: Theme) => createStyles({
   listItem: {
     backgroundColor: theme.palette.primary.main[400],
@@ -21,27 +30,18 @@ const styles = (theme: Theme) => createStyles({
 });
 
 /**
- * All the necessary props are available in the context
- * {IExerciseContext}
- */
-interface IProps extends WithStyles {
-  exerciseContext: IExerciseContext
-}
-
-
-/**
  * Props exercise list tab
  * @param props {IProps}
  * @returns Tab for managing exercises
  */
-const ExerciseListTab: SFC<IProps> = (props) => {
+const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>> = (props) => {
   const { classes } = props;
   const {
     exercises,
     selectExercise,
     toggleExerciseDialog,
     deleteExercise,
-    selectedExerciseIndex
+    selectedExerciseIndex,
   } = props.exerciseContext;
 
   const placeHolderIcon = <i className="material-icons">whatshot</i>
@@ -74,10 +74,14 @@ const ExerciseListTab: SFC<IProps> = (props) => {
     // add in visual indicator to selected exercise!
     const selected = selectedExerciseIndex === index;
     
-    // const backgroundColor = selected ? 'grey' : 'orange';
+    let backgroundColor = "grey";
+    if(!!props.theme){
+      const theme2 = props.theme as Theme;
+      backgroundColor = selected ? theme2.palette.secondary.main : theme2.palette.primary.main;
+    }
     // from theme
     // const backgroundColor = selected ? 'orange' : 'grey';
-    const styleClass = selected ? classes.selectedListItem : classes.listItem;
+    // const styleClass = selected ? classes.selectedListItem : classes.listItem;
 
     let duration = 0;
 
@@ -115,11 +119,11 @@ const ExerciseListTab: SFC<IProps> = (props) => {
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={styleClass} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
-      // style={{ backgroundColor }}
+      <ListItem className={classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
+      style={{ backgroundColor }}
       // focusVisibleClassName='secondary'
       button={true}>
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon >
           {placeHolderIcon}
         </ListItemIcon>
         <ListItemText
@@ -134,7 +138,7 @@ const ExerciseListTab: SFC<IProps> = (props) => {
   })
 
   return (
-    <div className={classes.root}>
+    <div >
       <List component="nav" style={{ height: '100%', paddingTop: 0, paddingBottom: 0 }}>
         {exerciseItems}
         <ListItem className={classes.listItem} key='add-exercise-btn'>
