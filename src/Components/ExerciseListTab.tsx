@@ -71,18 +71,6 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
 
   const exerciseItems = exercises.map((exercise, index) => {
 
-    // add in visual indicator to selected exercise!
-    const selected = selectedExerciseIndex === index;
-    
-    let backgroundColor = "grey";
-    if(!!props.theme){
-      const theme2 = props.theme as Theme;
-      backgroundColor = selected ? theme2.palette.secondary.main : theme2.palette.primary.main;
-    }
-    // from theme
-    // const backgroundColor = selected ? 'orange' : 'grey';
-    // const styleClass = selected ? classes.selectedListItem : classes.listItem;
-
     let duration = 0;
 
     exercise.defaultSections.forEach(element => {
@@ -119,9 +107,7 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
-      style={{ backgroundColor }}
-      // focusVisibleClassName='secondary'
+      <ListItem className={selectedExerciseIndex === index ? classes.selectedListItem : classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
       button={true}>
         <ListItemIcon >
           {placeHolderIcon}
@@ -150,6 +136,5 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
     </div>
   );
 }
-
 
 export default withExerciseContext(withStyles(styles)(ExerciseListTab));
