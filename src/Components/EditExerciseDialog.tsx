@@ -141,7 +141,6 @@ class EditExerciseDialog extends Component<IProps,IState> {
         type="time"
         defaultValue={this.getStartAsString()}
         onChange={this.setStartTime}
-        // className={classes.textField}
         InputLabelProps={{
           shrink: true,
         }}
@@ -149,13 +148,6 @@ class EditExerciseDialog extends Component<IProps,IState> {
           step: 300, // 5 min
         }}
       />
-          {/* <TimePicker
-          clearable={true}
-          ampm={false}
-          label="aseta"
-          value={this.state.exercise.startTime}
-          onChange={this.updateStart}
-          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
@@ -176,19 +168,6 @@ class EditExerciseDialog extends Component<IProps,IState> {
       open: false
     });
   };
-
-  // // private updateStart = (newStart: Date) => {
-  // //   console.log('time set: ', newStart);
-
-  // //   // const time = new Date(event.target.value);
-
-  // //   this.setState({
-  // //     exercise: {
-  // //       ...this.state.exercise,
-  // //       startTime: newStart
-  // //     }
-  // //   })
-  // // }
   
   private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
     const newStart = event.target.value.split(':');
