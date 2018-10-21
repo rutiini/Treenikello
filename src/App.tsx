@@ -1,6 +1,4 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
-import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
-import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 import React, { Component } from 'react';
 import BottomNavTabs from './Components/BottomNavTabs';
 import Clock from './Components/Clock';
@@ -73,7 +71,6 @@ class App extends Component<IProps, IState> {
 
     return (
       <ExerciseContextProvider value={this.getContext()}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <div className={classes.App}>
           <Clock canvasSide={100}/>
           <BottomNavTabs/>
@@ -82,7 +79,6 @@ class App extends Component<IProps, IState> {
           <ConfirmationDialog/>
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
-      </MuiPickersUtilsProvider>
       </ExerciseContextProvider>
     );
   }

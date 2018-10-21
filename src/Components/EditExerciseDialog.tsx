@@ -10,7 +10,6 @@ import  {
   withStyles,
   WithStyles,
 } from '@material-ui/core';
-import { TimePicker } from 'material-ui-pickers';
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise, IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
@@ -136,13 +135,27 @@ class EditExerciseDialog extends Component<IProps,IState> {
           </DialogContentText>
           {nameInput}
           <i className="material-icons">access_time</i>
-          <TimePicker
+          <TextField
+        id="time"
+        label="start"
+        type="time"
+        defaultValue={this.getStartAsString()}
+        onChange={this.setStartTime}
+        // className={classes.textField}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputProps={{
+          step: 300, // 5 min
+        }}
+      />
+          {/* <TimePicker
           clearable={true}
           ampm={false}
           label="aseta"
           value={this.state.exercise.startTime}
           onChange={this.updateStart}
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={this.handleClose} color="primary">
@@ -164,19 +177,39 @@ class EditExerciseDialog extends Component<IProps,IState> {
     });
   };
 
-  private updateStart = (newStart: Date) => {
-    console.log('time set: ', newStart);
+  // // private updateStart = (newStart: Date) => {
+  // //   console.log('time set: ', newStart);
 
-    // const time = new Date(event.target.value);
+  // //   // const time = new Date(event.target.value);
 
+  // //   this.setState({
+  // //     exercise: {
+  // //       ...this.state.exercise,
+  // //       startTime: newStart
+  // //     }
+  // //   })
+  // // }
+  
+  private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
+    const newStart = event.target.value.split(':');
+    console.log(newStart);
+    console.log(parseInt(newStart[0],10),parseInt(newStart[1],10));
+    const newStartTime = new Date();
+    newStartTime.setHours(parseInt(newStart[0],10),parseInt(newStart[1],10));
     this.setState({
-      exercise: {
+      exercise:{
         ...this.state.exercise,
-        startTime: newStart
+        startTime: newStartTime
       }
     })
+
   }
-  
+
+  private getStartAsString(){
+    const startAsString = `${this.state.exercise.startTime.getHours()}:${this.state.exercise.startTime.getMinutes()}`
+    return startAsString;
+  }
+
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {
     
     this.setState({

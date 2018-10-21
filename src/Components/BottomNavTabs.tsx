@@ -18,7 +18,7 @@ interface IState {
   value: number
 }
 
-interface IProps extends WithStyles {
+interface IProps extends WithStyles<typeof styles> {
   exerciseContext?: IExerciseContext
 }
 

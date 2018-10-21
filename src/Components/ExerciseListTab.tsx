@@ -137,4 +137,4 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
   );
 }
 
-export default withExerciseContext(withStyles(styles)(ExerciseListTab));
+export default withExerciseContext(withStyles(styles, { withTheme: true })(ExerciseListTab));
