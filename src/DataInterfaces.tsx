@@ -7,6 +7,7 @@
 interface ISection {
   color: string
   description: string,
+  setupTime: number,
   duration: number,
   key: string,
   name: string,

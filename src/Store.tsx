@@ -80,35 +80,40 @@ export const exercises : IExercise[] = [
         description: 'nilkat lämpimiksi, käsipallo',
         duration: 10,
         key: "unassigned",
-        name: 'Alkulämmittely'
+        name: 'Alkulämmittely',
+        setupTime: 2
       },
       {
         color: "#559e83",
         description: 'erityisesti jalat vetreiksi',
         duration: 5,
         key: "unassigned",
-        name: 'Alkuvenyttely'
+        name: 'Alkuvenyttely',
+        setupTime: 2
       },
       {
         color: "#ae5a41",
         description: 'kokeilkaa uutta korkeaa',
         duration: 10,
         key: "unassigned",
-        name: 'Tengi'
+        name: 'Tengi',
+        setupTime: 2
       },
       {
         color: "#c3cb71",
         description: 'perustekniikkaa',
         duration: 20,
         key: "unassigned",
-        name: 'Päivän aihe'
+        name: 'Päivän aihe',
+        setupTime: 2
       },
       {
         color: "#5a5255",
         description: 'intervallit mitseihin täysillä',
         duration: 15,
         key: "unassigned",
-        name: 'Loppujumppa'
+        name: 'Loppujumppa',
+        setupTime: 2
       }
     ],
     name: "Taidotreenit",
@@ -122,21 +127,8 @@ export const exercises : IExercise[] = [
         description: 'kyykyt',
         duration: 5,
         key: "unassigned",
-        name: 'Sarja'
-      },
-      {
-        color: "#559e83",
-        description: 'lepoa',
-        duration: 5,
-        key: "unassigned",
-        name: 'tauko'
-      },
-      {
-        color: "#ae5a41",
-        description: 'vatsat',
-        duration: 5,
-        key: "unassigned",
-        name: 'Sarja'
+        name: 'Sarja',
+        setupTime: 2
       },
       {
         color: "#559e83",
@@ -144,20 +136,39 @@ export const exercises : IExercise[] = [
         duration: 5,
         key: "unassigned",
         name: 'tauko',
+        setupTime: 2
       },
       {
         color: "#ae5a41",
-        description: 'punnerrukset',
+        description: 'vatsat',
         duration: 5,
         key: "unassigned",
-        name: 'Sarja'
+        name: 'Sarja',
+        setupTime: 2
       },
       {
         color: "#559e83",
         description: 'lepoa',
         duration: 5,
         key: "unassigned",
-        name: 'tauko'
+        name: 'tauko',
+        setupTime: 2
+      },
+      {
+        color: "#ae5a41",
+        description: 'punnerrukset',
+        duration: 5,
+        key: "unassigned",
+        name: 'Sarja',
+        setupTime: 2
+      },
+      {
+        color: "#559e83",
+        description: 'lepoa',
+        duration: 5,
+        key: "unassigned",
+        name: 'tauko',
+        setupTime: 2
       },
     ],
     name: "Intervallitreeni",
