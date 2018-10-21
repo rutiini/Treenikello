@@ -31,6 +31,7 @@ const emptySection: ISection = {
   duration: 0,
   key: '',
   name: '',
+  setupTime: 0
 }
 
 interface IProps extends WithStyles<typeof styles>{
@@ -66,6 +67,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             duration: 0,
             key: '',
             name: '',
+            setupTime: 0
           }
           return {
             open: true,

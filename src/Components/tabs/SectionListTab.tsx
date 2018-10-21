@@ -72,6 +72,7 @@ class SectionListTab extends Component<IProps>{
       duration: 0,
       key: "",
       name: "",
+      setupTime: 0
     }
     this.props.exerciseContext.toggleSectionDialog(newSection);
   }

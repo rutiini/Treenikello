@@ -114,13 +114,13 @@ class App extends Component<IProps, IState> {
 
   // returns a section with generated key.
   private createSection(name: string, description: string, duration: number, color: string, key: string) {
-
     const section: ISection = {
       color,
       description,
       duration,
       key,
-      name
+      name,
+      setupTime: 0 // replace with input
     }
     return section;
   }
