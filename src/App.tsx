@@ -1,11 +1,11 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import BottomNavTabs from './Components/BottomNavTabs';
 import Clock from './Components/Clock';
-import ConfirmationDialog from './Components/ConfirmationDialog';
-import EditExerciseDialog from './Components/EditExerciseDialog';
-import EditSectionDialog from './Components/EditSectionDialog';
+import ConfirmationDialog from './Components/dialogs/ConfirmationDialog';
+import EditExerciseDialog from './Components/dialogs/EditExerciseDialog';
+import EditSectionDialog from './Components/dialogs/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
+import BottomNavTabs from './Components/tabs/BottomNavTabs';
 import { IExercise, ISection } from './DataInterfaces';
 import { ExerciseContextProvider } from './ExerciseContext';
 import store, { exercises } from './Store';

@@ -1,16 +1,19 @@
 import {
   Button,
   createStyles,
+  Icon,
   Paper,
   Step,
+  // StepButton,
   StepContent,
+  // StepIcon,
   StepLabel,
   Stepper,
   Typography,
-  withStyles
+  withStyles,
 } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExercise } from '../DataInterfaces';
+import { IExercise } from '../../DataInterfaces';
 
 const styles = createStyles({
   actionsContainer: {
@@ -30,17 +33,14 @@ const styles = createStyles({
   },
 });
 
-interface IProps{
+interface IProps {
   classes: any,
   exercise: IExercise,
   activeSectionIndex: number
 }
-interface IState{
-  activeStep: number // TODO: this is probably not necessary. -> consider pure component
-}
 
-class WorkoutMonitorTab extends Component<IProps, IState> {
-  constructor(props: IProps){
+class WorkoutMonitorTab extends Component<IProps, {}> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       activeStep: 0,
@@ -51,28 +51,39 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
     const { classes, exercise, activeSectionIndex } = this.props;
     const steps = exercise.defaultSections.map(section => section.name);
     
-    const {activeStep} = this.state;
-
     return (
       <div className={classes.root}>
         <Stepper activeStep={activeSectionIndex} orientation="vertical">
           {steps.map((label, index) => {
+            const section = exercise.defaultSections[index];
+            console.log(`step status completed: ${index}, ${activeSectionIndex}, ${index < activeSectionIndex}`);
+            let icon;
+              if(index < activeSectionIndex){
+                icon = <Icon color="secondary" className="material-icons">done</Icon> 
+              }else if(index === activeSectionIndex){
+                icon = <Icon color="primary" className="material-icons">timer</Icon>
+              }else{
+                icon = <Icon color="action" className="material-icons">fitness_center</Icon>
+              }
+
             return (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepLabel icon={icon}>
+                  {label}
+                </StepLabel>
                 <StepContent>
                   <Typography>
-                    {exercise.defaultSections[index].description}
+                    {section.description}
                   </Typography>
                   <Typography>
-                    {exercise.defaultSections[index].duration} min
+                    {section.duration} min
           </Typography>
                 </StepContent>
               </Step>
             );
           })}
         </Stepper>
-        {activeStep === steps.length && (
+        {activeSectionIndex === steps.length && (
           <Paper square={true} elevation={0} className={classes.resetContainer}>
             <Typography>Treeni suoritettu!</Typography>
             <Button onClick={this.handleReset} className={classes.button}>

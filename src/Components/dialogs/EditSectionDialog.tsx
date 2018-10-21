@@ -15,10 +15,10 @@ import {
   WithStyles
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
-import { IExerciseContext, ISection } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
+import { IExerciseContext, ISection } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
 // store
-import { colorOptions } from '../Store';
+import { colorOptions } from '../../Store';
 
 const styles = createStyles({
   EditSectionDialog: {

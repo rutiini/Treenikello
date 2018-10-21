@@ -6,9 +6,9 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { IExerciseContext } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
-import ActionsMenuBar from './ActionsMenuBar';
+import { IExerciseContext } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
+import ActionsMenuBar from '../ActionsMenuBar';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';

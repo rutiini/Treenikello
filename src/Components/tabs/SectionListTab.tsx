@@ -1,8 +1,8 @@
 import { Button, createStyles, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExerciseContext, ISection } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
-import SectionListItem from './SectionListItem';
+import { IExerciseContext, ISection } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
+import SectionListItem from '../SectionListItem';
 
 const styles = createStyles({
   listItem: {

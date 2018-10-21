@@ -6,8 +6,8 @@ import  { Dialog,
   DialogTitle,
 } from '@material-ui/core';
 import React, { PureComponent } from 'react';
-import { IExerciseContext } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
+import { IExerciseContext } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
 
 interface IProps{
   exerciseContext: IExerciseContext

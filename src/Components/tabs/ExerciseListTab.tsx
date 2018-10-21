@@ -2,8 +2,8 @@ import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
-import { IExercise, IExerciseContext } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
+import { IExercise, IExerciseContext } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
 
 /**
  * All the necessary props are available in the context

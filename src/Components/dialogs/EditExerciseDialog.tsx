@@ -11,8 +11,8 @@ import  {
   WithStyles,
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
-import { IExercise, IExerciseContext } from '../DataInterfaces';
-import { withExerciseContext } from '../ExerciseContext';
+import { IExercise, IExerciseContext } from '../../DataInterfaces';
+import { withExerciseContext } from '../../ExerciseContext';
 
 const styles = createStyles({
   EditForm: {
