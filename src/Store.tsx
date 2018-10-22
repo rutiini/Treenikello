@@ -33,7 +33,7 @@ class Store{
     localStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
-  // updates the locally stored exercises
+  // use session storage only for caching
   public saveSessionExercises = (sessionExercises : IExercise[]) =>{
 
     const nonPresets = sessionExercises.filter((x) => x.preset !== true)
