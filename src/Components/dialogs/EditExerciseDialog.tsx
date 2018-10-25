@@ -7,14 +7,15 @@ import  {
   DialogContentText,
   DialogTitle,
   TextField,
+  Theme,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core';
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise, IExerciseContext } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
 
-const styles = createStyles({
+const styles = (theme: Theme) => createStyles({
   EditForm: {
     width: '75%'
   }
@@ -171,7 +172,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
   
   private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
     const newStart = event.target.value.split(':');
-    console.log(newStart);
+    console.log(`${event.target.value} - ${newStart}`);
     console.log(parseInt(newStart[0],10),parseInt(newStart[1],10));
     const newStartTime = new Date();
     newStartTime.setHours(parseInt(newStart[0],10),parseInt(newStart[1],10));
@@ -185,7 +186,12 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 
   private getStartAsString(){
-    const startAsString = `${this.state.exercise.startTime.getHours()}:${this.state.exercise.startTime.getMinutes()}`
+    const hours = this.state.exercise.startTime.getHours()
+    const minutes = this.state.exercise.startTime.getMinutes()
+    const HHString = hours < 10 ? `0${hours}` : hours;
+    const mmString = minutes < 10 ? `0${minutes}` : minutes;
+    const startAsString = `${HHString}:${mmString}`;
+    console.log(`second format: ${startAsString}`);
     return startAsString;
   }
 
@@ -219,4 +225,4 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 }
 
-export default withExerciseContext(withStyles(styles)(EditExerciseDialog));
+export default withExerciseContext(withStyles(styles, { withTheme: true })(EditExerciseDialog));

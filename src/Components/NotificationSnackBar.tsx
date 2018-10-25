@@ -1,5 +1,5 @@
-import {createStyles, IconButton, Snackbar, withStyles } from '@material-ui/core';
-import React, { PureComponent } from 'react';
+import {createStyles, IconButton, Snackbar, withStyles, WithStyles } from '@material-ui/core';
+import React, { SFC } from 'react';
 
 const styles = createStyles({
   close: {
@@ -16,10 +16,9 @@ interface IProps{
   open: boolean
 }
 
-class NotificationSnackBar extends PureComponent<IProps,{}> {
+const NotificationSnackBar: SFC<IProps & WithStyles<'close'>> = (props) => {
 
-  public render() {
-    const { classes,handleHide,open } = this.props;
+  const { classes,handleHide,open } = props;
     return (
         <Snackbar
           anchorOrigin={{
@@ -43,7 +42,6 @@ class NotificationSnackBar extends PureComponent<IProps,{}> {
           ]}
         />
     );
-  }
 }
 
 export default withStyles(styles)(NotificationSnackBar);

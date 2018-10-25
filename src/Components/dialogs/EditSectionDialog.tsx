@@ -23,6 +23,11 @@ import { colorOptions } from '../../Store';
 const styles = createStyles({
   EditSectionDialog: {
     width: '75%'
+  },
+  numericInput: {
+    marginLeft: 10,
+    marginRight: 10,
+    width: 80,
   }
 })
 const emptySection: ISection = {
@@ -34,7 +39,7 @@ const emptySection: ISection = {
   setupTime: 0
 }
 
-interface IProps extends WithStyles<typeof styles>{
+interface IProps extends WithStyles<typeof styles> {
   exerciseContext: IExerciseContext
 }
 
@@ -51,7 +56,7 @@ class EditSectionDialog extends Component<IProps, IState> {
     if (prevState) {
 
       let section = nextProps.exerciseContext.exercises[nextProps.exerciseContext.selectedExerciseIndex].defaultSections[nextProps.exerciseContext.selectedSectionIndex]
-      const{ editSectionOpen } = nextProps.exerciseContext
+      const { editSectionOpen } = nextProps.exerciseContext
 
       if (!prevState.open && editSectionOpen) {
 
@@ -84,8 +89,8 @@ class EditSectionDialog extends Component<IProps, IState> {
 
   private colorOptions = colorOptions.map(optionItem => {
 
-    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{backgroundColor: optionItem.colorValue}}>
-    {/* {optionItem.colorName} */}
+    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{ backgroundColor: optionItem.colorValue }}>
+      {/* {optionItem.colorName} */}
     </MenuItem>;
   })
 
@@ -98,7 +103,7 @@ class EditSectionDialog extends Component<IProps, IState> {
   }
 
   public render() {
-    const { classes} = this.props;
+    const { classes } = this.props;
     const { exercises, selectedExerciseIndex, selectedSectionIndex, editSectionOpen } = this.props.exerciseContext;
     const section = exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex];
 
@@ -110,12 +115,13 @@ class EditSectionDialog extends Component<IProps, IState> {
 
     return (
       <Dialog
+        fullScreen={true}
         open={editSectionOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ width: 312 }}>
           <DialogContentText>
             {dialogDescription}
           </DialogContentText>
@@ -143,7 +149,7 @@ class EditSectionDialog extends Component<IProps, IState> {
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
-            <Select style={{backgroundColor: this.state.section.color}}
+            <Select style={{ backgroundColor: this.state.section.color }}
               value={this.state.section.color}
               onChange={this.updateColor}
               inputProps={{
@@ -158,7 +164,19 @@ class EditSectionDialog extends Component<IProps, IState> {
       </Select>
           </FormControl>
           <br />
-          <TextField margin="dense"
+          <TextField
+            className={classes.numericInput}
+            margin="dense"
+            id="setupTime"
+            label="Alustus/Tauko"
+            type="number"
+            value={activeSection.setupTime}
+            onChange={this.updateSetup}
+          />
+          <TextField
+            className={classes.numericInput}
+            style={{ float: "right" }}
+            margin="dense"
             id="duration"
             label="Kesto"
             type="number"
@@ -190,7 +208,7 @@ class EditSectionDialog extends Component<IProps, IState> {
 
   private handleSubmit = () => {
 
-    const {exercises, selectedExerciseIndex,selectedSectionIndex} = this.props.exerciseContext;
+    const { exercises, selectedExerciseIndex, selectedSectionIndex } = this.props.exerciseContext;
     this.props.exerciseContext.submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
     this.props.exerciseContext.toggleSectionDialog(this.state.section);
 
@@ -237,6 +255,17 @@ class EditSectionDialog extends Component<IProps, IState> {
       section: {
         ...this.state.section,
         duration: newDuration
+      }
+    })
+  }
+
+  private updateSetup = (event: ChangeEvent<HTMLSelectElement>) => {
+
+    const newSetup = parseInt(event.target.value, 10);
+    this.setState({
+      section: {
+        ...this.state.section,
+        setup: newSetup
       }
     })
   }

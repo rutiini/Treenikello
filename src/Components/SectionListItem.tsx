@@ -73,7 +73,6 @@ interface IProps{
   moveDown: (section: ISection) => void
 }
 
-
 class SectionListItem extends PureComponent<IProps>{
 
   public render(){
@@ -92,7 +91,7 @@ class SectionListItem extends PureComponent<IProps>{
           </div>
           {/* text part */}
           <div className={classes.textContainer}>
-            <Typography variant="headline" component="h2">
+            <Typography variant="h4" component="h2">
               {section.name}
             </Typography>
             <Typography component="p" className={classes.description}>

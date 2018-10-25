@@ -102,14 +102,9 @@ class App extends Component<IProps, IState> {
   })
 
   private setActiveSection = (sectionIndex: number) => {
-    if (sectionIndex < 0) {
-      console.log("no active section");
-    } else {
       this.setState({
         activeSectionIndex: sectionIndex
       })
-    }
-
   }
 
   // returns a section with generated key.

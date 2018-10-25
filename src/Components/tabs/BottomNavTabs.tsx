@@ -13,7 +13,7 @@ import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';
 
-
+// TODO: remove state, make sfc
 interface IState {
   value: number
 }
