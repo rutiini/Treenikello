@@ -63,7 +63,7 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
   }
 
   public componentWillUnmount(){
-    this.timer.Clear();
+    clearInterval(this.timer);
   }
 
   public render() {
@@ -141,7 +141,7 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
 
     return new Date(0, 0, 0, hours, minutes, seconds);
   }
-  
+
   /**
    * This function transforms the time component of a date object to seconds,
    * NOTE: ignores the date component!
