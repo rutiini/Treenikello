@@ -22,6 +22,7 @@ const styles = createStyles({
   root: {
     alignContent: "center",
     flexGrow: 1,
+    userSelect: "none",
   },
   timeInput: {
     fontSize: 20,

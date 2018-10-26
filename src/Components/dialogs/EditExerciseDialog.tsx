@@ -185,13 +185,16 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
   }
 
+  /**
+   * transform the exercise start time to HH:mm string..
+   */
   private getStartAsString(){
-    const hours = this.state.exercise.startTime.getHours()
-    const minutes = this.state.exercise.startTime.getMinutes()
+    // TODO: clean this mess up?
+    const hours = this.state.exercise.startTime.getHours();
+    const minutes = this.state.exercise.startTime.getMinutes();
     const HHString = hours < 10 ? `0${hours}` : hours;
     const mmString = minutes < 10 ? `0${minutes}` : minutes;
-    const startAsString = `${HHString}:${mmString}`;
-    console.log(`second format: ${startAsString}`);
+    const startAsString = `${HHString}:${mmString}`
     return startAsString;
   }
 

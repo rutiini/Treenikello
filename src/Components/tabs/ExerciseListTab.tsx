@@ -74,36 +74,13 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
     let duration = 0;
 
     exercise.defaultSections.forEach(element => {
-      duration = duration + element.duration;
+      duration = duration + element.duration + element.setupTime;
     });
 
     // parse timestamps for start and stop
     const starts = `${exercise.startTime.toLocaleTimeString('FI', { hour: '2-digit', minute: '2-digit' })}`;
     const stopTime = new Date(exercise.startTime.getTime() + duration * 60000);
-    const stops = `${stopTime.toLocaleTimeString('FI', { hour: '2-digit', minute: '2-digit' })}`;
-
-    // buttons disabled for presets.
-    let deleteBtn;
-    let editBtn;
-    if (exercise.preset) {
-      deleteBtn =
-        <IconButton disabled={true}>
-          {deleteIcon}
-        </IconButton>
-      editBtn =
-        <IconButton disabled={true}>
-          {editIcon}
-        </IconButton>
-    } else {
-      deleteBtn =
-        <IconButton onClick={deleteClicked(exercise)}>
-          {deleteIcon}
-        </IconButton>
-      editBtn =
-        <IconButton onClick={editClicked(exercise)}>
-          {editIcon}
-        </IconButton>
-    }
+    const stops = `${stopTime.toLocaleTimeString('FI', { hour: '2-digit', minute: '2-digit' })}`
 
     const exerciseKey = exercise.name;
     return (
@@ -116,8 +93,17 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
           primary={exercise.name}
           secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`} />
         <ListItemSecondaryAction>
-          {deleteBtn}
-          {editBtn}
+        {/*buttons disabled for presets.*/}
+        <IconButton 
+          onClick={deleteClicked(exercise)}
+          disabled={exercise.preset}>
+          {deleteIcon}
+        </IconButton>
+        <IconButton 
+          onClick={editClicked(exercise)} 
+          disabled={exercise.preset}>
+          {editIcon}
+        </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
     )

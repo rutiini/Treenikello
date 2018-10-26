@@ -47,6 +47,11 @@ const styles = (theme: Theme) => createStyles({
         stroke: '#bebebe', // colorings in to the theme?
         strokeWidth: 2,
     },
+    faceCover: {
+        fill: '#000000',
+        // stroke: '#bebebe', // colorings in to the theme?
+        // strokeWidth: 2,
+    },
     hourMarker: {
         stroke: theme.palette.action.active,
         strokeWidth: 1
@@ -184,22 +189,72 @@ class Clock extends Component<IProps, IState> {
         const { classes } = this.props;
         return (
             <div className={classes.clockContainer} onClick={this.cycleTimerFunctions}>
-
                 <svg id="clock" className={classes.clock} viewBox="0 0 100 100">
-                    <circle className={classes.face} cx="50" cy="50" r="45" />
+                {/* TODO: remove a bunch of magic numbers, make stuff rescalable. */}
+                    <circle
+                        className={classes.face}
+                        cx={this.centerCoordinate}
+                        cy={this.centerCoordinate}
+                        r="45" />
                     {this.sectionItems}
+                    <circle
+                        className={classes.faceCover}
+                        cx={this.centerCoordinate}
+                        cy={this.centerCoordinate}
+                        r="41" />
                     <g id="minuteMarkers">
                         {this.Majors}
                     </g>
                     <g id="hands">
-                        <rect transform={`rotate(${this.state.hourPosition} 50 50)`} id="hour" className={classes.hourMin} x="48.5" y="22.5" width="3" height="30" rx="2.5" ry="2.55" fill="red" />
-                        <rect transform={`rotate(${this.state.minPosition} 50 50)`} id="min" className={classes.hourMin} x="49" y="12.5" width="2" height="40" rx="2" ry="2" fill="blue" />
-                        <StopWatchHand x1={50} y1={50} x2={50} y2={14} y3={12} rotation={this.state.stopWatchSeconds * 3} visible={this.state.timerEnabled} color="yellow" tipColor="red" />
-                        <g transform={`rotate(${this.state.secPosition} 50 50)`} id="secHand">
-                            <line id="sec" x1="50" y1="50" x2="50" y2="11" stroke="white" />
+                        <rect
+                            transform={`rotate(${this.state.hourPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            id="hour"
+                            className={classes.hourMin}
+                            x="48.5"
+                            y="22.5"
+                            width="3"
+                            height="30"
+                            rx="2.5"
+                            ry="2.55"
+                            fill="red" />
+                        <rect
+                            transform={`rotate(${this.state.minPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            id="min"
+                            className={classes.hourMin}
+                            x="49"
+                            y="12.5"
+                            width="2"
+                            height="40"
+                            rx="2"
+                            ry="2"
+                            fill="blue" />
+                        <StopWatchHand
+                            x1={this.centerCoordinate}
+                            y1={this.centerCoordinate}
+                            x2={this.centerCoordinate}
+                            y2={14}
+                            y3={12}
+                            rotation={this.state.stopWatchSeconds * 3}
+                            visible={this.state.timerEnabled}
+                            color="yellow"
+                            tipColor="red" />
+                        <g
+                            transform={`rotate(${this.state.secPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            id="secHand">
+                            <line
+                                id="sec"
+                                x1={this.centerCoordinate}
+                                y1={this.centerCoordinate}
+                                x2={this.centerCoordinate}
+                                y2="11"
+                                stroke="white" />
                         </g>;
                     </g>
-                    <circle className={classes.midPoint} cx="50" cy="50" r="3" />
+                    <circle
+                        className={classes.midPoint}
+                        cx={this.centerCoordinate}
+                        cy={this.centerCoordinate}
+                        r="3" />
                 </svg>
             </div>
         )
@@ -301,7 +356,12 @@ class Clock extends Component<IProps, IState> {
 
         const currentPosition = this.timeToDegrees(new Date()); // "absolute minute position"
         const startPosition = this.timeToDegrees(startTime);
-        const endPosition = startPosition + sectionItems.map((a: ISection) => a.duration + a.setupTime).reduce((a: number, b: number) => a + b);
+
+        const length = sectionItems.length
+            ? sectionItems.map((a: ISection) => a.duration + a.setupTime).reduce((a: number, b: number) => a + b)
+            : 0;
+
+        const endPosition = startPosition + length;
         let angle = startPosition;
         let index = -1;
 
@@ -319,7 +379,7 @@ class Clock extends Component<IProps, IState> {
                 }
                 angle = angle + sectionAngle;
             }
-            if (currentPosition >= (angle + sectionItems[sectionItems.length - 1].duration * minuteInDegrees)) {
+            if (length && currentPosition >= (angle + sectionItems[sectionItems.length - 1].duration * minuteInDegrees)) {
                 index++;
             }
         }
@@ -332,7 +392,7 @@ class Clock extends Component<IProps, IState> {
      * @returns {ISection} updated sections.
      */
     private updateFaceElements() {
-        // TODO: implement setuptime (can be just gaps in between sections?)
+        // TODO: handle midnight problem?
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
         const { exercises, selectedExerciseIndex, setActiveSection, activeSectionIndex } = this.props.exerciseContext;
         const { startTime, defaultSections } = exercises[selectedExerciseIndex];
@@ -346,7 +406,7 @@ class Clock extends Component<IProps, IState> {
         let stopDrawAngle = circleInDegrees; // opacity of sections is a good way of communication where we start and are..
 
         if (defaultSections) {
-            
+
             // calculate the active section index and update index if it has changed
             const activeIndex = this.getActiveSectionIndex()
             if (activeSectionIndex !== activeIndex) {
@@ -358,16 +418,17 @@ class Clock extends Component<IProps, IState> {
             let angle = startPosition;
             defaultSections.map((sectionItem, index) => {
                 let sectionStyle = classes.inactiveSection;
-                const startAngle = angle;
+                const startAngle = angle + sectionItem.setupTime * minuteInDegrees; // !added setup
                 angle += sectionItem.duration * minuteInDegrees; // transform minutes to degrees
 
                 // if the section ends before starting angle dont draw it. Also if start is over an hour away
                 if (angle <= currentPosition || currentPosition < angle - circleInDegrees) {
-                    // "extend" full circle by new minutes
+                    // "extend" last visible section by new minutes
+                    // TODO: current position is probably not the correct variable here since it can be in the middle of a section..
                     stopDrawAngle = stopDrawAngle + currentPosition;
                 }
                 else {
-                    if (startAngle <= currentPosition && currentPosition < angle) {
+                    if (index === activeIndex) {
                         sectionStyle = classes.activeSection;
                     }
 
@@ -379,7 +440,7 @@ class Clock extends Component<IProps, IState> {
                     sectionItems.push(<SectionItem
                         cx={this.centerCoordinate}
                         cy={this.centerCoordinate}
-                        radius={44.1}
+                        radius={44.1} // TODO: get rid of magic number
                         startAngle={startAngle}
                         endAngle={angle}
                         thickness={3}

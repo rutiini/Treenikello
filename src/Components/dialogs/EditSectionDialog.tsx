@@ -115,7 +115,7 @@ class EditSectionDialog extends Component<IProps, IState> {
 
     return (
       <Dialog
-        fullScreen={true}
+        fullWidth={true}
         open={editSectionOpen}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
@@ -265,7 +265,7 @@ class EditSectionDialog extends Component<IProps, IState> {
     this.setState({
       section: {
         ...this.state.section,
-        setup: newSetup
+        setupTime: newSetup
       }
     })
   }
