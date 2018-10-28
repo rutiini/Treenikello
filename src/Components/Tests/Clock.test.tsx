@@ -108,12 +108,12 @@ test(`current time is during the second section of the exercise (18:40 - 18:49)`
 
 test(`current time is during the third section of the exercise (18:50 - 19:04)`,
   () =>
-    expect(ClockUtilities.getActiveSectionIndex(testExercise, new Date(0, 0, 0, 18, 51)))
+    expect(ClockUtilities.getActiveSectionIndex(testExercise, new Date(0, 0, 0, 19, 4)))
       .toEqual(2));
 
 test(`current time is during the fourth section of the exercise (19:05 - 19:29)`,
   () =>
-    expect(ClockUtilities.getActiveSectionIndex(testExercise, new Date(0, 0, 0, 19, 6)))
+    expect(ClockUtilities.getActiveSectionIndex(testExercise, new Date(0, 0, 0, 19, 5)))
       .toEqual(3));
 test(`current time is during the last section of the exercise (19:30 - 19:45)`,
   () =>
