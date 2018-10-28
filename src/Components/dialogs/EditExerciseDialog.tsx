@@ -14,6 +14,7 @@ import  {
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise, IExerciseContext } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
+import ClockUtilities from '../Utils/ClockUtilities';
 
 const styles = (theme: Theme) => createStyles({
   EditForm: {
@@ -83,6 +84,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
   public render() {
     const { exercises, editExerciseIndex, editExerciseOpen } = this.props.exerciseContext;
+    const originalExercise = exercises[editExerciseIndex];
     const { errorText } = this.state;
 
     let submitBtnText = 'Lisää'
@@ -140,7 +142,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="time"
         label="start"
         type="time"
-        defaultValue={this.getStartAsString()}
+        defaultValue={ClockUtilities.getTimeAsHHmmString(originalExercise ? originalExercise.startTime : new Date())}
         onChange={this.setStartTime}
         InputLabelProps={{
           shrink: true,
@@ -172,8 +174,6 @@ class EditExerciseDialog extends Component<IProps,IState> {
   
   private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
     const newStart = event.target.value.split(':');
-    console.log(`${event.target.value} - ${newStart}`);
-    console.log(parseInt(newStart[0],10),parseInt(newStart[1],10));
     const newStartTime = new Date();
     newStartTime.setHours(parseInt(newStart[0],10),parseInt(newStart[1],10));
     this.setState({
@@ -183,19 +183,6 @@ class EditExerciseDialog extends Component<IProps,IState> {
       }
     })
 
-  }
-
-  /**
-   * transform the exercise start time to HH:mm string..
-   */
-  private getStartAsString(){
-    // TODO: clean this mess up?
-    const hours = this.state.exercise.startTime.getHours();
-    const minutes = this.state.exercise.startTime.getMinutes();
-    const HHString = hours < 10 ? `0${hours}` : hours;
-    const mmString = minutes < 10 ? `0${minutes}` : minutes;
-    const startAsString = `${HHString}:${mmString}`
-    return startAsString;
   }
 
   private updateName = (event: ChangeEvent<HTMLInputElement>) => {

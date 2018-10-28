@@ -66,6 +66,7 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
     clearInterval(this.timer);
   }
 
+  // TODO: rerenders the whole component a lot but not a problem? => change shouldcomponentupdate with the index checking: if <0 then we should rerender but otherwise only when index changes
   public render() {
     const { classes, exercise, activeSectionIndex } = this.props;
     const steps = exercise.defaultSections.map(section => section.name);

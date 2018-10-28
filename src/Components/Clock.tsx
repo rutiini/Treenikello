@@ -1,9 +1,10 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExerciseContext, ISection } from '../DataInterfaces';
+import { IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
 import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
+import ClockUtilities from './Utils/ClockUtilities';
 
 interface IProps extends WithStyles<typeof styles> {
     exerciseContext: IExerciseContext,
@@ -79,13 +80,6 @@ const styles = (theme: Theme) => createStyles({
     }
 })
 
-/**
- * constants used for the calculations
- */
-const circleInDegrees = 360;
-const hourInMinutes = 60;
-const minuteInDegrees = circleInDegrees / hourInMinutes;
-
 
 /**
  * Clock component renders the clock face and arms, it uses ExerciseContext to 
@@ -140,8 +134,8 @@ class Clock extends Component<IProps, IState> {
 
         // put the hands in correct time for initial render
         const d = new Date()
-        const secRotation = minuteInDegrees * d.getSeconds();
-        const minRotation = minuteInDegrees * d.getMinutes();
+        const secRotation = ClockUtilities.minuteInDegrees * d.getSeconds();
+        const minRotation = ClockUtilities.minuteInDegrees * d.getMinutes();
         const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2;
 
         this.state =
@@ -190,7 +184,7 @@ class Clock extends Component<IProps, IState> {
         return (
             <div className={classes.clockContainer} onClick={this.cycleTimerFunctions}>
                 <svg id="clock" className={classes.clock} viewBox="0 0 100 100">
-                {/* TODO: remove a bunch of magic numbers, make stuff rescalable. */}
+                    {/* TODO: remove a bunch of magic numbers, make stuff rescalable. */}
                     <circle
                         className={classes.face}
                         cx={this.centerCoordinate}
@@ -263,13 +257,14 @@ class Clock extends Component<IProps, IState> {
     public componentDidMount() {
 
         setInterval(() => {
-            const d = new Date()
-            const secRotation = 6 * d.getSeconds();
-            const minRotation = 6 * d.getMinutes();
-            const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2
+            const currentTime = new Date()
+            this.checkActiveSection(currentTime);
+            const secRotation = 6 * currentTime.getSeconds();
+            const minRotation = 6 * currentTime.getMinutes();
+            const hourRotation = 30 * (currentTime.getHours() % 12) + currentTime.getMinutes() / 2
             this.setState(
                 {
-                    date: d.toLocaleString("fi"),
+                    date: currentTime.toLocaleString("fi"),
                     hourPosition: hourRotation,
                     minPosition: minRotation,
                     secPosition: secRotation
@@ -279,10 +274,18 @@ class Clock extends Component<IProps, IState> {
 
     }
 
-    // TODO: refactor, context can be taken directly from props.
-    // private ctxt = () => this.props.exerciseContext;
-
-
+    /**
+     * calculate the active section index and update index if it has changed.
+     * @param currentTime date to compare to the exercise timings
+     */
+    private checkActiveSection(currentTime: Date) {
+        const { exercises, selectedExerciseIndex, setActiveSection, activeSectionIndex } = this.props.exerciseContext;
+        const activeIndex = ClockUtilities.getActiveSectionIndex(exercises[selectedExerciseIndex], currentTime);
+        // console.log(`active: ${activeIndex}`);
+        if (activeSectionIndex !== activeIndex) {
+            setActiveSection(activeIndex);
+        }
+    }
 
     /**
      * Disable timer hand of clock
@@ -316,6 +319,7 @@ class Clock extends Component<IProps, IState> {
         })
     }
 
+    // TODO: refactor to use int or enum for cycling the state..
     // cycle on tap -> make visible -> start -> stop -> hide and reset
     private cycleTimerFunctions = () => {
         // case hidden set to visible and reset position to 0
@@ -344,49 +348,6 @@ class Clock extends Component<IProps, IState> {
         }
     }
 
-    // fix this, the last active section stays active even when the exercise should be finished
-    /**
-     * returns an int describing which section is currently active based on the time.
-     * -1 means the exercise has not yet started, index == section array length means that
-     * the exercise is over.
-     */
-    private getActiveSectionIndex = () => {
-        const { exercises, selectedExerciseIndex } = this.props.exerciseContext;
-        const { startTime, defaultSections: sectionItems } = exercises[selectedExerciseIndex];
-
-        const currentPosition = this.timeToDegrees(new Date()); // "absolute minute position"
-        const startPosition = this.timeToDegrees(startTime);
-
-        const length = sectionItems.length
-            ? sectionItems.map((a: ISection) => a.duration + a.setupTime).reduce((a: number, b: number) => a + b)
-            : 0;
-
-        const endPosition = startPosition + length;
-        let angle = startPosition;
-        let index = -1;
-
-        if (startPosition > currentPosition) {
-            return index;
-        } else if (endPosition < currentPosition) {
-            return sectionItems.length;
-        }
-        else {
-            for (let i = 0; i < sectionItems.length; i++) {
-                const sectionAngle = sectionItems[i].duration * minuteInDegrees;
-                if (angle <= currentPosition && currentPosition <= angle + sectionAngle) {
-                    index = i;
-                    break;
-                }
-                angle = angle + sectionAngle;
-            }
-            if (length && currentPosition >= (angle + sectionItems[sectionItems.length - 1].duration * minuteInDegrees)) {
-                index++;
-            }
-        }
-
-        return index;
-    }
-
     /**
      * Updates sections on the face.
      * @returns {ISection} updated sections.
@@ -394,41 +355,35 @@ class Clock extends Component<IProps, IState> {
     private updateFaceElements() {
         // TODO: handle midnight problem?
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
-        const { exercises, selectedExerciseIndex, setActiveSection, activeSectionIndex } = this.props.exerciseContext;
+        const { exercises, selectedExerciseIndex, activeSectionIndex } = this.props.exerciseContext;
         const { startTime, defaultSections } = exercises[selectedExerciseIndex];
 
-        const d = new Date();
+        const currentTime = new Date();
         const sectionItems: JSX.Element[] = [];
 
         // change to absolute
-        const currentPosition = this.timeToDegrees(d); // "absolute minute positio
-        const startPosition = this.timeToDegrees(startTime);
-        let stopDrawAngle = circleInDegrees; // opacity of sections is a good way of communication where we start and are..
+        const currentPosition = ClockUtilities.timeToDegrees(currentTime); // "absolute minute positio
+        const startPosition = ClockUtilities.timeToDegrees(startTime);
+        let stopDrawAngle = ClockUtilities.circleInDegrees; // opacity of sections is a good way of communication where we start and are..
 
         if (defaultSections) {
-
-            // calculate the active section index and update index if it has changed
-            const activeIndex = this.getActiveSectionIndex()
-            if (activeSectionIndex !== activeIndex) {
-                setActiveSection(activeIndex);
-            }
 
             // calculate from start time
             const { classes } = this.props;
             let angle = startPosition;
             defaultSections.map((sectionItem, index) => {
                 let sectionStyle = classes.inactiveSection;
-                const startAngle = angle + sectionItem.setupTime * minuteInDegrees; // !added setup
-                angle += sectionItem.duration * minuteInDegrees; // transform minutes to degrees
+                const startAngle = angle + sectionItem.setupTime * ClockUtilities.minuteInDegrees; // !added setup
+                angle += sectionItem.duration * ClockUtilities.minuteInDegrees; // transform minutes to degrees
 
                 // if the section ends before starting angle dont draw it. Also if start is over an hour away
-                if (angle <= currentPosition || currentPosition < angle - circleInDegrees) {
+                if (angle <= currentPosition || currentPosition < angle - ClockUtilities.circleInDegrees) {
                     // "extend" last visible section by new minutes
                     // TODO: current position is probably not the correct variable here since it can be in the middle of a section..
                     stopDrawAngle = stopDrawAngle + currentPosition;
                 }
                 else {
-                    if (index === activeIndex) {
+                    if (index === activeSectionIndex) {
                         sectionStyle = classes.activeSection;
                     }
 
@@ -452,14 +407,6 @@ class Clock extends Component<IProps, IState> {
             });
         }
         return sectionItems;
-    }
-
-    /**
-     * Transform the minutes of a date object as degrees.
-     * @param date A date object
-     */
-    private timeToDegrees(date: Date) {
-        return date.getMinutes() * minuteInDegrees + date.getHours() * circleInDegrees;
     }
 
 }

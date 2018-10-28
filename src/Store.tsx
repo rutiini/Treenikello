@@ -8,8 +8,11 @@ class Store{
     const customsJSON = localStorage.getItem("customExercises");
     if(customsJSON !== undefined){
       const customs : IExercise[] = JSON.parse(customsJSON as string);
-      if(customs === undefined || customs == null){
-        console.log("local storage corrupted. clearing cached data.")
+      if(customs === null){
+        return null;
+      }
+      if(customs === undefined){
+        console.log(`local storage value was ${customs}. clearing cached data.`)
         localStorage.clear();
         return null;
       }
