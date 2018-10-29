@@ -1,10 +1,10 @@
 import { IExercise } from "./DataInterfaces";
 
 // session / localstorage functionality
-class Store{
+export default class Store{
   
   // get saved exercises from browser cache
-  public getSavedExercises = () =>{
+  public static getSavedExercises = () =>{
     const customsJSON = localStorage.getItem("customExercises");
     if(customsJSON !== undefined){
       const customs : IExercise[] = JSON.parse(customsJSON as string);
@@ -28,7 +28,7 @@ class Store{
   }
   
   // save users custom exercises to browser cache
-  public saveExercises = (modifiedExercises : IExercise[]) =>{
+  public static saveExercises = (modifiedExercises : IExercise[]) =>{
 
     const nonPresets = modifiedExercises.filter((x : IExercise) => x.preset !== true)
     console.log(`saving ${nonPresets.length} exercises`)
@@ -36,14 +36,14 @@ class Store{
   }
   
   // use session storage only for caching
-  public saveSessionExercises = (sessionExercises : IExercise[]) =>{
+  public static saveSessionExercises = (sessionExercises : IExercise[]) =>{
 
     const nonPresets = sessionExercises.filter((x) => x.preset !== true)
     sessionStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
   // returns an array of the locally stored exercises
-  public getSessionExercises = () => {
+  public static getSessionExercises = () => {
     let customsJSON = sessionStorage.getItem("customExercises");
     if(customsJSON === undefined){
       console.log("sessionStorage is empty. checking localStorage");
@@ -71,8 +71,8 @@ class Store{
   
 }
 
-const store = new Store();
-export default store;
+// const store = new Store();
+// export default store;
 
 export const exercises : IExercise[] = [
   {
@@ -120,7 +120,7 @@ export const exercises : IExercise[] = [
     ],
     name: "Taidotreenit",
     preset: true,
-    startTime: new Date(2018,1,1,18,30)
+    startTime: new Date(0,0,0,18,30)
   },
   {
     defaultSections: [
@@ -175,49 +175,15 @@ export const exercises : IExercise[] = [
     ],
     name: "Intervallitreeni",
     preset: true,
-    startTime: new Date(2018,1,1,17,30)
+    startTime: new Date(0,0,0,17,30)
   }
 ]
+// TODO: if possible, include the colors in the theme for easier usage
 export const colorOptions = 
 [
-  // {"colorName":"none","colorValue":"none"},
-  // {"colorName":"dark blue","colorValue":"#1b85b8"},
-  // {"colorName":"dark grey","colorValue":"#5a5255"},
-  // {"colorName":"dark green","colorValue":"#559e83"},
-  // {"colorName":"dark red","colorValue":"#ae5a41"},
-  // {"colorName":"olive green","colorValue":"#c3cb71"},
   {"colorName":"red","colorValue":"#ee4035"},
   {"colorName":"orange","colorValue":"#f37736"},
   {"colorName":"yellow","colorValue":"#fdf498"},
   {"colorName":"green","colorValue":"#7bc043"},
   {"colorName":"blue","colorValue":"#0392cf"},
 ]
-/*
-// original color palette
-[
-  {"colorName":"none","colorValue":"none"},
-  {"colorName":"dark blue","colorValue":"#1b85b8"},
-  {"colorName":"dark grey","colorValue":"#5a5255"},
-  {"colorName":"dark green","colorValue":"#559e83"},
-  {"colorName":"dark red","colorValue":"#ae5a41"},
-  {"colorName":"olive green","colorValue":"#c3cb71"},
-]
-// brighter color palette (rainbow dash)
-[
-  {"colorName":"none","colorValue":"none"},
-  {"colorName":"red","colorValue":"#ee4035"},
-  {"colorName":"orange","colorValue":"#f37736"},
-  {"colorName":"yellow","colorValue":"#fdf498"},
-  {"colorName":"green","colorValue":"#7bc043"},
-  {"colorName":"blue","colorValue":"#0392cf"},
-]
-// alternative pastel colors (beach)
-[
-  {"colorName":"none","colorValue":"none"},
-  {"colorName":"grass","colorValue":"#ffeead"},
-  {"colorName":"sand","colorValue":"#f37736"},
-  {"colorName":"salmon","colorValue":"#ff6f69"},
-  {"colorName":"pine","colorValue":"#ffcc5c"},
-  {"colorName":"algae","colorValue":"#88d8b0"},
-]
-*/

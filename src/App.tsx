@@ -8,7 +8,7 @@ import NotificationSnackBar from './Components/NotificationSnackBar';
 import BottomNavTabs from './Components/tabs/BottomNavTabs';
 import { IExercise, ISection } from './DataInterfaces';
 import { ExerciseContextProvider } from './ExerciseContext';
-import store, { exercises } from './Store';
+import Store, { exercises } from './Store';
 
 interface IProps extends WithStyles<typeof styles>{
   // just for style injection
@@ -40,7 +40,7 @@ class App extends Component<IProps, IState> {
 
     let newExercises: IExercise[] = [...exercises];
 
-    const customExercises = store.getSavedExercises();
+    const customExercises = Store.getSavedExercises();
     if (customExercises !== null && customExercises !== undefined && customExercises.length > 0) {
       newExercises = newExercises.concat(customExercises);
     }
@@ -133,7 +133,7 @@ class App extends Component<IProps, IState> {
         {
           exercises: newExercises,
         },
-        () => store.saveExercises(newExercises)
+        () => Store.saveExercises(newExercises)
       )
     } else {
       // add newSection to the current ex
@@ -160,7 +160,7 @@ class App extends Component<IProps, IState> {
         exercises: newExercises
       },
 
-      () => store.saveExercises(newExercises)
+      () => Store.saveExercises(newExercises)
     )
   }
 
@@ -180,7 +180,7 @@ class App extends Component<IProps, IState> {
       this.setState((prevState) => {
         return { exercises: newExercises };
       },
-        () => store.saveExercises(newExercises))
+        () => Store.saveExercises(newExercises))
     }
   }
 
@@ -203,7 +203,7 @@ class App extends Component<IProps, IState> {
         {
           exercises: newExercises
         },
-        () => store.saveExercises(newExercises)
+        () => Store.saveExercises(newExercises)
       )
     }
   }
@@ -227,7 +227,7 @@ class App extends Component<IProps, IState> {
         {
           exercises: newExercises
         },
-        () => store.saveExercises(newExercises)
+        () => Store.saveExercises(newExercises)
       )
     }
   }
@@ -277,7 +277,7 @@ class App extends Component<IProps, IState> {
           exercises: newExercises,
           selectedExerciseIndex: newExercises.length - 1
         },
-        () => store.saveExercises(newExercises)
+        () => Store.saveExercises(newExercises)
       )
     }
     // edit existing
@@ -300,7 +300,7 @@ class App extends Component<IProps, IState> {
     const { exercises: stateExercises } = this.state;
     const nonPresets = stateExercises.filter(x => x.preset !== true)
     // save only here..
-    store.saveExercises(nonPresets);
+    Store.saveExercises(nonPresets);
     this.handleShowSnackbar();
   }
 
@@ -333,7 +333,7 @@ class App extends Component<IProps, IState> {
         {
           exercises: newExercises
         },
-        () => store.saveExercises(newExercises)
+        () => Store.saveExercises(newExercises)
       )
     }
   }

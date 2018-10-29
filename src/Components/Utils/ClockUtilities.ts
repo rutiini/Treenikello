@@ -67,7 +67,6 @@ export default class ClockUtilities {
    * @param date date to transform
    */
   public static getTimeAsHHmmString(date: Date){
-    console.log(date);
     if(!date){
       throw new Error("Cannot transform time from null");
     }
