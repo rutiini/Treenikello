@@ -46,7 +46,7 @@ export default class ClockUtilities {
         }
         angle = angle + sectionAngle;
       }
-      if (length && currentPosition >= (angle + sectionItems[sectionItems.length - 1].duration * ClockUtilities.minuteInDegrees)) {
+      if (length && currentPosition >= (angle + (sectionItems[sectionItems.length - 1].duration + sectionItems[sectionItems.length - 1].setupTime) * ClockUtilities.minuteInDegrees)) {
         index++;
       }
     }

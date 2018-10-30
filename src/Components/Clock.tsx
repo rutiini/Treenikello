@@ -91,7 +91,6 @@ class Clock extends Component<IProps, IState> {
     private canvasSide: number = 100;
     private centerCoordinate = 100 / 2;
     private faceRadius = 100 / 2 - (100 / 20);
-    // private initialRotation: number = 0; // TODO: check whether this needs an actual value
 
     private timerStarted = false;
     private timerFinished = false;
@@ -370,38 +369,56 @@ class Clock extends Component<IProps, IState> {
 
             // calculate from start time
             const { classes } = this.props;
-            let angle = startPosition;
+            let cumulativeAngle = startPosition;
             defaultSections.map((sectionItem, index) => {
-                let sectionStyle = classes.inactiveSection;
-                const startAngle = angle + sectionItem.setupTime * ClockUtilities.minuteInDegrees; // !added setup
-                angle += sectionItem.duration * ClockUtilities.minuteInDegrees; // transform minutes to degrees
+                
+                const setupStartAngle = cumulativeAngle;
+                const setupStopAngle = cumulativeAngle + sectionItem.setupTime * ClockUtilities.minuteInDegrees;
+
+                const sectionStartAngle = setupStopAngle // + sectionItem.setupTime * ClockUtilities.minuteInDegrees; // !added setup
+                cumulativeAngle += (sectionItem.duration + sectionItem.setupTime)* ClockUtilities.minuteInDegrees; // transform minutes to degrees
 
                 // if the section ends before starting angle dont draw it. Also if start is over an hour away
-                if (angle <= currentPosition || currentPosition < angle - ClockUtilities.circleInDegrees) {
+                if (cumulativeAngle <= currentPosition || currentPosition < cumulativeAngle - ClockUtilities.circleInDegrees) {
                     // "extend" last visible section by new minutes
                     // TODO: current position is probably not the correct variable here since it can be in the middle of a section..
                     stopDrawAngle = stopDrawAngle + currentPosition;
                 }
                 else {
-                    if (index === activeSectionIndex) {
-                        sectionStyle = classes.activeSection;
+                    if (cumulativeAngle > stopDrawAngle + startPosition) {
+                        cumulativeAngle = stopDrawAngle + startPosition;
                     }
 
-                    if (angle > stopDrawAngle + startPosition) {
-                        angle = stopDrawAngle + startPosition;
-                    }
-
-                    const sectionArcKey = "Arc-" + index + angle;
+                    // setup arc
                     sectionItems.push(<SectionItem
                         cx={this.centerCoordinate}
                         cy={this.centerCoordinate}
                         radius={44.1} // TODO: get rid of magic number
-                        startAngle={startAngle}
-                        endAngle={angle}
+                        startAngle={setupStartAngle}
+                        endAngle={setupStopAngle}
+                        thickness={2}
+                        key={sectionItems.length}
+                        color={"#d3d0da"}
+                        class={
+                            index === activeSectionIndex 
+                            ? classes.activeSection 
+                            : classes.inactiveSection
+                        } />)
+                    // section arc
+                    sectionItems.push(<SectionItem
+                        cx={this.centerCoordinate}
+                        cy={this.centerCoordinate}
+                        radius={44.1} // TODO: get rid of magic number
+                        startAngle={sectionStartAngle}
+                        endAngle={cumulativeAngle}
                         thickness={3}
-                        key={sectionArcKey}
+                        key={sectionItems.length}
                         color={sectionItem.color}
-                        class={sectionStyle} />)
+                        class={
+                            index === activeSectionIndex 
+                            ? classes.activeSection 
+                            : classes.inactiveSection
+                        } />)
                     // just check whether there is an active item set.
                 }
             });
