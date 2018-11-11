@@ -11,6 +11,9 @@ interface IProps{
     color: string
 }
 
+/**
+ * TODO: port to SFC format
+ */
 class SectionItem extends PureComponent<IProps> {
     
     public render() {

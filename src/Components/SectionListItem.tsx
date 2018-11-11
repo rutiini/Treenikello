@@ -87,7 +87,7 @@ class SectionListItem extends PureComponent<IProps>{
           {/* left edge icon */}
           <div className={classes.iconContainer}>
             <i className={`material-icons ${classes.exerciseSymbol}`} style={{ color: section.color }}>directions_run</i>
-            <Typography className={classes.pos}>{`${section.duration} min`}</Typography>
+            <Typography className={classes.pos}>{`${section.setupTime} | ${section.duration} min`}</Typography>
           </div>
           {/* text part */}
           <div className={classes.textContainer}>
