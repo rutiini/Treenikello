@@ -34,10 +34,6 @@ interface IProps {
  * well to mobile UI.
  * Role of this component is to serve as the content of a list item representing an exercise sections properties
  */
-<<<<<<< HEAD
-const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter'>> = (props: IProps) => {
-  const {setupTime,duration,name,description} = props.section;
-=======
 const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
   const { setupTime, duration, name, description, color } = props.section;
   const { classes } = props;
@@ -48,7 +44,6 @@ const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'ac
   const exerciseIcon = <i className="material-icons">fitness_center</i>
   // TODO: move the icon to the summary, it can be a simple icon, not a button. The icon will only indicate type and color of exercise.
   // TODO: change expand behavior so that only one section can be open?
->>>>>>> d85043bd9102b426396bdaf011f898e007a77400
 
   const text = `${name} | ${setupTime} | ${duration}`
   const content =
