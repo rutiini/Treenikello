@@ -40,11 +40,11 @@ class SectionListTab extends Component<IProps>{
 
     const sections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
       // MUI style elments
-      // return(
-      // <ListItem className={classes.listItem} key={index}>
-      //   <CompactSectionLitItem section={sectionItem}/>
-      // </ListItem>
-      // )
+      return(
+      <ListItem className={classes.listItem} key={index}>
+        <CompactSectionLitItem section={sectionItem}/>
+      </ListItem>
+      )
 
       return (
         <ListItem className={classes.listItem} key={index}>

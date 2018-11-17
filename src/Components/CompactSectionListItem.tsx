@@ -23,7 +23,7 @@ interface IProps{
  * Role of this component is to serve as the content of a list item representing an exercise sections properties
  */
 const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter'>> = (props: IProps) => {
-  const {setupTime,duration,name,description} = props.section  
+  const {setupTime,duration,name,description} = props.section;
 
   const text = `${name} | ${setupTime} | ${duration}`
   const content = 
