@@ -63,7 +63,7 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
         <AppBar position="static" color="secondary">
           <Toolbar>
             <Button variant="fab" mini={true} color="primary" onClick={this.saveAllExercises}><i className="material-icons">save</i></Button>
-            <Typography variant="h3" color="inherit" className={classes.flex}>
+            <Typography variant="h4" color="inherit" className={classes.flex}>
               {title}
             </Typography>
             <Button variant="fab" mini={true} color="primary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Button>

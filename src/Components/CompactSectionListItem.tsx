@@ -1,6 +1,7 @@
 ﻿import { createStyles, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, WithStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import React from 'react';
+import { SortableHandle } from 'react-sortable-hoc';
 import { ISection } from 'src/DataInterfaces';
 
 const styles = createStyles({
@@ -52,20 +53,26 @@ const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'ac
   const editSectionClicked = () => {
     editSection(section);
   }
+
+  const expandIcon = <i className="material-icons" onClick={sectionCliked}>expand_more</i>
+  const DragHandle = SortableHandle(() => <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>unfold_more</i>);
+
   // TODO: implement optional icon property for section, find a suitable set of icons
   const exerciseIcon = <i className="material-icons" style={{ color, fontSize: 40 }}>fitness_center</i>
   // TODO: change expand behavior so that only one section can be open?
 
   const text = `${name} | ${setupTime} | ${duration}`
   const content =
-    <ExpansionPanel defaultExpanded={false} expanded={expanded} onClick={sectionCliked}>
-      <ExpansionPanelSummary className={classes.justifyCenter}>
+    <ExpansionPanel defaultExpanded={false} expanded={expanded}>
+      <ExpansionPanelSummary className={classes.justifyCenter} expandIcon={expandIcon}>
+      <DragHandle/>
         <div className={classes.iconButtonContainer}>
         {exerciseIcon}
         </div>
-        <Typography variant="h4" className={classes.justifyCenter}>{text}</Typography>
+        <Typography variant="h6" className={classes.justifyCenter}>{text}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={props.classes.justifyCenter}>
+      
         <Typography component="p" style={{width: "inherit"}}>{description}</Typography>
         <div className={classes.actionButtonContainer}>
           <IconButton onClick={editSectionClicked}>

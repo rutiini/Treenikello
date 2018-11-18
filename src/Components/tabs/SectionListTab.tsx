@@ -1,6 +1,6 @@
 import { Button, createStyles, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
 import React, { Component } from 'react';
-import { arrayMove, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { IExerciseContext, ISection } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
 import CompactSectionLitItem from '../CompactSectionListItem';
@@ -43,11 +43,8 @@ class SectionListTab extends Component<IProps, IState>{
       toggleSectionDialog
     } = this.props.exerciseContext;
 
-    const DragHandle = SortableHandle(() => <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>unfold_more</i>);
-
     const SortableItem = SortableElement(({value}: {value: JSX.Element}) =>
       <ListItem className={classes.listItem}>
-      <DragHandle/>
       {value}
       </ListItem>
     );
