@@ -77,8 +77,10 @@ class SectionListItem extends PureComponent<IProps>{
 
   public render(){
     
-    const { classes,
-      section } = this.props;
+    const { 
+      classes,
+      section 
+    } = this.props;
 
     return (
       <Card className={classes.card}>

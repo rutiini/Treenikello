@@ -1,4 +1,4 @@
-﻿import { Button, createStyles, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, WithStyles, withStyles } from '@material-ui/core';
+﻿import { createStyles, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, IconButton, WithStyles, withStyles } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import React from 'react';
 import { ISection } from 'src/DataInterfaces';
@@ -24,9 +24,14 @@ interface IProps {
   classes: {
     justifyCenter: string,
     actionButtonContainer: string,
-    iconButtonContainer: string
+    iconButtonContainer: string,
   },
   section: ISection,
+  expanded: boolean,
+  index: number,
+  setIndex: (index: number) => void,
+  deleteSection: (section: ISection) => void,
+  editSection: (section: ISection) => void
 }
 
 /**
@@ -35,30 +40,40 @@ interface IProps {
  * Role of this component is to serve as the content of a list item representing an exercise sections properties
  */
 const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
-  const { setupTime, duration, name, description, color } = props.section;
-  const { classes } = props;
-  const deleteIcon = <i className="material-icons">delete</i>
-  const editIcon = <i className="material-icons">edit</i>
+  const { classes, expanded, index, setIndex, deleteSection, editSection,section } = props;
+  const { setupTime, duration, name, description, color } = section;
 
-  // TODO: add icon and color selector for the button on the left
-  const exerciseIcon = <i className="material-icons">fitness_center</i>
-  // TODO: move the icon to the summary, it can be a simple icon, not a button. The icon will only indicate type and color of exercise.
+  const sectionCliked = () => {
+    setIndex(index);
+  }
+  const deleteSectionClicked = () => {
+    deleteSection(section);
+  }
+  const editSectionClicked = () => {
+    editSection(section);
+  }
+  // TODO: implement optional icon property for section, find a suitable set of icons
+  const exerciseIcon = <i className="material-icons" style={{ color, fontSize: 40 }}>fitness_center</i>
   // TODO: change expand behavior so that only one section can be open?
 
   const text = `${name} | ${setupTime} | ${duration}`
   const content =
-    <ExpansionPanel defaultExpanded={false}>
+    <ExpansionPanel defaultExpanded={false} expanded={expanded} onClick={sectionCliked}>
       <ExpansionPanelSummary className={classes.justifyCenter}>
+        <div className={classes.iconButtonContainer}>
+        {exerciseIcon}
+        </div>
         <Typography variant="h4" className={classes.justifyCenter}>{text}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={props.classes.justifyCenter}>
-        <div className={classes.iconButtonContainer}>
-          <Button variant="fab" style={{ background: color }}>{exerciseIcon}</Button>
-        </div>
         <Typography component="p" style={{width: "inherit"}}>{description}</Typography>
         <div className={classes.actionButtonContainer}>
-          <IconButton>{editIcon}</IconButton>
-          <IconButton>{deleteIcon}</IconButton>
+          <IconButton onClick={editSectionClicked}>
+            <i className="material-icons">edit</i>
+          </IconButton>
+          <IconButton onClick={deleteSectionClicked}>
+            <i className="material-icons">delete</i>
+          </IconButton>
         </div>
       </ExpansionPanelDetails>
     </ExpansionPanel>

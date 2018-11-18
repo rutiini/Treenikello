@@ -1,9 +1,9 @@
 import { Button, createStyles, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
 import React, { Component } from 'react';
+import { arrayMove, SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import { IExerciseContext, ISection } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
 import CompactSectionLitItem from '../CompactSectionListItem';
-import SectionListItem from '../SectionListItem';
 
 const styles = createStyles({
   listItem: {
@@ -12,66 +12,83 @@ const styles = createStyles({
   },
   root: {
     overflow: 'auto',
+    userSelect: 'none',
   }
 });
 
-interface IProps extends WithStyles{
+interface IProps extends WithStyles {
   exerciseContext: IExerciseContext
 }
 
-class SectionListTab extends Component<IProps>{
+interface IState {
+  expandedIndex: number
+}
+
+class SectionListTab extends Component<IProps, IState>{
 
   constructor(props: IProps) {
     super(props);
-
+    this.state = {
+      expandedIndex: -1
+    }
   }
 
   public render() {
     const { classes,
     } = this.props;
-    const { 
-      exercises, 
-      selectedExerciseIndex, 
-      moveSectionUp, 
-      moveSectionDown, 
-      deleteSection, 
-      toggleSectionDialog 
+    const {
+      exercises,
+      selectedExerciseIndex,
+      deleteSection,
+      toggleSectionDialog
     } = this.props.exerciseContext;
+
+    const DragHandle = SortableHandle(() => <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>unfold_more</i>);
+
+    const SortableItem = SortableElement(({value}: {value: JSX.Element}) =>
+      <ListItem className={classes.listItem}>
+      <DragHandle/>
+      {value}
+      </ListItem>
+    );
+
+    const SortableList = SortableContainer(({items}: {items: JSX.Element[]}) => {
+      return (
+        <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
+          {items.map((value: JSX.Element, index: number) => (
+            <SortableItem key={`item-${index}`} index={index} value={value}/>
+          ))}
+        </List>
+      );
+    });
 
     const sections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
       // MUI style elments
-      return(
-      <ListItem className={classes.listItem} key={index}>
-        <CompactSectionLitItem section={sectionItem}/>
-      </ListItem>
-      )
-
-      return (
-        <ListItem className={classes.listItem} key={index}>
-          <SectionListItem
-            section={sectionItem}
-            moveUp={moveSectionUp}
-            moveDown={moveSectionDown}
-            deleteSection={deleteSection}
-            handleSectionEditToggle={toggleSectionDialog}
-          />
-        </ListItem>
-      )
+      return (<CompactSectionLitItem
+        key={`item-${index}`}
+        section={sectionItem}
+        expanded={index === this.state.expandedIndex}
+        index={index}
+        setIndex={this.setSelectedIndex}
+        editSection={toggleSectionDialog}
+        deleteSection={deleteSection}
+      />)
     })
+
+    const addNewButton = <ListItem className={classes.listItem} key="add-section-button">
+      <Button variant="fab" size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
+    </ListItem>
+
+    // const list = SortableContainer(() => <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>{[...sections, addNewButton]}</List>)
 
     return (
       <div className={classes.root}>
-        <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
-          {sections}
-          <ListItem className={classes.listItem} key="add-section-button">
-            <Button variant="fab" size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
-          </ListItem>
-        </List>
+        <SortableList items={sections} onSortEnd={this.sorted} lockAxis={"y"} useDragHandle={true}/>
+        {addNewButton}
       </div>
     );
   }
 
-  // binds automagically!
   private addNewSection = () => {
     const newSection: ISection = {
       color: "",
@@ -82,6 +99,20 @@ class SectionListTab extends Component<IProps>{
       setupTime: 0
     }
     this.props.exerciseContext.toggleSectionDialog(newSection);
+  }
+
+  private setSelectedIndex = (index: number) => {
+    this.setState(
+      {
+        expandedIndex: index === this.state.expandedIndex ? -1 : index
+      }
+    )
+  }
+  
+  private sorted = ({oldIndex, newIndex}:{oldIndex: number, newIndex: number}) => {
+    const {exercises, selectedExerciseIndex, updateSectionOrder} = this.props.exerciseContext;
+    const rearranged = arrayMove(exercises[selectedExerciseIndex].defaultSections,oldIndex,newIndex);
+    updateSectionOrder(rearranged);
   }
 }
 
