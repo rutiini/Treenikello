@@ -44,8 +44,9 @@ interface IExerciseContext {
   setTime: (time: Date) => void,
   saveExercises: () => void,
   // section controls
-  moveSectionUp: (section: ISection) => void,
-  moveSectionDown: (section: ISection) => void,
+  // moveSectionUp: (section: ISection) => void,
+  // moveSectionDown: (section: ISection) => void,
+  updateSectionOrder: (sections: ISection[]) => void,
   submitSection: (oldSection: ISection, newSection: ISection) => void,
   deleteSection: (section: ISection) => void,
   setActiveSection: (sectionIndex: number) => void,

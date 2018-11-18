@@ -10,7 +10,7 @@ import { IExercise, ISection } from './DataInterfaces';
 import { ExerciseContextProvider } from './ExerciseContext';
 import Store, { exercises } from './Store';
 
-interface IProps extends WithStyles<typeof styles>{
+interface IProps extends WithStyles<typeof styles> {
   // just for style injection
 }
 
@@ -28,7 +28,7 @@ interface IState {
 }
 
 const styles = createStyles({
-  App:{
+  App: {
     textAlign: 'center'
   },
 })
@@ -59,8 +59,8 @@ class App extends Component<IProps, IState> {
     }
 
     // bindings..
-    this.moveSectionUp = this.moveSectionUp.bind(this);
-    this.moveSectionDown = this.moveSectionDown.bind(this);
+    // // this.moveSectionUp = this.moveSectionUp.bind(this);
+    // // this.moveSectionDown = this.moveSectionDown.bind(this);
     this.deleteSection = this.deleteSection.bind(this);
     this.updateSection = this.updateSection.bind(this);
   }
@@ -72,11 +72,11 @@ class App extends Component<IProps, IState> {
     return (
       <ExerciseContextProvider value={this.getContext()}>
         <div className={classes.App}>
-          <Clock canvasSide={100}/>
-          <BottomNavTabs/>
-          <EditSectionDialog/>
-          <EditExerciseDialog/>
-          <ConfirmationDialog/>
+          <Clock canvasSide={100} />
+          <BottomNavTabs />
+          <EditSectionDialog />
+          <EditExerciseDialog />
+          <ConfirmationDialog />
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
       </ExerciseContextProvider>
@@ -88,8 +88,8 @@ class App extends Component<IProps, IState> {
     acceptDeleteExercise: this.handleDeleteExercise,
     deleteExercise: this.handleToggleCofirmationDialog,
     deleteSection: this.deleteSection,
-    moveSectionDown: this.moveSectionDown,
-    moveSectionUp: this.moveSectionUp,
+    // moveSectionDown: this.moveSectionDown,
+    // moveSectionUp: this.moveSectionUp,
     saveExercises: this.saveExercises,
     selectExercise: this.selectExercise,
     setActiveSection: this.setActiveSection,
@@ -98,13 +98,14 @@ class App extends Component<IProps, IState> {
     submitSection: this.updateSection,
     toggleExerciseDialog: this.handleExerciseEditToggle,
     toggleSectionDialog: this.handleSectionEditToggle,
+    updateSectionOrder: this.updateSectionOrder,
     validateExerciseName: this.validateExerciseName,
   })
 
   private setActiveSection = (sectionIndex: number) => {
-      this.setState({
-        activeSectionIndex: sectionIndex
-      })
+    this.setState({
+      activeSectionIndex: sectionIndex
+    })
   }
 
   // returns a section with generated key.
@@ -184,53 +185,68 @@ class App extends Component<IProps, IState> {
     }
   }
 
-
-  private moveSectionUp = (section: ISection) => {
+  private updateSectionOrder = (sections: ISection[]) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+    const e = stateExercises[selectedExerciseIndex]
+    e.defaultSections = sections;
 
-    const exercise = stateExercises[selectedExerciseIndex];
-    const moveIndex = exercise.defaultSections.indexOf(section)
-    // if section is first we cant move up any more.
-    if (moveIndex > 0) {
-      const sections = exercise.defaultSections;
-      // remove and readd section to new position..
-      sections.splice(moveIndex, 1);
-      sections.splice(moveIndex - 1, 0, section);
-      const newExercises = stateExercises;
-      newExercises[selectedExerciseIndex] = exercise;
+    const newExercises = stateExercises;
+    newExercises[selectedExerciseIndex] = e;
 
-      this.setState(
-        {
-          exercises: newExercises
-        },
-        () => Store.saveExercises(newExercises)
-      )
-    }
+    this.setState(
+      {
+        exercises: newExercises
+      },
+      () => Store.saveExercises(newExercises)
+    )
   }
 
-  private moveSectionDown = (section: ISection) => {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  // // private moveSectionUp = (section: ISection) => {
+  // //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    const exercise = stateExercises[selectedExerciseIndex];
-    const moveIndex = exercise.defaultSections.indexOf(section)
-    // if section is last we cant move down any more.
-    if (moveIndex < exercise.defaultSections.length - 1) {
-      const sections = exercise.defaultSections;
-      // remove and readd section to new position..
-      sections.splice(moveIndex, 1);
-      sections.splice(moveIndex + 1, 0, section);
+  // //   const exercise = stateExercises[selectedExerciseIndex];
+  // //   const moveIndex = exercise.defaultSections.indexOf(section)
+  // //   // if section is first we cant move up any more.
+  // //   if (moveIndex > 0) {
+  // //     const sections = exercise.defaultSections;
+  // //     // remove and readd section to new position..
+  // //     sections.splice(moveIndex, 1);
+  // //     sections.splice(moveIndex - 1, 0, section);
+  // //     const newExercises = stateExercises;
+  // //     newExercises[selectedExerciseIndex] = exercise;
 
-      const newExercises = stateExercises;
-      newExercises[selectedExerciseIndex] = exercise;
+  // //     this.setState(
+  // //       {
+  // //         exercises: newExercises
+  // //       },
+  // //       () => Store.saveExercises(newExercises)
+  // //     )
+  // //   }
+  // // }
 
-      this.setState(
-        {
-          exercises: newExercises
-        },
-        () => Store.saveExercises(newExercises)
-      )
-    }
-  }
+  // // private moveSectionDown = (section: ISection) => {
+  // //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+
+  // //   const exercise = stateExercises[selectedExerciseIndex];
+  // //   const moveIndex = exercise.defaultSections.indexOf(section)
+  // //   // if section is last we cant move down any more.
+  // //   if (moveIndex < exercise.defaultSections.length - 1) {
+  // //     const sections = exercise.defaultSections;
+  // //     // remove and readd section to new position..
+  // //     sections.splice(moveIndex, 1);
+  // //     sections.splice(moveIndex + 1, 0, section);
+
+  // //     const newExercises = stateExercises;
+  // //     newExercises[selectedExerciseIndex] = exercise;
+
+  // //     this.setState(
+  // //       {
+  // //         exercises: newExercises
+  // //       },
+  // //       () => Store.saveExercises(newExercises)
+  // //     )
+  // //   }
+  // // }
 
   private timeChanged = (time: Date) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;
