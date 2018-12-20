@@ -14,7 +14,7 @@ import  {
 import React, { ChangeEvent, Component } from 'react';
 import { IExercise, IExerciseContext } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
-import ClockUtilities from '../Utils/ClockUtilities';
+import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
 
 const styles = (theme: Theme) => createStyles({
   EditForm: {
@@ -142,7 +142,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
         id="time"
         label="start"
         type="time"
-        defaultValue={ClockUtilities.getTimeAsHHmmString(originalExercise ? originalExercise.startTime : new Date())}
+        defaultValue={GetTimeAsHHmmString(originalExercise ? originalExercise.startTime : new Date())}
         onChange={this.setStartTime}
         InputLabelProps={{
           shrink: true,

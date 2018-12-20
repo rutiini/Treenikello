@@ -1,16 +1,15 @@
 ﻿import { IExercise, ISection } from "src/DataInterfaces";
+import { TimerMode } from "../Clock";
 
-
-
-export default class ClockUtilities {
+// export default class ClockUtilities {
 
 
   /**
    * constants used for the calculations
    */
-  public static readonly circleInDegrees = 360;
-  public static readonly hourInMinutes = 60;
-  public static readonly minuteInDegrees = ClockUtilities.circleInDegrees / ClockUtilities.hourInMinutes;
+  export const CircleInDegrees = 360;
+  export const HourInMinutes = 60;
+  export const MinuteInDegrees = CircleInDegrees / HourInMinutes;
 
   // fix this, the last active section stays active even when the exercise should be finished
   /**
@@ -18,16 +17,16 @@ export default class ClockUtilities {
    * -1 means the exercise has not yet started, index == section array length means that
    * the exercise is over.
    */
-  public static getActiveSectionIndex = (exercise: IExercise, currentTime: Date) => {
+  export function GetActiveSectionIndex(exercise: IExercise, currentTime: Date) {
 
     const { startTime, defaultSections: sectionItems } = exercise;
-    const currentPosition = ClockUtilities.timeToDegrees(currentTime); // "absolute minute position"
-    const startPosition = ClockUtilities.timeToDegrees(startTime);
+    const currentPosition = TimeToDegrees(currentTime); // "absolute minute position"
+    const startPosition = TimeToDegrees(startTime);
 
     const length = sectionItems.length
-      ? sectionItems.map((a: ISection) => a.duration + a.setupTime).reduce((a: number, b: number) => a + b)*ClockUtilities.minuteInDegrees
+      ? sectionItems.map((a: ISection) => a.duration + a.setupTime).reduce((a: number, b: number) => a + b) * MinuteInDegrees
       : 0;
-    
+
     const endPosition = startPosition + length;
     let angle = startPosition;
     let index = -1;
@@ -39,14 +38,14 @@ export default class ClockUtilities {
     }
     else {
       for (let i = 0; i < sectionItems.length; i++) {
-        const sectionAngle = (sectionItems[i].duration + sectionItems[i].setupTime) * ClockUtilities.minuteInDegrees;
+        const sectionAngle = (sectionItems[i].duration + sectionItems[i].setupTime) * MinuteInDegrees;
         if (angle <= currentPosition && currentPosition <= angle + sectionAngle) {
           index = i;
           break;
         }
         angle = angle + sectionAngle;
       }
-      if (length && currentPosition >= (angle + (sectionItems[sectionItems.length - 1].duration + sectionItems[sectionItems.length - 1].setupTime) * ClockUtilities.minuteInDegrees)) {
+      if (length && currentPosition >= (angle + (sectionItems[sectionItems.length - 1].duration + sectionItems[sectionItems.length - 1].setupTime) * MinuteInDegrees)) {
         index++;
       }
     }
@@ -58,16 +57,16 @@ export default class ClockUtilities {
    * Transform the hours and minutes of a date object as degrees on a 360 degree circle where 1 minute is 6 degrees.
    * @param date A date object
    */
-  public static timeToDegrees(date: Date) {
-    return date.getMinutes() * ClockUtilities.minuteInDegrees + date.getHours() * ClockUtilities.circleInDegrees;
+  export function TimeToDegrees(date: Date) {
+    return date.getMinutes() * MinuteInDegrees + date.getHours() * CircleInDegrees;
   }
 
   /**
    * transform time component of a date object to HH:mm string.
    * @param date date to transform
    */
-  public static getTimeAsHHmmString(date: Date){
-    if(!date){
+  export function GetTimeAsHHmmString(date: Date) {
+    if (!date) {
       throw new Error("Cannot transform time from null");
     }
     // TODO: clean this mess up?
@@ -78,5 +77,41 @@ export default class ClockUtilities {
     const startAsString = `${HHString}:${mmString}`
     return startAsString;
   }
+
+export function CycleTimerMode(currentState: TimerMode): TimerMode {
+  switch (currentState) {
+    case TimerMode.Hidden:
+      return TimerMode.Ready;
+    case TimerMode.Ready:
+      return TimerMode.Running;
+    case TimerMode.Running:
+      return TimerMode.Finished;
+    case TimerMode.Finished:
+      return TimerMode.Hidden;
+  }
+}
+
+/** simple interface for containing all the clock drawing data */
+export class ClockData {
+  private date: Date; 
+  
+  constructor(date: Date){
+    this.date = date;
+  }
+
+  public UpdateDate(date: Date){
+    this.date = date;
+  }
+
+  public getHourPosition(){
+    return MinuteInDegrees * this.date.getHours();
+  }
+  public getMinutePosition(){
+    return MinuteInDegrees * this.date.getMinutes();
+  }
+  public getSecondPosition(){
+    return MinuteInDegrees * this.date.getSeconds();
+  }
+  
 
 }

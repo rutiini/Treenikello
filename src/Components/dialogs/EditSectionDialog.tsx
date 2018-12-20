@@ -126,17 +126,19 @@ class EditSectionDialog extends Component<IProps, IState> {
             {dialogDescription}
           </DialogContentText>
           <TextField
+            name="name"
             autoFocus={true}
             margin="dense"
             id="name"
             label="Nimi"
             type="text"
             value={activeSection.name}
-            onChange={this.updateName}
+            onChange={this.updateProp}
             fullWidth={true}
           />
           <br />
           <TextField
+            name="description"
             margin="dense"
             id="description"
             label="Sisältö"
@@ -144,14 +146,15 @@ class EditSectionDialog extends Component<IProps, IState> {
             multiline={true}
             rows="2"
             value={this.state.section.description}
-            onChange={this.updateDescription}
+            onChange={this.updateProp}
             fullWidth={true}
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
             <Select style={{ backgroundColor: this.state.section.color }}
               value={this.state.section.color}
-              onChange={this.updateColor}
+              onChange={this.updateProp}
+              // TODO: change
               inputProps={{
                 id: 'item-color',
                 name: 'color',
@@ -165,15 +168,17 @@ class EditSectionDialog extends Component<IProps, IState> {
           </FormControl>
           <br />
           <TextField
+            name='setupTime'
             className={classes.numericInput}
             margin="dense"
             id="setupTime"
             label="Alustus/Tauko"
             type="number"
             value={activeSection.setupTime}
-            onChange={this.updateSetup}
+            onChange={this.updateProp}
           />
           <TextField
+            name='duration'
             className={classes.numericInput}
             style={{ float: "right" }}
             margin="dense"
@@ -181,7 +186,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             label="Kesto"
             type="number"
             value={activeSection.duration}
-            onChange={this.updateDuration}
+            onChange={this.updateProp}
           />
         </DialogContent>
         <DialogActions>
@@ -217,55 +222,12 @@ class EditSectionDialog extends Component<IProps, IState> {
       section: { ...emptySection }
     })
   }
-
-  private updateName = (event: ChangeEvent<HTMLInputElement>) => {
-
+  /** updates a property that matches the name of the sender element */
+  private updateProp = (event: ChangeEvent<HTMLSelectElement>) => {
     this.setState({
       section: {
         ...this.state.section,
-        name: event.target.value
-      }
-    })
-  }
-
-  private updateDescription = (event: ChangeEvent<HTMLInputElement>) => {
-
-    this.setState({
-      section: {
-        ...this.state.section,
-        description: event.target.value
-      }
-    })
-  }
-
-  private updateColor = (event: ChangeEvent<HTMLSelectElement>) => {
-
-    this.setState({
-      section: {
-        ...this.state.section,
-        color: event.target.value
-      }
-    })
-  }
-
-  private updateDuration = (event: ChangeEvent<HTMLSelectElement>) => {
-
-    const newDuration = parseInt(event.target.value, 10);
-    this.setState({
-      section: {
-        ...this.state.section,
-        duration: newDuration
-      }
-    })
-  }
-
-  private updateSetup = (event: ChangeEvent<HTMLSelectElement>) => {
-
-    const newSetup = parseInt(event.target.value, 10);
-    this.setState({
-      section: {
-        ...this.state.section,
-        setupTime: newSetup
+        [event.target.name]: event.target.value
       }
     })
   }

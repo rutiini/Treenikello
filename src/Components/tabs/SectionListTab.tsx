@@ -80,7 +80,7 @@ class SectionListTab extends Component<IProps, IState>{
 
     return (
       <div className={classes.root}>
-        <SortableList items={sections} onSortEnd={this.sorted} lockAxis={"y"} useDragHandle={true}/>
+        <SortableList items={sections} onSortEnd={this.sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true}/>
         {addNewButton}
       </div>
     );

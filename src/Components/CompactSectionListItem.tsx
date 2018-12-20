@@ -72,7 +72,6 @@ const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'ac
         <Typography variant="h6" className={classes.justifyCenter}>{text}</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails className={props.classes.justifyCenter}>
-      
         <Typography component="p" style={{width: "inherit"}}>{description}</Typography>
         <div className={classes.actionButtonContainer}>
           <IconButton onClick={editSectionClicked}>

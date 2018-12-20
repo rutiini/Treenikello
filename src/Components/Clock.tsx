@@ -4,7 +4,7 @@ import { IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
 import SectionItem from './SectionItem';
 import StopWatchHand from './StopWatchHand';
-import ClockUtilities from './Utils/ClockUtilities';
+import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
 
 interface IProps extends WithStyles<typeof styles> {
     exerciseContext: IExerciseContext,
@@ -12,12 +12,18 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 interface IState {
-    date: string,
     secPosition: number,
     minPosition: number,
     hourPosition: number,
-    timerEnabled: boolean,
+    timerMode: TimerMode,
     stopWatchSeconds: number
+}
+
+export enum TimerMode {
+    Hidden,
+    Ready,
+    Running,
+    Finished
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -92,10 +98,7 @@ class Clock extends Component<IProps, IState> {
     private centerCoordinate = 100 / 2;
     private faceRadius = 100 / 2 - (100 / 20);
 
-    private timerStarted = false;
-    private timerFinished = false;
-
-    private stopwatchInterval: any;
+    private stopwatchInterval: NodeJS.Timeout;
     // private interval: any;
     private sectionItems: JSX.Element[];
 
@@ -132,23 +135,16 @@ class Clock extends Component<IProps, IState> {
         this.Majors = majors;
 
         // put the hands in correct time for initial render
-        const d = new Date()
-        const secRotation = ClockUtilities.minuteInDegrees * d.getSeconds();
-        const minRotation = ClockUtilities.minuteInDegrees * d.getMinutes();
-        const hourRotation = 30 * (d.getHours() % 12) + d.getMinutes() / 2;
+        const clockData = new ClockData(new Date());
 
         this.state =
             {
-                date: d.toLocaleString("fi"),
-                hourPosition: hourRotation,
-                minPosition: minRotation,
-                secPosition: secRotation,
+                hourPosition: clockData.getHourPosition(),
+                minPosition: clockData.getMinutePosition(),
+                secPosition: clockData.getSecondPosition(),
                 stopWatchSeconds: 0,
-                timerEnabled: false,
+                timerMode: TimerMode.Hidden
             }
-
-        // bindings
-        this.cycleTimerFunctions = this.cycleTimerFunctions.bind(this);
     }
     // get stuff from sub function
 
@@ -168,13 +164,6 @@ class Clock extends Component<IProps, IState> {
         const centerCoordinate = this.canvasSide / 2;
         const rotation = 'rotate(' + position * 6 + ' 50 50)';
         return (<line key={idTag} id={idTag} className={className} x1={centerCoordinate} y1={y1} x2={centerCoordinate} y2={y2} transform={rotation} />)
-    }
-
-    /**
-     * Enable timer hand of clock
-     */
-    public enableTimerHand = () => {
-        this.setState({ timerEnabled: true })
     }
 
     public render() {
@@ -228,7 +217,7 @@ class Clock extends Component<IProps, IState> {
                             y2={14}
                             y3={12}
                             rotation={this.state.stopWatchSeconds * 3}
-                            visible={this.state.timerEnabled}
+                            visible={0 < this.state.timerMode}
                             color="yellow"
                             tipColor="red" />
                         <g
@@ -263,7 +252,6 @@ class Clock extends Component<IProps, IState> {
             const hourRotation = 30 * (currentTime.getHours() % 12) + currentTime.getMinutes() / 2
             this.setState(
                 {
-                    date: currentTime.toLocaleString("fi"),
                     hourPosition: hourRotation,
                     minPosition: minRotation,
                     secPosition: secRotation
@@ -279,33 +267,10 @@ class Clock extends Component<IProps, IState> {
      */
     private checkActiveSection(currentTime: Date) {
         const { exercises, selectedExerciseIndex, setActiveSection, activeSectionIndex } = this.props.exerciseContext;
-        const activeIndex = ClockUtilities.getActiveSectionIndex(exercises[selectedExerciseIndex], currentTime);
-        // console.log(`active: ${activeIndex}`);
+        const activeIndex = GetActiveSectionIndex(exercises[selectedExerciseIndex], currentTime);
         if (activeSectionIndex !== activeIndex) {
             setActiveSection(activeIndex);
         }
-    }
-
-    /**
-     * Disable timer hand of clock
-     */
-    private disableTimerHand = () => {
-        // have all the hands as private props.
-        const hand: HTMLElement = document.getElementById("timerHand") as HTMLElement;
-
-        this.setState({
-            stopWatchSeconds: 0
-        })
-
-        hand.setAttribute("visibility", "hidden")
-        if (hand.classList.contains("timerOn")) {
-            hand.classList.remove("timerOn")
-        }
-        if (!hand.classList.contains("timerOff")) {
-            hand.classList.add("timerOff")
-        }
-
-        this.setState({ timerEnabled: true })
     }
 
     /**
@@ -318,32 +283,23 @@ class Clock extends Component<IProps, IState> {
         })
     }
 
-    // TODO: refactor to use int or enum for cycling the state..
-    // cycle on tap -> make visible -> start -> stop -> hide and reset
+    /** cycle on tap -> make visible -> start -> stop -> hide and reset */
     private cycleTimerFunctions = () => {
         // case hidden set to visible and reset position to 0
-        if (!this.state.timerEnabled && !this.timerFinished) {
-            this.enableTimerHand();
-            this.setState({ timerEnabled: true })
-        }
-        // case visible and stopped start timer
-        else if (this.state.timerEnabled && !this.timerStarted && !this.timerFinished) {
-            this.stopwatchInterval = setInterval(this.updateStopwatch, 500);
-            this.timerStarted = true;
+
+        const newMode = CycleTimerMode(this.state.timerMode);
+        this.setState({ timerMode: newMode });
+
+        if (newMode === TimerMode.Running) {
+            this.stopwatchInterval = setInterval(this.updateStopwatch, 500)
         }
         // case visible and stated stop timer
-        else if (this.state.timerEnabled && this.timerStarted) {
+        else if (newMode === TimerMode.Finished) {
             // stopTimer
             clearInterval(this.stopwatchInterval);
-            this.timerFinished = true;
-            this.timerStarted = false;
-        }
-        // case visible and stopped (and used) set to hidden
-        else {
-            this.disableTimerHand();
-            this.timerStarted = false;
-            this.timerFinished = false;
-            this.setState({ timerEnabled: false })
+        } else if (newMode === TimerMode.Hidden) {
+            // reset time
+            this.setState({ stopWatchSeconds: 0 });
         }
     }
 
@@ -361,9 +317,9 @@ class Clock extends Component<IProps, IState> {
         const sectionItems: JSX.Element[] = [];
 
         // change to absolute
-        const currentPosition = ClockUtilities.timeToDegrees(currentTime); // "absolute minute positio
-        const startPosition = ClockUtilities.timeToDegrees(startTime);
-        let stopDrawAngle = ClockUtilities.circleInDegrees; // opacity of sections is a good way of communication where we start and are..
+        const currentPosition = TimeToDegrees(currentTime); // "absolute minute positio
+        const startPosition = TimeToDegrees(startTime);
+        let stopDrawAngle = CircleInDegrees; // opacity of sections is a good way of communication where we start and are..
 
         if (defaultSections) {
 
@@ -371,15 +327,15 @@ class Clock extends Component<IProps, IState> {
             const { classes } = this.props;
             let cumulativeAngle = startPosition;
             defaultSections.map((sectionItem, index) => {
-                
-                const setupStartAngle = cumulativeAngle;
-                const setupStopAngle = cumulativeAngle + sectionItem.setupTime * ClockUtilities.minuteInDegrees;
 
-                const sectionStartAngle = setupStopAngle // + sectionItem.setupTime * ClockUtilities.minuteInDegrees; // !added setup
-                cumulativeAngle += (sectionItem.duration + sectionItem.setupTime)* ClockUtilities.minuteInDegrees; // transform minutes to degrees
+                const setupStartAngle = cumulativeAngle;
+                const setupStopAngle = cumulativeAngle + sectionItem.setupTime * MinuteInDegrees;
+
+                const sectionStartAngle = setupStopAngle // + sectionItem.setupTime * MinuteInDegrees; // !added setup
+                cumulativeAngle += (sectionItem.duration + sectionItem.setupTime) * MinuteInDegrees; // transform minutes to degrees
 
                 // if the section ends before starting angle dont draw it. Also if start is over an hour away
-                if (cumulativeAngle <= currentPosition || currentPosition < cumulativeAngle - ClockUtilities.circleInDegrees) {
+                if (cumulativeAngle <= currentPosition || currentPosition < cumulativeAngle - CircleInDegrees) {
                     // "extend" last visible section by new minutes
                     // TODO: current position is probably not the correct variable here since it can be in the middle of a section..
                     stopDrawAngle = stopDrawAngle + currentPosition;
@@ -400,9 +356,9 @@ class Clock extends Component<IProps, IState> {
                         key={sectionItems.length}
                         color={"#d3d0da"}
                         class={
-                            index === activeSectionIndex 
-                            ? classes.activeSection 
-                            : classes.inactiveSection
+                            index === activeSectionIndex
+                                ? classes.activeSection
+                                : classes.inactiveSection
                         } />)
                     // section arc
                     sectionItems.push(<SectionItem
@@ -415,9 +371,9 @@ class Clock extends Component<IProps, IState> {
                         key={sectionItems.length}
                         color={sectionItem.color}
                         class={
-                            index === activeSectionIndex 
-                            ? classes.activeSection 
-                            : classes.inactiveSection
+                            index === activeSectionIndex
+                                ? classes.activeSection
+                                : classes.inactiveSection
                         } />)
                     // just check whether there is an active item set.
                 }
