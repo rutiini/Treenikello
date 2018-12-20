@@ -104,7 +104,7 @@ export class ClockData {
   }
 
   public getHourPosition(){
-    return MinuteInDegrees * this.date.getHours();
+    return 30 * (this.date.getHours() % 12) + this.date.getMinutes() / 2;
   }
   public getMinutePosition(){
     return MinuteInDegrees * this.date.getMinutes();
@@ -112,6 +112,4 @@ export class ClockData {
   public getSecondPosition(){
     return MinuteInDegrees * this.date.getSeconds();
   }
-  
-
 }

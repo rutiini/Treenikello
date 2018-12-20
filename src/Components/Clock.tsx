@@ -12,9 +12,10 @@ interface IProps extends WithStyles<typeof styles> {
 }
 
 interface IState {
-    secPosition: number,
-    minPosition: number,
-    hourPosition: number,
+    clockData: ClockData,
+    // secPosition: number,
+    // minPosition: number,
+    // hourPosition: number,
     timerMode: TimerMode,
     stopWatchSeconds: number
 }
@@ -139,9 +140,7 @@ class Clock extends Component<IProps, IState> {
 
         this.state =
             {
-                hourPosition: clockData.getHourPosition(),
-                minPosition: clockData.getMinutePosition(),
-                secPosition: clockData.getSecondPosition(),
+                clockData,
                 stopWatchSeconds: 0,
                 timerMode: TimerMode.Hidden
             }
@@ -169,6 +168,7 @@ class Clock extends Component<IProps, IState> {
     public render() {
         this.sectionItems = this.updateFaceElements();
         const { classes } = this.props;
+        const { clockData } = this.state;
         return (
             <div className={classes.clockContainer} onClick={this.cycleTimerFunctions}>
                 <svg id="clock" className={classes.clock} viewBox="0 0 100 100">
@@ -189,7 +189,7 @@ class Clock extends Component<IProps, IState> {
                     </g>
                     <g id="hands">
                         <rect
-                            transform={`rotate(${this.state.hourPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            transform={`rotate(${clockData.getHourPosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
                             id="hour"
                             className={classes.hourMin}
                             x="48.5"
@@ -200,7 +200,7 @@ class Clock extends Component<IProps, IState> {
                             ry="2.55"
                             fill="red" />
                         <rect
-                            transform={`rotate(${this.state.minPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            transform={`rotate(${clockData.getMinutePosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
                             id="min"
                             className={classes.hourMin}
                             x="49"
@@ -221,7 +221,7 @@ class Clock extends Component<IProps, IState> {
                             color="yellow"
                             tipColor="red" />
                         <g
-                            transform={`rotate(${this.state.secPosition} ${this.centerCoordinate} ${this.centerCoordinate})`}
+                            transform={`rotate(${clockData.getSecondPosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
                             id="secHand">
                             <line
                                 id="sec"
@@ -247,14 +247,11 @@ class Clock extends Component<IProps, IState> {
         setInterval(() => {
             const currentTime = new Date()
             this.checkActiveSection(currentTime);
-            const secRotation = 6 * currentTime.getSeconds();
-            const minRotation = 6 * currentTime.getMinutes();
-            const hourRotation = 30 * (currentTime.getHours() % 12) + currentTime.getMinutes() / 2
+            const clockData = new ClockData(currentTime);
             this.setState(
                 {
-                    hourPosition: hourRotation,
-                    minPosition: minRotation,
-                    secPosition: secRotation
+                    ...this.state,
+                    clockData
                 }
             )
         }, 1000)
