@@ -13,11 +13,14 @@ import { TimerMode } from "../Clock";
 
   // fix this, the last active section stays active even when the exercise should be finished
   /**
-   * returns an int describing which section is currently active based on the time.
+   * returns an int describing which section is currently active based on the time given, 
+   * exercise start time and section durations and order.
    * -1 means the exercise has not yet started, index == section array length means that
    * the exercise is over.
+   * @param exercise excercise data
+   * @param currentTime time to calculate the active section index from
    */
-  export function GetActiveSectionIndex(exercise: IExercise, currentTime: Date) {
+  export function GetActiveSectionIndex(exercise: IExercise, currentTime: Date): number {
 
     const { startTime, defaultSections: sectionItems } = exercise;
     const currentPosition = TimeToDegrees(currentTime); // "absolute minute position"

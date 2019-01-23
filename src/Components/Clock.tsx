@@ -2,8 +2,8 @@ import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { IExerciseContext } from '../DataInterfaces';
 import { withExerciseContext } from '../ExerciseContext';
+import ClockFace from './ClockFace';
 import SectionItem from './SectionItem';
-import StopWatchHand from './StopWatchHand';
 import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
 
 interface IProps extends WithStyles<typeof styles> {
@@ -13,9 +13,6 @@ interface IProps extends WithStyles<typeof styles> {
 
 interface IState {
     clockData: ClockData,
-    // secPosition: number,
-    // minPosition: number,
-    // hourPosition: number,
     timerMode: TimerMode,
     stopWatchSeconds: number
 }
@@ -31,17 +28,6 @@ const styles = (theme: Theme) => createStyles({
     activeSection: {
         opacity: 1
     },
-    bigHourMarker: {
-        stroke: theme.palette.action.active,
-        strokeWidth: 2
-    },
-    clock: {
-        height: "45vh",
-        [theme.breakpoints.between("md", "xl")]: {
-            height: "99vh",
-            width: "49vw",
-        }
-    },
     clockContainer: {
         height: "45vh",
         [theme.breakpoints.between("md", "xl")]: {
@@ -50,40 +36,8 @@ const styles = (theme: Theme) => createStyles({
             width: "49vw",
         }
     },
-    face: {
-        fill: '#000000',
-        stroke: '#bebebe', // colorings in to the theme?
-        strokeWidth: 2,
-    },
-    faceCover: {
-        fill: '#000000',
-        // stroke: '#bebebe', // colorings in to the theme?
-        // strokeWidth: 2,
-    },
-    hourMarker: {
-        stroke: theme.palette.action.active,
-        strokeWidth: 1
-    },
-    hourMin: {
-        fill: theme.palette.secondary.main,
-        stroke: theme.palette.action.active,
-        strokeWidth: 1,
-    },
     inactiveSection: {
         opacity: 0.65
-    },
-    midPoint: {
-        fill: theme.palette.action.active,
-    },
-    minor: {
-        fill: '#3f3f3f',
-    },
-    minuteMarker: {
-        stroke: theme.palette.action.active,
-        strokeWidth: 1,
-    },
-    sec: {
-        stroke: theme.palette.action.active,
     }
 })
 
@@ -97,14 +51,10 @@ class Clock extends Component<IProps, IState> {
     // basic parameters for drawing
     private canvasSide: number = 100;
     private centerCoordinate = 100 / 2;
-    private faceRadius = 100 / 2 - (100 / 20);
 
     private stopwatchInterval: NodeJS.Timeout;
     // private interval: any;
     private sectionItems: JSX.Element[];
-
-    // draw hours and minutes to the clock face
-    private Majors: JSX.Element[] = [];
 
     constructor(props: IProps) {
         super(props);
@@ -114,26 +64,7 @@ class Clock extends Component<IProps, IState> {
 
             this.canvasSide = this.props.canvasSide;
             this.centerCoordinate = this.canvasSide / 2;
-            this.faceRadius = this.canvasSide / 2 - (this.canvasSide / 20)
         }
-        const majors = [];
-        const { classes } = this.props;
-
-        for (let i = 0; i < 60; i++) {
-            // the "big hours"
-            if (i % 15 === 0) {
-                majors.push(this.createMarker(i, 5, classes.bigHourMarker))
-            }
-            // lesser markers
-            else if (i % 5 === 0) {
-                majors.push(this.createMarker(i, 5, classes.hourMarker))
-            }
-            // minutes
-            else {
-                majors.push(this.createMarker(i, 3, classes.minuteMarker))
-            }
-        }
-        this.Majors = majors;
 
         // put the hands in correct time for initial render
         const clockData = new ClockData(new Date());
@@ -145,99 +76,18 @@ class Clock extends Component<IProps, IState> {
                 timerMode: TimerMode.Hidden
             }
     }
-    // get stuff from sub function
-
-
-    /**
-     * Creates minute and hour markers on the clock face
-     */
-    public createMarker = (position: number, length: number, className: string) => {
-
-        // lets not render too many objects here
-        if (position >= 60) {
-            throw new DOMException("too many minutemarkers for this clock");
-        }
-        const idTag = "marker" + position;
-        const y1 = this.canvasSide / 2 - this.faceRadius + length;
-        const y2 = this.canvasSide / 2 - this.faceRadius + 0.9; // slight overlap (0.1) and stroke width..
-        const centerCoordinate = this.canvasSide / 2;
-        const rotation = 'rotate(' + position * 6 + ' 50 50)';
-        return (<line key={idTag} id={idTag} className={className} x1={centerCoordinate} y1={y1} x2={centerCoordinate} y2={y2} transform={rotation} />)
-    }
 
     public render() {
         this.sectionItems = this.updateFaceElements();
         const { classes } = this.props;
-        const { clockData } = this.state;
+        const { clockData, stopWatchSeconds, timerMode } = this.state;
         return (
             <div className={classes.clockContainer} onClick={this.cycleTimerFunctions}>
-                <svg id="clock" className={classes.clock} viewBox="0 0 100 100">
-                    {/* TODO: remove a bunch of magic numbers, make stuff rescalable. */}
-                    <circle
-                        className={classes.face}
-                        cx={this.centerCoordinate}
-                        cy={this.centerCoordinate}
-                        r="45" />
-                    {this.sectionItems}
-                    <circle
-                        className={classes.faceCover}
-                        cx={this.centerCoordinate}
-                        cy={this.centerCoordinate}
-                        r="41" />
-                    <g id="minuteMarkers">
-                        {this.Majors}
-                    </g>
-                    <g id="hands">
-                        <rect
-                            transform={`rotate(${clockData.getHourPosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
-                            id="hour"
-                            className={classes.hourMin}
-                            x="48.5"
-                            y="22.5"
-                            width="3"
-                            height="30"
-                            rx="2.5"
-                            ry="2.55"
-                            fill="red" />
-                        <rect
-                            transform={`rotate(${clockData.getMinutePosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
-                            id="min"
-                            className={classes.hourMin}
-                            x="49"
-                            y="12.5"
-                            width="2"
-                            height="40"
-                            rx="2"
-                            ry="2"
-                            fill="blue" />
-                        <StopWatchHand
-                            x1={this.centerCoordinate}
-                            y1={this.centerCoordinate}
-                            x2={this.centerCoordinate}
-                            y2={14}
-                            y3={12}
-                            rotation={this.state.stopWatchSeconds * 3}
-                            visible={0 < this.state.timerMode}
-                            color="yellow"
-                            tipColor="red" />
-                        <g
-                            transform={`rotate(${clockData.getSecondPosition()} ${this.centerCoordinate} ${this.centerCoordinate})`}
-                            id="secHand">
-                            <line
-                                id="sec"
-                                x1={this.centerCoordinate}
-                                y1={this.centerCoordinate}
-                                x2={this.centerCoordinate}
-                                y2="11"
-                                stroke="white" />
-                        </g>;
-                    </g>
-                    <circle
-                        className={classes.midPoint}
-                        cx={this.centerCoordinate}
-                        cy={this.centerCoordinate}
-                        r="3" />
-                </svg>
+                <ClockFace clockData={clockData}
+                    centerCoordinate={this.centerCoordinate}
+                    sectionItems={this.sectionItems}
+                    stopWatchRotation={stopWatchSeconds}
+                    timerMode={timerMode} />
             </div>
         )
     }
@@ -378,7 +228,6 @@ class Clock extends Component<IProps, IState> {
         }
         return sectionItems;
     }
-
 }
 
 export default withExerciseContext(withStyles(styles)(Clock));
