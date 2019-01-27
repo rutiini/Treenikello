@@ -1,37 +1,33 @@
 import * as React from 'react';
-import { IExerciseContext } from './DataInterfaces';
+import { IExercise, IExerciseContext, ISection } from './DataInterfaces';
 
-const ctx = React.createContext<IExerciseContext | null>(null);
-
-/**
- * Context provider is used to set up the context on the top level.
- */
-export const ExerciseContextProvider = ctx.Provider;
-
-/**
- * Context consumer can be used to provide the context for a component. 
- * Usage of the {@link withExerciseContext} method is preferred.
- */
-export const ExerciseContextConsumer = ctx.Consumer;
-
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
-/**
- * This higher order component injects the exercise context consumer to the components props.
- * Use it with the export statement:
- * export withExerciseContext(Component) 
- * @param Component 
- */
-export function withExerciseContext<
-  P extends { exerciseContext?: IExerciseContext },
-  R = Omit<P, "exerciseContext">
-  >(
-    Component: React.ComponentClass<P> | React.StatelessComponent<P>): React.SFC<R> {
-  return function BoundComponent(props: R) {
-    return (
-      <ExerciseContextConsumer>
-        {value => <Component {...props} exerciseContext={value} />}
-      </ExerciseContextConsumer>
-    );
-  };
+export const ExerciseContext = React.createContext<IExerciseContext>(getDefaultContext());
+function getDefaultContext(): IExerciseContext {
+  return(
+    {
+      acceptDeleteExercise: () => null,
+      activeSectionIndex: 0,
+      confirmationDialogOpen: true,
+      deleteExercise: (deleteIndex: number ) => null,
+      deleteExerciseIndex: -1,
+      deleteSection: (section: ISection) => null,
+      editExerciseIndex: 0,
+      editExerciseOpen: true,
+      editSectionOpen: false,
+      exercises: [],
+      saveExercises: () => null,
+      selectExercise: (exercise: string) => null,
+      selectedExerciseIndex: 0,
+      selectedSectionIndex: 0,
+      setActiveSection: (sectionIndex: number) => null,
+      setTime: (time: Date) => null,
+      snackBarOpen: true,
+      submitExercise: (oldExercise: IExercise, newExercise: IExercise) => null,
+      submitSection: (oldSection: ISection, newSection: ISection) => null,
+      toggleExerciseDialog: (section: IExercise) => null,
+      toggleSectionDialog: (section: ISection) => null,
+      updateSectionOrder: (sections: ISection[]) => null,
+      validateExerciseName: (name: string) => true,
+    }
+  )
 }

@@ -59,8 +59,6 @@ class App extends Component<IProps, IState> {
     }
 
     // bindings..
-    // // this.moveSectionUp = this.moveSectionUp.bind(this);
-    // // this.moveSectionDown = this.moveSectionDown.bind(this);
     this.deleteSection = this.deleteSection.bind(this);
     this.updateSection = this.updateSection.bind(this);
   }
@@ -88,8 +86,6 @@ class App extends Component<IProps, IState> {
     acceptDeleteExercise: this.handleDeleteExercise,
     deleteExercise: this.handleToggleCofirmationDialog,
     deleteSection: this.deleteSection,
-    // moveSectionDown: this.moveSectionDown,
-    // moveSectionUp: this.moveSectionUp,
     saveExercises: this.saveExercises,
     selectExercise: this.selectExercise,
     setActiveSection: this.setActiveSection,
@@ -200,53 +196,6 @@ class App extends Component<IProps, IState> {
       () => Store.saveExercises(newExercises)
     )
   }
-
-  // // private moveSectionUp = (section: ISection) => {
-  // //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
-
-  // //   const exercise = stateExercises[selectedExerciseIndex];
-  // //   const moveIndex = exercise.defaultSections.indexOf(section)
-  // //   // if section is first we cant move up any more.
-  // //   if (moveIndex > 0) {
-  // //     const sections = exercise.defaultSections;
-  // //     // remove and readd section to new position..
-  // //     sections.splice(moveIndex, 1);
-  // //     sections.splice(moveIndex - 1, 0, section);
-  // //     const newExercises = stateExercises;
-  // //     newExercises[selectedExerciseIndex] = exercise;
-
-  // //     this.setState(
-  // //       {
-  // //         exercises: newExercises
-  // //       },
-  // //       () => Store.saveExercises(newExercises)
-  // //     )
-  // //   }
-  // // }
-
-  // // private moveSectionDown = (section: ISection) => {
-  // //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
-
-  // //   const exercise = stateExercises[selectedExerciseIndex];
-  // //   const moveIndex = exercise.defaultSections.indexOf(section)
-  // //   // if section is last we cant move down any more.
-  // //   if (moveIndex < exercise.defaultSections.length - 1) {
-  // //     const sections = exercise.defaultSections;
-  // //     // remove and readd section to new position..
-  // //     sections.splice(moveIndex, 1);
-  // //     sections.splice(moveIndex + 1, 0, section);
-
-  // //     const newExercises = stateExercises;
-  // //     newExercises[selectedExerciseIndex] = exercise;
-
-  // //     this.setState(
-  // //       {
-  // //         exercises: newExercises
-  // //       },
-  // //       () => Store.saveExercises(newExercises)
-  // //     )
-  // //   }
-  // // }
 
   private timeChanged = (time: Date) => {
     const { exercises: stateExercises, selectedExerciseIndex } = this.state;

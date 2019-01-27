@@ -40,7 +40,7 @@ interface IProps {
  * well to mobile UI.
  * Role of this component is to serve as the content of a list item representing an exercise sections properties
  */
-const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
+const CompactSectionListItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
   const { classes, expanded, index, setIndex, deleteSection, editSection,section } = props;
   const { setupTime, duration, name, description, color } = section;
 
@@ -91,4 +91,4 @@ const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'ac
   );
 }
 
-export default withStyles(styles)(CompactSectionLitItem);
+export default withStyles(styles)(CompactSectionListItem);

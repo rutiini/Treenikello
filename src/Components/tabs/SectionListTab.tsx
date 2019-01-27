@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { IExerciseContext, ISection } from '../../DataInterfaces';
 import { withExerciseContext } from '../../ExerciseContext';
-import CompactSectionLitItem from '../CompactSectionListItem';
+import CompactSectionListItem from '../CompactSectionListItem';
 
 const styles = createStyles({
   listItem: {
@@ -25,7 +25,6 @@ interface IState {
 }
 
 class SectionListTab extends Component<IProps, IState>{
-
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -49,19 +48,16 @@ class SectionListTab extends Component<IProps, IState>{
       </ListItem>
     );
 
-    const SortableList = SortableContainer(({items}: {items: JSX.Element[]}) => {
-      return (
+    const SortableList = SortableContainer(({items}: {items: JSX.Element[]}) => 
         <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
           {items.map((value: JSX.Element, index: number) => (
             <SortableItem key={`item-${index}`} index={index} value={value}/>
           ))}
-        </List>
-      );
-    });
+        </List>);
 
     const sections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
       // MUI style elments
-      return (<CompactSectionLitItem
+      return (<CompactSectionListItem
         key={`item-${index}`}
         section={sectionItem}
         expanded={index === this.state.expandedIndex}

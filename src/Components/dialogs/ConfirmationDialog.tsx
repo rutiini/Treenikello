@@ -5,52 +5,48 @@ import  { Dialog,
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import React, { PureComponent } from 'react';
+import React, { Context, PureComponent } from 'react';
 import { IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import { ExerciseContext } from '../../ExerciseContext';
 
-interface IProps{
-  exerciseContext: IExerciseContext
-}
-
-class ConfirmationDialog extends PureComponent<IProps, {}> {
+class ConfirmationDialog extends PureComponent<{}, {}> {
+  
+  public static contextType: Context<IExerciseContext> = ExerciseContext;
 
   public render() {
-    const { confirmationDialogOpen, exercises, deleteExerciseIndex } = this.props.exerciseContext
+    const { confirmationDialogOpen, exercises, deleteExerciseIndex } = this.context;
     return (
-        <Dialog
-          open={confirmationDialogOpen}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">Vahvista</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              {`Haluatko varmasti poistaa valitun harjoituksen ${deleteExerciseIndex !== -1 ? exercises[deleteExerciseIndex].name : ''}?`}
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.cancel} color="primary">
-              Peruuta
-            </Button>
-            <Button onClick={this.accept} color="primary" autoFocus={true}>
-              Poista
-            </Button>
-          </DialogActions>
-        </Dialog>
-    );
+      <Dialog
+      open={confirmationDialogOpen}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      >
+      <DialogTitle id="alert-dialog-title">Vahvista</DialogTitle>
+      <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+      {`Haluatko varmasti poistaa valitun harjoituksen ${deleteExerciseIndex !== -1 ? exercises[deleteExerciseIndex].name : ''}?`}
+      </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+      <Button onClick={this.cancel} color="primary">
+      Peruuta
+      </Button>
+      <Button onClick={this.accept} color="primary" autoFocus={true}>
+      Poista
+      </Button>
+      </DialogActions>
+      </Dialog>
+      );
+    }
+    
+    private accept = () => {
+      this.context.acceptDeleteExercise();
+      this.context.deleteExercise(-1);
+    }
+    private cancel = () => {
+      this.context.handleToggle(-1);
+      this.context.deleteExercise(-1);
+    }
   }
   
-  // private ctxt = () => this.props.exerciseContext as IExerciseContext;
-
-  private accept = () => {
-    this.props.exerciseContext.acceptDeleteExercise();
-    this.props.exerciseContext.deleteExercise(-1);
-  }
-  private cancel = () => {
-    // this.props.handleToggle(-1);
-    this.props.exerciseContext.deleteExercise(-1);
-  }
-}
-
-export default withExerciseContext(ConfirmationDialog);
+  export default ConfirmationDialog;

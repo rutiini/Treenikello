@@ -11,10 +11,10 @@ import  {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, Context } from 'react';
 import { IExercise, IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
 import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
+import { ExerciseContext } from 'src/ExerciseContext';
 
 const styles = (theme: Theme) => createStyles({
   EditForm: {
@@ -29,10 +29,6 @@ const emptyExercise = {
   startTime: new Date(),
 }
 
-interface IProps extends WithStyles<typeof styles>{
-  exerciseContext: IExerciseContext
-}
-
 interface IState{
   errorText: string;
   exercise: IExercise,
@@ -40,12 +36,14 @@ interface IState{
 }
 
 
-class EditExerciseDialog extends Component<IProps,IState> {
+class EditExerciseDialog extends Component<{},IState> {
 
   // just initialize the controlled state from props and save that object on the save method, no need for this hook.
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
+  public static contextType: Context<IExerciseContext> = ExerciseContext;
+  
+  public static getDerivedStateFromProps(nextProps: unknown, prevState: IState){
     // opening the dialog
-    const { exercises,editExerciseOpen, editExerciseIndex } = nextProps.exerciseContext;
+    const { exercises,editExerciseOpen, editExerciseIndex } = this.context;
     
     let exercise: IExercise = exercises[editExerciseIndex];
     
@@ -215,4 +213,5 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 }
 
-export default withExerciseContext(withStyles(styles, { withTheme: true })(EditExerciseDialog));
+export default withStyles(styles, { withTheme: true })(EditExerciseDialog);
+// export default withExerciseContext(withStyles(styles, { withTheme: true })(EditExerciseDialog));

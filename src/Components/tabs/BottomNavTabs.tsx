@@ -19,7 +19,7 @@ interface IState {
 }
 
 interface IProps extends WithStyles<typeof styles> {
-  exerciseContext?: IExerciseContext
+  exerciseContext: IExerciseContext
 }
 
 const styles = (theme: Theme) => createStyles({
