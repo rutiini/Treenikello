@@ -71,7 +71,7 @@ class EditExerciseDialog extends Component<{},IState> {
     }
 
   }
-  constructor(props: IProps){
+  constructor(props: unknown){
     super(props);
     this.state = {
       errorText: '',
