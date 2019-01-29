@@ -12,7 +12,7 @@ const testProps = {
     timerMode: TimerMode.Hidden
 }
 
-it('Clock renders without crashing', () => {
+it('ClockFace renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(<ClockFace {...testProps} />, div);
   ReactDOM.unmountComponentAtNode(div);

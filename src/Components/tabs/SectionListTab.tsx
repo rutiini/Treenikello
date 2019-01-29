@@ -1,8 +1,7 @@
-import { Button, createStyles, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
+import { createStyles, Fab, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
 import React, { Component } from 'react';
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
-import { IExerciseContext, ISection } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import { IExercise, ISection } from '../../DataInterfaces';
 import CompactSectionListItem from '../CompactSectionListItem';
 
 const styles = createStyles({
@@ -17,7 +16,12 @@ const styles = createStyles({
 });
 
 interface IProps extends WithStyles {
-  exerciseContext: IExerciseContext
+  toggleSectionDialog: (section: ISection) => void,
+  deleteSection: (section: ISection) => void,
+  exercise: IExercise,
+  expandedIndex: number,
+  selected: number,
+  updateSectionOrder: (sections: ISection[]) => void
 }
 
 interface IState {
@@ -36,11 +40,10 @@ class SectionListTab extends Component<IProps, IState>{
     const { classes,
     } = this.props;
     const {
-      exercises,
-      selectedExerciseIndex,
+      exercise,
       deleteSection,
       toggleSectionDialog
-    } = this.props.exerciseContext;
+    } = this.props;
 
     const SortableItem = SortableElement(({value}: {value: JSX.Element}) =>
       <ListItem className={classes.listItem}>
@@ -55,7 +58,7 @@ class SectionListTab extends Component<IProps, IState>{
           ))}
         </List>);
 
-    const sections = exercises[selectedExerciseIndex].defaultSections.map((sectionItem, index) => {
+    const sections = exercise.defaultSections.map((sectionItem: ISection, index: number) => {
       // MUI style elments
       return (<CompactSectionListItem
         key={`item-${index}`}
@@ -69,7 +72,7 @@ class SectionListTab extends Component<IProps, IState>{
     })
 
     const addNewButton = <ListItem className={classes.listItem} key="add-section-button">
-      <Button variant="fab" size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Button>
+      <Fab size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Fab>
     </ListItem>
 
     // const list = SortableContainer(() => <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>{[...sections, addNewButton]}</List>)
@@ -91,7 +94,7 @@ class SectionListTab extends Component<IProps, IState>{
       name: "",
       setupTime: 0
     }
-    this.props.exerciseContext.toggleSectionDialog(newSection);
+    this.props.toggleSectionDialog(newSection);
   }
 
   private setSelectedIndex = (index: number) => {
@@ -103,11 +106,11 @@ class SectionListTab extends Component<IProps, IState>{
   }
   
   private sorted = ({oldIndex, newIndex}:{oldIndex: number, newIndex: number}) => {
-    const {exercises, selectedExerciseIndex, updateSectionOrder} = this.props.exerciseContext;
-    const rearranged = arrayMove(exercises[selectedExerciseIndex].defaultSections,oldIndex,newIndex);
+    const {exercise, updateSectionOrder} = this.props;
+    const rearranged = arrayMove(exercise.defaultSections,oldIndex,newIndex);
     updateSectionOrder(rearranged);
   }
 }
 
 
-export default withExerciseContext(withStyles(styles)(SectionListTab));
+export default withStyles(styles)(SectionListTab);

@@ -1,17 +1,20 @@
-import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import { createStyles, Fab, Theme, withStyles, WithStyles } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 import React, { SFC } from 'react';
-import { IExercise, IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import { IExercise } from '../../DataInterfaces';
 
 /**
  * All the necessary props are available in the context
  * {IExerciseContext}
  */
 interface IProps extends WithStyles<typeof styles> {
-  exerciseContext: IExerciseContext,
-  theme: Theme
+  // exerciseContext: IExerciseContext,
+  exercises: IExercise[],
+  selected: number,
+  theme: Theme,
+  toggleExerciseDialog: (exercise: IExercise) => void,
+  deleteExercise: (index: number) => void,
+  selectExercise: (name: string) => void
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -41,8 +44,8 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
     selectExercise,
     toggleExerciseDialog,
     deleteExercise,
-    selectedExerciseIndex,
-  } = props.exerciseContext;
+    selected,
+  } = props;
 
   const placeHolderIcon = <i className="material-icons">whatshot</i>
   const deleteIcon = <i className="material-icons">delete</i>
@@ -84,7 +87,7 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
 
     const exerciseKey = exercise.name;
     return (
-      <ListItem className={selectedExerciseIndex === index ? classes.selectedListItem : classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
+      <ListItem className={selected === index ? classes.selectedListItem : classes.listItem} key={exerciseKey} value={exercise.name} onClick={clicked(exercise)}
       button={true}>
         <ListItemIcon >
           {placeHolderIcon}
@@ -114,13 +117,13 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
       <List component="nav" style={{ height: '100%', paddingTop: 0, paddingBottom: 0 }}>
         {exerciseItems}
         <ListItem className={classes.listItem} key='add-exercise-btn'>
-          <Button variant="fab" mini={true} color="primary" aria-label="add" onClick={addClicked}>
+          <Fab color="primary" aria-label="add" onClick={addClicked}>
             <i className="material-icons">add</i>
-          </Button>
+          </Fab>
         </ListItem>
       </List>
     </div>
   );
 }
 
-export default withExerciseContext(withStyles(styles, { withTheme: true })(ExerciseListTab));
+export default withStyles(styles, { withTheme: true })(ExerciseListTab);

@@ -4,10 +4,10 @@ import {
   Tab,
   Tabs
 } from '@material-ui/core';
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, Context } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import { ExerciseContext } from '../../ExerciseContext';
 import ActionsMenuBar from '../ActionsMenuBar';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
@@ -19,7 +19,6 @@ interface IState {
 }
 
 interface IProps extends WithStyles<typeof styles> {
-  exerciseContext: IExerciseContext
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -95,6 +94,8 @@ const styles = (theme: Theme) => createStyles({
 });
 
 class BottomNavTabs extends Component<IProps, IState> {
+  public static contextType: Context<IExerciseContext> = ExerciseContext;
+
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -117,8 +118,14 @@ class BottomNavTabs extends Component<IProps, IState> {
       selectedExerciseIndex,
       activeSectionIndex,
       setTime, 
-      saveExercises
-    } = this.ctxt();
+      saveExercises,
+      toggleSectionDialog,
+      deleteSection,
+      updateSectionOrder,
+      toggleExerciseDialog,
+      deleteExercise,
+      selectExercise
+    } = this.context;
 
     const tabLabels = ["Treeni", "Osiot", "Harjoitukset"]
     const workoutIcon = <i className="material-icons">timer</i>
@@ -145,8 +152,19 @@ class BottomNavTabs extends Component<IProps, IState> {
               exercise={exercises[selectedExerciseIndex]}
               activeSectionIndex={activeSectionIndex}
             />
-            <SectionListTab/>
-            <ExerciseListTab/>
+            <SectionListTab 
+              selected={selectedExerciseIndex}
+              exercise={exercises[selectedExerciseIndex]}
+              expandedIndex={0}
+              toggleSectionDialog={toggleSectionDialog}
+              deleteSection={deleteSection}
+              updateSectionOrder={updateSectionOrder}/>
+            <ExerciseListTab 
+              exercises={exercises}
+              selected={selectedExerciseIndex}
+              toggleExerciseDialog={toggleExerciseDialog}
+              deleteExercise={deleteExercise}
+              selectExercise={selectExercise}/>
           </SwipeableViews>
         </div>
         <AppBar
@@ -157,7 +175,7 @@ class BottomNavTabs extends Component<IProps, IState> {
             onChange={this.handleChange}
             indicatorColor="secondary"
             textColor="secondary"
-            fullWidth={true}
+            variant="standard"
             centered={true}
           >
             <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[0]} icon={workoutIcon} />
@@ -168,9 +186,6 @@ class BottomNavTabs extends Component<IProps, IState> {
       </div>
     );
   }
-  
-  // todo: refactor the context to come directly from props..
-  private ctxt = () => this.props.exerciseContext as IExerciseContext;
 }
 
-export default withExerciseContext(withStyles(styles, { withTheme: true })(BottomNavTabs));
+export default withStyles(styles, { withTheme: true })(BottomNavTabs);

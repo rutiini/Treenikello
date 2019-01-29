@@ -7,7 +7,7 @@ import EditSectionDialog from './Components/dialogs/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
 import BottomNavTabs from './Components/tabs/BottomNavTabs';
 import { IExercise, ISection } from './DataInterfaces';
-import { ExerciseContextProvider } from './ExerciseContext';
+import { ExerciseContext } from './ExerciseContext';
 import Store, { exercises } from './Store';
 
 interface IProps extends WithStyles<typeof styles> {
@@ -64,20 +64,32 @@ class App extends Component<IProps, IState> {
   }
 
   public render() {
-    const { snackBarOpen } = this.state;
+    const { 
+      snackBarOpen, 
+      exercises: stateExercises, 
+      selectedExerciseIndex, 
+      editSectionOpen, 
+      editExerciseOpen 
+    } = this.state;
     const { classes } = this.props;
 
     return (
-      <ExerciseContextProvider value={this.getContext()}>
+      <ExerciseContext.Provider value={this.getContext()}>
         <div className={classes.App}>
           <Clock canvasSide={100} />
           <BottomNavTabs />
-          <EditSectionDialog />
-          <EditExerciseDialog />
+          <EditSectionDialog 
+            section={stateExercises[selectedExerciseIndex].defaultSections[0]} 
+            open={editSectionOpen}/>
+          <EditExerciseDialog 
+            exercise={stateExercises[selectedExerciseIndex]}
+            open={editExerciseOpen}
+            validateExerciseName={this.validateExerciseName}
+            submit={this.saveExercises}/>
           <ConfirmationDialog />
           <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
         </div>
-      </ExerciseContextProvider>
+      </ExerciseContext.Provider>
     );
   }
 

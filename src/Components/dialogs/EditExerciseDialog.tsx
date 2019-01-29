@@ -8,13 +8,12 @@ import  {
   DialogTitle,
   TextField,
   Theme,
-  withStyles,
-  WithStyles
+  withStyles
 } from '@material-ui/core';
 import React, { ChangeEvent, Component, Context } from 'react';
 import { IExercise, IExerciseContext } from '../../DataInterfaces';
+import { ExerciseContext } from '../../ExerciseContext';
 import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
-import { ExerciseContext } from 'src/ExerciseContext';
 
 const styles = (theme: Theme) => createStyles({
   EditForm: {
@@ -29,59 +28,49 @@ const emptyExercise = {
   startTime: new Date(),
 }
 
-interface IState{
-  errorText: string;
+interface IProps{
   exercise: IExercise,
-  open: boolean
+  open: boolean,
+  submit: (exercise: IExercise) => void,
+  validateExerciseName: (name: string) => boolean
+}
+
+interface IState{
+  errorText: string,
+  exercise: IExercise,
 }
 
 
-class EditExerciseDialog extends Component<{},IState> {
+class EditExerciseDialog extends Component<IProps,IState> {
 
   // just initialize the controlled state from props and save that object on the save method, no need for this hook.
   public static contextType: Context<IExerciseContext> = ExerciseContext;
   
-  public static getDerivedStateFromProps(nextProps: unknown, prevState: IState){
+  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
     // opening the dialog
-    const { exercises,editExerciseOpen, editExerciseIndex } = this.context;
-    
-    let exercise: IExercise = exercises[editExerciseIndex];
-    
-    if(!prevState.open && editExerciseOpen){
-      if(exercise){
-        return {
-          exercise: {...exercise},
-          open: true
-        };
-      }else{
-        exercise = {
-          defaultSections: [],
-          name: '',
-          preset: false,
-          startTime: new Date(),
-        }
-        return{
-          exercise: {...exercise},
-          open: true
-        };
+    const { exercise } = nextProps;
+
+    if(exercise){
+      return {
+         exercise
       }
-    // default
     }else{
-      return null;
+      return {
+        exercise: {...emptyExercise}
+      }
     }
 
   }
-  constructor(props: unknown){
+  constructor(props: IProps){
     super(props);
     this.state = {
       errorText: '',
-      exercise: {...emptyExercise},
-      open: false,
+      exercise: {...emptyExercise}
     };
   }
 
   public render() {
-    const { exercises, editExerciseIndex, editExerciseOpen } = this.props.exerciseContext;
+    const { exercises, editExerciseIndex, editExerciseOpen } = this.context;
     const originalExercise = exercises[editExerciseIndex];
     const { errorText } = this.state;
 
@@ -106,7 +95,7 @@ class EditExerciseDialog extends Component<{},IState> {
         value={this.state.exercise.name}
         onChange={this.updateName}
         helperText={errorText}
-        fullWidth={true}
+        variant="filled"
         error={true}
       />
       }else{
@@ -119,7 +108,7 @@ class EditExerciseDialog extends Component<{},IState> {
         type="text"
         value={this.state.exercise.name}
         onChange={this.updateName}
-        fullWidth={true}
+        variant="filled"
       />
       }
 
@@ -163,11 +152,7 @@ class EditExerciseDialog extends Component<{},IState> {
   }
 
   private handleClose = () => {
-    const {exercises, editExerciseIndex, toggleExerciseDialog} = this.props.exerciseContext;
-    toggleExerciseDialog(exercises[editExerciseIndex]);
-    this.setState({
-      open: false
-    });
+    this.props.submit(this.state.exercise);
   };
   
   private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
@@ -196,16 +181,11 @@ class EditExerciseDialog extends Component<{},IState> {
   private handleSubmit = () => {
     
     const { exercise } = this.state;
-    const { exercises, editExerciseIndex, validateExerciseName, submitExercise } = this.props.exerciseContext;
     // validate that the name is unique
     // for updates the same name should be allowed
-    const nameOK = validateExerciseName(exercise.name);
-    if ((nameOK || exercises[editExerciseIndex] ) && exercise.name !== '') {
-      submitExercise(exercises[editExerciseIndex], exercise);
+    const nameOK = this.context.validateExerciseName(exercise.name);
+    if ((nameOK || exercise ) && exercise.name !== '') {
       this.handleClose();
-      this.setState({
-        open: false
-      });
     } else {
       console.log(`invalid name`)
       this.setState({ errorText: 'virheellinen nimi' })
@@ -213,5 +193,4 @@ class EditExerciseDialog extends Component<{},IState> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(EditExerciseDialog);
-// export default withExerciseContext(withStyles(styles, { withTheme: true })(EditExerciseDialog));
+export default withStyles(styles, { withTheme: true })(EditExerciseDialog)
