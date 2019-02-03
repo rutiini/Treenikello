@@ -1,7 +1,7 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
-import React, { Component, Context } from 'react';
-import { IExerciseContext, ISection } from '../DataInterfaces';
-import { ExerciseContext } from '../ExerciseContext';
+import React, { Component, Context, ContextType } from 'react';
+import { ISection } from '../DataInterfaces'
+import { AppContext, IAppContext } from './AppContext';
 import ClockFace from './ClockFace';
 import SectionItem from './SectionItem';
 import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
@@ -47,7 +47,8 @@ const styles = (theme: Theme) => createStyles({
  */
 class Clock extends Component<IProps, IState> {
 
-    public static contextType: Context<IExerciseContext> = ExerciseContext;
+    public static contextType: Context<IAppContext> = AppContext;
+    public context!: ContextType<typeof AppContext>;
     // basic parameters for drawing
     private canvasSide: number = 100;
     private centerCoordinate = 100 / 2;
@@ -113,10 +114,11 @@ class Clock extends Component<IProps, IState> {
      * @param currentTime date to compare to the exercise timings
      */
     private checkActiveSection(currentTime: Date) {
-        const { exercises, selectedExerciseIndex, setActiveSection, activeSectionIndex } = this.context;
-        const activeIndex = GetActiveSectionIndex(exercises[selectedExerciseIndex], currentTime);
+        const { selectedExercise, activeSection } = this.context.state;
+        const activeIndex = GetActiveSectionIndex(selectedExercise, currentTime);
+        const activeSectionIndex = activeSection ? selectedExercise.defaultSections.indexOf(activeSection) : -1;
         if (activeSectionIndex !== activeIndex) {
-            setActiveSection(activeIndex);
+            this.context.dispatch.setActiveSection(selectedExercise.defaultSections[activeIndex]);
         }
     }
 
@@ -157,8 +159,8 @@ class Clock extends Component<IProps, IState> {
     private updateFaceElements() {
         // TODO: handle midnight problem?
         // in order to enable full lenght that exceeds hour we need to track the hour as well.
-        const { exercises, selectedExerciseIndex, activeSectionIndex } = this.context;
-        const { startTime, defaultSections } = exercises[selectedExerciseIndex];
+        const { selectedExercise, activeSection } = this.context.state;
+        const { startTime, defaultSections } = selectedExercise;
 
         const currentTime = new Date();
         const sectionItems: JSX.Element[] = [];
@@ -203,7 +205,7 @@ class Clock extends Component<IProps, IState> {
                         key={sectionItems.length}
                         color={"#d3d0da"}
                         class={
-                            index === activeSectionIndex
+                            sectionItem === activeSection
                                 ? classes.activeSection
                                 : classes.inactiveSection
                         } />)
@@ -218,7 +220,7 @@ class Clock extends Component<IProps, IState> {
                         key={sectionItems.length}
                         color={sectionItem.color}
                         class={
-                            index === activeSectionIndex
+                            sectionItem === activeSection
                                 ? classes.activeSection
                                 : classes.inactiveSection
                         } />)

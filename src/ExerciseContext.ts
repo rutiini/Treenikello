@@ -20,7 +20,6 @@ function getDefaultContext(): IExerciseContext {
       selectedExerciseIndex: 0,
       selectedSectionIndex: 0,
       setActiveSection: (sectionIndex: number) => null,
-      setTime: (time: Date) => null,
       snackBarOpen: true,
       submitExercise: (oldExercise: IExercise, newExercise: IExercise) => null,
       submitSection: (oldSection: ISection, newSection: ISection) => null,

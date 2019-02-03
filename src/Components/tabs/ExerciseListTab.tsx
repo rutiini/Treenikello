@@ -3,18 +3,14 @@ import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, List
 import React, { SFC } from 'react';
 import { IExercise } from '../../DataInterfaces';
 
-/**
- * All the necessary props are available in the context
- * {IExerciseContext}
- */
+/** component props */
 interface IProps extends WithStyles<typeof styles> {
-  // exerciseContext: IExerciseContext,
   exercises: IExercise[],
   selected: number,
   theme: Theme,
   toggleExerciseDialog: (exercise: IExercise) => void,
-  deleteExercise: (index: number) => void,
-  selectExercise: (name: string) => void
+  deleteExercise: (exercise: IExercise) => boolean,
+  selectExercise: (exercise: IExercise) => void
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -52,7 +48,7 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
   const editIcon = <i className="material-icons">edit</i>
 
   const clicked = (exercise: IExercise) => () => {
-  selectExercise(exercise.name)
+  selectExercise(exercise)
   }
 
   const addClicked = () => {
@@ -69,7 +65,7 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
   }
   const deleteClicked = (exercise: IExercise) => () => {
     // confirmation prompt?
-    deleteExercise(exercises.indexOf(exercise));
+    deleteExercise(exercise);
   }
 
   const exerciseItems = exercises.map((exercise, index) => {
@@ -99,7 +95,7 @@ const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>>
         {/*buttons disabled for presets.*/}
         <IconButton 
           onClick={deleteClicked(exercise)}
-          disabled={exercise.preset}>
+          /*disabled={exercise.preset}*/>
           {deleteIcon}
         </IconButton>
         <IconButton 

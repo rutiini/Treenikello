@@ -33,8 +33,8 @@ const theme = createMuiTheme({
 
 render(
   <MuiThemeProvider theme={theme}>
-  <CssBaseline/>
-    <App />
+      <CssBaseline/>
+      <App />
   </MuiThemeProvider>,
   document.getElementById('root') as HTMLElement
 );

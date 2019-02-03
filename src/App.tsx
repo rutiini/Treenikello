@@ -1,30 +1,17 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
-import React, { Component } from 'react';
+import React, { Component, Context, ContextType } from 'react';
+import { AppContext, ContextInstance, IAppContext, IAppState } from './Components/AppContext';
 import Clock from './Components/Clock';
 import ConfirmationDialog from './Components/dialogs/ConfirmationDialog';
 import EditExerciseDialog from './Components/dialogs/EditExerciseDialog';
 import EditSectionDialog from './Components/dialogs/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
 import BottomNavTabs from './Components/tabs/BottomNavTabs';
-import { IExercise, ISection } from './DataInterfaces';
-import { ExerciseContext } from './ExerciseContext';
+import { IExercise } from './DataInterfaces';
 import Store, { exercises } from './Store';
 
 interface IProps extends WithStyles<typeof styles> {
   // just for style injection
-}
-
-interface IState {
-  activeSectionIndex: number,
-  exercises: IExercise[],
-  selectedExerciseIndex: number,
-  editSectionOpen: boolean,
-  selectedSectionIndex: number,
-  editExerciseOpen: boolean,
-  editExerciseIndex: number,
-  confirmationDialogOpen: boolean,
-  deleteExerciseIndex: number,
-  snackBarOpen: boolean
 }
 
 const styles = createStyles({
@@ -33,7 +20,10 @@ const styles = createStyles({
   },
 })
 
-class App extends Component<IProps, IState> {
+class App extends Component<IProps, IAppState> {
+
+  public static ContextType: Context<IAppContext>;
+  public context!: ContextType<typeof AppContext>;
 
   constructor(props: any) {
     super(props);
@@ -45,330 +35,306 @@ class App extends Component<IProps, IState> {
       newExercises = newExercises.concat(customExercises);
     }
 
-    this.state = {
-      activeSectionIndex: 0,
-      confirmationDialogOpen: false,
-      deleteExerciseIndex: -1,
-      editExerciseIndex: -1,
-      editExerciseOpen: false,
-      editSectionOpen: false,
-      exercises: newExercises,
-      selectedExerciseIndex: 0,
-      selectedSectionIndex: 0,
-      snackBarOpen: false,
-    }
+    this.state = ContextInstance.state;
 
-    // bindings..
-    this.deleteSection = this.deleteSection.bind(this);
-    this.updateSection = this.updateSection.bind(this);
   }
 
   public render() {
     const { 
-      snackBarOpen, 
-      exercises: stateExercises, 
-      selectedExerciseIndex, 
-      editSectionOpen, 
-      editExerciseOpen 
+      snackBarOpen,
+      selectedExercise, 
+      editSection, 
+      editExercise,
+      selectedSection,
+      // confirmOpen
     } = this.state;
     const { classes } = this.props;
+    const contextValue = {state: {...this.state}, dispatch: ContextInstance.dispatch }
 
     return (
-      <ExerciseContext.Provider value={this.getContext()}>
+      <AppContext.Provider value={contextValue}>
         <div className={classes.App}>
           <Clock canvasSide={100} />
           <BottomNavTabs />
           <EditSectionDialog 
-            section={stateExercises[selectedExerciseIndex].defaultSections[0]} 
-            open={editSectionOpen}/>
+            section={selectedSection} 
+            open={!!editSection}/>
           <EditExerciseDialog 
-            exercise={stateExercises[selectedExerciseIndex]}
-            open={editExerciseOpen}
+            exercise={selectedExercise}
+            open={!!editExercise}
             validateExerciseName={this.validateExerciseName}
-            submit={this.saveExercises}/>
-          <ConfirmationDialog />
-          <NotificationSnackBar open={snackBarOpen} handleHide={this.handleCloseSnackbar} />
+            submit={contextValue.dispatch.save}/>
+          <ConfirmationDialog open = {contextValue.state.confirmOpen} exercise={selectedExercise} deleteExercise={contextValue.dispatch.deleteExercise} setConfirmOpen={contextValue.dispatch.setConfirmOpen}/>
+          <NotificationSnackBar open={snackBarOpen} handleHide={contextValue.dispatch.setConfirmOpen} />
         </div>
-      </ExerciseContext.Provider>
+      </AppContext.Provider>
     );
   }
 
-  private getContext = () => ({
-    ...this.state,
-    acceptDeleteExercise: this.handleDeleteExercise,
-    deleteExercise: this.handleToggleCofirmationDialog,
-    deleteSection: this.deleteSection,
-    saveExercises: this.saveExercises,
-    selectExercise: this.selectExercise,
-    setActiveSection: this.setActiveSection,
-    setTime: this.timeChanged,
-    submitExercise: this.submitExerciseEditDialog,
-    submitSection: this.updateSection,
-    toggleExerciseDialog: this.handleExerciseEditToggle,
-    toggleSectionDialog: this.handleSectionEditToggle,
-    updateSectionOrder: this.updateSectionOrder,
-    validateExerciseName: this.validateExerciseName,
-  })
-
-  private setActiveSection = (sectionIndex: number) => {
-    this.setState({
-      activeSectionIndex: sectionIndex
-    })
+  private validateExerciseName(name: string){
+    return this.state.exercises.map(e => e.name).indexOf(name) !== -1;
   }
 
-  // returns a section with generated key.
-  private createSection(name: string, description: string, duration: number, color: string, key: string) {
-    const section: ISection = {
-      color,
-      description,
-      duration,
-      key,
-      name,
-      setupTime: 0 // replace with input
-    }
-    return section;
-  }
+  // private setActiveSection = (sectionIndex: number) => {
+  //   this.setState({
+  //     activeSectionIndex: sectionIndex
+  //   })
+  // }
 
-  private updateSection(oldSection: ISection, newSection: ISection) {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  // // returns a section with generated key.
+  // private createSection(name: string, description: string, duration: number, color: string, key: string) {
+  //   const section: ISection = {
+  //     color,
+  //     description,
+  //     duration,
+  //     key,
+  //     name,
+  //     setupTime: 0 // replace with input
+  //   }
+  //   return section;
+  // }
 
-    const targetSectionIndex = stateExercises[selectedExerciseIndex].defaultSections.indexOf(oldSection);
-    if (targetSectionIndex > -1) {
+  // private updateSection(oldSection: ISection, newSection: ISection) {
+  //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-      const newExercises = [...stateExercises];
-      newExercises[selectedExerciseIndex].defaultSections[targetSectionIndex] = newSection;
+  //   const targetSectionIndex = stateExercises[selectedExerciseIndex].defaultSections.indexOf(oldSection);
+  //   if (targetSectionIndex > -1) {
 
-      this.setState(
-        {
-          exercises: newExercises,
-        },
-        () => Store.saveExercises(newExercises)
-      )
-    } else {
-      // add newSection to the current ex
-      console.log(`adding new section ${newSection.name}`)
-      this.addSection(newSection);
-    }
-  }
+  //     const newExercises = [...stateExercises];
+  //     newExercises[selectedExerciseIndex].defaultSections[targetSectionIndex] = newSection;
 
-  // TODO: refactor all of these to store?
-  private addSection(section: ISection) {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  //     this.setState(
+  //       {
+  //         exercises: newExercises,
+  //       },
+  //       () => Store.saveExercises(newExercises)
+  //     )
+  //   } else {
+  //     // add newSection to the current ex
+  //     console.log(`adding new section ${newSection.name}`)
+  //     this.addSection(newSection);
+  //   }
+  // }
 
-    const prevSelectedexercise = stateExercises[selectedExerciseIndex];
-    if (prevSelectedexercise.preset) {
-      // create new as a copy of the selected..
-      console.log("template modified, create a new exercise based on the selected one!");
-    }
+  // // TODO: refactor all of these to store?
+  // private addSection(section: ISection) {
+  //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    const newExercises = [...stateExercises]
-    newExercises[selectedExerciseIndex].defaultSections = [...prevSelectedexercise.defaultSections, this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.defaultSections.length.toString())];
+  //   const prevSelectedexercise = stateExercises[selectedExerciseIndex];
+  //   if (prevSelectedexercise.preset) {
+  //     // create new as a copy of the selected..
+  //     console.log("template modified, create a new exercise based on the selected one!");
+  //   }
 
-    this.setState(
-      {
-        exercises: newExercises
-      },
+  //   const newExercises = [...stateExercises]
+  //   newExercises[selectedExerciseIndex].defaultSections = [...prevSelectedexercise.defaultSections, this.createSection(section.name, section.description, section.duration, section.color, prevSelectedexercise.defaultSections.length.toString())];
 
-      () => Store.saveExercises(newExercises)
-    )
-  }
+  //   this.setState(
+  //     {
+  //       exercises: newExercises
+  //     },
 
-  private deleteSection(section: ISection) {
-    // prompt user for confirmation?
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  //     () => Store.saveExercises(newExercises)
+  //   )
+  // }
 
-    const newSections = [...stateExercises[selectedExerciseIndex].defaultSections];
-    const index = newSections.indexOf(section);
+  // private deleteSection(section: ISection) {
+  //   // prompt user for confirmation?
+  //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    if (index > -1) {
-      newSections.splice(index, 1)
-      const newexercise = { ...stateExercises[selectedExerciseIndex], defaultSections: newSections };
-      const newExercises = [...stateExercises];
-      newExercises[selectedExerciseIndex] = newexercise;
+  //   const newSections = [...stateExercises[selectedExerciseIndex].defaultSections];
+  //   const index = newSections.indexOf(section);
 
-      this.setState((prevState) => {
-        return { exercises: newExercises };
-      },
-        () => Store.saveExercises(newExercises))
-    }
-  }
+  //   if (index > -1) {
+  //     newSections.splice(index, 1)
+  //     const newexercise = { ...stateExercises[selectedExerciseIndex], defaultSections: newSections };
+  //     const newExercises = [...stateExercises];
+  //     newExercises[selectedExerciseIndex] = newexercise;
 
-  private updateSectionOrder = (sections: ISection[]) => {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
-    const e = stateExercises[selectedExerciseIndex]
-    e.defaultSections = sections;
+  //     this.setState((prevState) => {
+  //       return { exercises: newExercises };
+  //     },
+  //       () => Store.saveExercises(newExercises))
+  //   }
+  // }
 
-    const newExercises = stateExercises;
-    newExercises[selectedExerciseIndex] = e;
+  // private updateSectionOrder = (sections: ISection[]) => {
+  //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  //   const e = stateExercises[selectedExerciseIndex]
+  //   e.defaultSections = sections;
 
-    this.setState(
-      {
-        exercises: newExercises
-      },
-      () => Store.saveExercises(newExercises)
-    )
-  }
+  //   const newExercises = stateExercises;
+  //   newExercises[selectedExerciseIndex] = e;
 
-  private timeChanged = (time: Date) => {
-    const { exercises: stateExercises, selectedExerciseIndex } = this.state;
+  //   this.setState(
+  //     {
+  //       exercises: newExercises
+  //     },
+  //     () => Store.saveExercises(newExercises)
+  //   )
+  // }
 
-    console.log(time)
-    // time is coming in the right format
-    const newExercises = [...stateExercises];
+  // private timeChanged = (time: Date) => {
+  //   const { exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    newExercises[selectedExerciseIndex].startTime = time
-    this.setState(
-      {
-        exercises: newExercises
-      }
-    )
-  }
+  //   console.log(time)
+  //   // time is coming in the right format
+  //   const newExercises = [...stateExercises];
 
-  private selectExercise = (name: string) => {
+  //   newExercises[selectedExerciseIndex].startTime = time
+  //   this.setState(
+  //     {
+  //       exercises: newExercises
+  //     }
+  //   )
+  // }
 
-    const arrayIndex = this.state.exercises.map(exercise => exercise.name).indexOf(name);
+  // private selectExercise = (name: string) => {
 
-    if (arrayIndex > -1) {
+  //   const arrayIndex = this.state.exercises.map(exercise => exercise.name).indexOf(name);
 
-      this.setState(
-        {
-          selectedExerciseIndex: arrayIndex
-        }
-      )
-    }
-  }
+  //   if (arrayIndex > -1) {
 
-  // form submit action handler
-  private submitExerciseEditDialog = (oldExercise: IExercise, newExercise: IExercise) => {
-    const { exercises: stateExercises } = this.state;
-    // check indexof old ex and replace with new, if -1 add new
-    const editIndex = stateExercises.indexOf(oldExercise);
-    // add new
-    if (editIndex === -1) {
-      const newExercises = [...stateExercises, newExercise];
+  //     this.setState(
+  //       {
+  //         selectedExerciseIndex: arrayIndex
+  //       }
+  //     )
+  //   }
+  // }
 
-      // add and select the new exercise
-      this.setState(
-        {
-          ...this.state,
-          exercises: newExercises,
-          selectedExerciseIndex: newExercises.length - 1
-        },
-        () => Store.saveExercises(newExercises)
-      )
-    }
-    // edit existing
-    else {
-      const editedExercises = [...stateExercises];
-      editedExercises.splice(editIndex, 1, newExercise)
-      console.log(editedExercises)
-      this.setState(
-        {
-          ...this.state,
-          exercises: editedExercises
-        }
-      )
-    }
+  // // form submit action handler
+  // private submitExerciseEditDialog = (oldExercise: IExercise, newExercise: IExercise) => {
+  //   const { exercises: stateExercises } = this.state;
+  //   // check indexof old ex and replace with new, if -1 add new
+  //   const editIndex = stateExercises.indexOf(oldExercise);
+  //   // add new
+  //   if (editIndex === -1) {
+  //     const newExercises = [...stateExercises, newExercise];
 
-  }
+  //     // add and select the new exercise
+  //     this.setState(
+  //       {
+  //         ...this.state,
+  //         exercises: newExercises,
+  //         selectedExerciseIndex: newExercises.length - 1
+  //       },
+  //       () => Store.saveExercises(newExercises)
+  //     )
+  //   }
+  //   // edit existing
+  //   else {
+  //     const editedExercises = [...stateExercises];
+  //     editedExercises.splice(editIndex, 1, newExercise)
+  //     console.log(editedExercises)
+  //     this.setState(
+  //       {
+  //         ...this.state,
+  //         exercises: editedExercises
+  //       }
+  //     )
+  //   }
 
-  // pass custom exercises for store to be saved
-  private saveExercises = () => {
-    const { exercises: stateExercises } = this.state;
-    const nonPresets = stateExercises.filter(x => x.preset !== true)
-    // save only here..
-    Store.saveExercises(nonPresets);
-    this.handleShowSnackbar();
-  }
+  // }
 
-  // return true for valid new name
-  private validateExerciseName = (name: string) => {
+  // // pass custom exercises for store to be saved
+  // private saveExercises = () => {
+  //   const { exercises: stateExercises } = this.state;
+  //   const nonPresets = stateExercises.filter(x => x.preset !== true)
+  //   // save only here..
+  //   Store.saveExercises(nonPresets);
+  //   this.handleShowSnackbar();
+  // }
 
-    const position = this.state.exercises.map(exercise => exercise.name).indexOf(name);
+  // // return true for valid new name
+  // private validateExerciseName = (name: string) => {
 
-    if (position === -1) {
-      return true;
-    } else {
-      return false;
-    }
+  //   const position = this.state.exercises.map(exercise => exercise.name).indexOf(name);
 
-  }
+  //   if (position === -1) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
 
-  private handleDeleteExercise = () => {
-    const { exercises: stateExercises, deleteExerciseIndex } = this.state;
-    if (deleteExerciseIndex !== -1) {
-      console.log(`deleting exercise at ${deleteExerciseIndex}`)
-      const newExercises = [...stateExercises];
-      // set selected to first in list (presets should always exist)
-      this.setState({
-        selectedExerciseIndex: 0
-      })
+  // }
 
-      newExercises.splice(deleteExerciseIndex, 1)
+  // private handleDeleteExercise = () => {
+  //   const { exercises: stateExercises, deleteExerciseIndex } = this.state;
+  //   if (deleteExerciseIndex !== -1) {
+  //     console.log(`deleting exercise at ${deleteExerciseIndex}`)
+  //     const newExercises = [...stateExercises];
+  //     // set selected to first in list (presets should always exist)
+  //     this.setState({
+  //       selectedExerciseIndex: 0
+  //     })
 
-      this.setState(
-        {
-          exercises: newExercises
-        },
-        () => Store.saveExercises(newExercises)
-      )
-    }
-  }
+  //     newExercises.splice(deleteExerciseIndex, 1)
 
-  private handleSectionEditToggle = (section: ISection) => {
+  //     this.setState(
+  //       {
+  //         exercises: newExercises
+  //       },
+  //       () => Store.saveExercises(newExercises)
+  //     )
+  //   }
+  // }
 
-    const { editSectionOpen, exercises: stateExercises, selectedExerciseIndex } = this.state;
+  // private handleSectionEditToggle = (section: ISection) => {
 
-    // open for edit
-    if (!editSectionOpen) {
-      const i = stateExercises[selectedExerciseIndex].defaultSections.indexOf(section);
-      this.setState({ selectedSectionIndex: i })
-    }
+  //   const { editSectionOpen, exercises: stateExercises, selectedExerciseIndex } = this.state;
 
-    this.setState({
-      editSectionOpen: !this.state.editSectionOpen
-    })
-  }
+  //   // open for edit
+  //   if (!editSectionOpen) {
+  //     const i = stateExercises[selectedExerciseIndex].defaultSections.indexOf(section);
+  //     this.setState({ selectedSectionIndex: i })
+  //   }
 
-  private handleExerciseEditToggle = (exercise: IExercise) => {
-    const { editExerciseOpen, exercises: stateExercises } = this.state;
+  //   this.setState({
+  //     editSectionOpen: !this.state.editSectionOpen
+  //   })
+  // }
 
-    // open for edit
-    if (!editExerciseOpen) {
-      const i = stateExercises.indexOf(exercise);
-      // console.log('opened for editing: ', i)
-      this.setState({ editExerciseIndex: i })
-    }
-    // get exercise name to validate uniqueness etc.
-    this.setState(
-      { editExerciseOpen: !editExerciseOpen }
-    )
+  // private handleExerciseEditToggle = (exercise: IExercise) => {
+  //   const { editExerciseOpen, exercises: stateExercises } = this.state;
 
-  }
+  //   // open for edit
+  //   if (!editExerciseOpen) {
+  //     const i = stateExercises.indexOf(exercise);
+  //     // console.log('opened for editing: ', i)
+  //     this.setState({ editExerciseIndex: i })
+  //   }
+  //   // get exercise name to validate uniqueness etc.
+  //   this.setState(
+  //     { editExerciseOpen: !editExerciseOpen }
+  //   )
 
-  private handleShowSnackbar = () => {
-    this.setState({ snackBarOpen: true });
-  };
+  // }
 
-  private handleCloseSnackbar = (event: Event, reason: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // private handleShowSnackbar = () => {
+  //   this.setState({ snackBarOpen: true });
+  // };
 
-    this.setState({ snackBarOpen: false });
-  };
+  // private handleCloseSnackbar = (event: Event, reason: string) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-  private handleToggleCofirmationDialog = (deleteIndex: number) => {
+  //   this.setState({ snackBarOpen: false });
+  // };
 
-    const { confirmationDialogOpen } = this.state;
-    this.setState(
-      {
-        confirmationDialogOpen: !confirmationDialogOpen,
-        deleteExerciseIndex: deleteIndex
-      }
-    );
+  // private handleToggleCofirmationDialog = (deleteIndex: number) => {
 
-  }
+  //   // const { confirmationDialogOpen } = this.state;
+  //   this.setState(
+  //     {
+  //       // confirmationDialogOpen: !confirmationDialogOpen,
+  //       confirmationDialogOpen: true,
+  //       deleteExerciseIndex: deleteIndex
+  //     }
+  //   );
+
+  // }
 
 }
 

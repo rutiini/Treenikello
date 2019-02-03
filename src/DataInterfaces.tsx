@@ -28,6 +28,7 @@ interface IExercise {
  * The ExerciseContext is used for all data manipulation inside the app. It provides methods for exercise and section
  * creation, deletion and modification. It also holds some app wide state information which is used to update different
  * components in the app which are dependend on the same state variables.
+ * TODO: refactor to state / data and dispatch / actions (could do a hooks intermediate with [data, setter] structure?), move to the context.ts?
  */
 interface IExerciseContext {
   exercises: IExercise[],
@@ -41,7 +42,6 @@ interface IExerciseContext {
   deleteExerciseIndex: number,
   snackBarOpen: boolean,
   // general actions
-  setTime: (time: Date) => void,
   saveExercises: () => void,
   // section controls
   updateSectionOrder: (sections: ISection[]) => void,

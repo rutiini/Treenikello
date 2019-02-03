@@ -70,7 +70,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
   }
 
   public render() {
-    const { exercises, editExerciseIndex, editExerciseOpen } = this.context;
+    const { exercises, editExerciseIndex } = this.context;
     const originalExercise = exercises[editExerciseIndex];
     const { errorText } = this.state;
 
@@ -114,7 +114,7 @@ class EditExerciseDialog extends Component<IProps,IState> {
 
     return (
       <Dialog
-        open={editExerciseOpen}
+        open={this.props.open}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >

@@ -5,26 +5,30 @@ import  { Dialog,
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import React, { Context, PureComponent } from 'react';
-import { IExerciseContext } from '../../DataInterfaces';
-import { ExerciseContext } from '../../ExerciseContext';
+import React, { PureComponent } from 'react'
+import { IExercise } from 'src/DataInterfaces';
 
-class ConfirmationDialog extends PureComponent<{}, {}> {
+interface IProps{
+  open: boolean,
+  exercise: IExercise,
+  deleteExercise: (exercise: IExercise) => void,
+  setConfirmOpen: (open: boolean) => void
+}
+
+class ConfirmationDialog extends PureComponent<IProps, {}> {
   
-  public static contextType: Context<IExerciseContext> = ExerciseContext;
-
   public render() {
-    const { confirmationDialogOpen, exercises, deleteExerciseIndex } = this.context;
+    const {exercise} = this.props;
     return (
       <Dialog
-      open={confirmationDialogOpen}
+      open={this.props.open}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       >
       <DialogTitle id="alert-dialog-title">Vahvista</DialogTitle>
       <DialogContent>
       <DialogContentText id="alert-dialog-description">
-      {`Haluatko varmasti poistaa valitun harjoituksen ${deleteExerciseIndex !== -1 ? exercises[deleteExerciseIndex].name : ''}?`}
+      {`Haluatko varmasti poistaa valitun harjoituksen ${exercise ? exercise.name : ''}?`}
       </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -40,12 +44,10 @@ class ConfirmationDialog extends PureComponent<{}, {}> {
     }
     
     private accept = () => {
-      this.context.acceptDeleteExercise();
-      this.context.deleteExercise(-1);
+      this.props.deleteExercise(this.props.exercise); // this could be done internally?
     }
     private cancel = () => {
-      this.context.handleToggle(-1);
-      this.context.deleteExercise(-1);
+      this.props.setConfirmOpen(false);
     }
   }
   

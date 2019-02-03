@@ -40,7 +40,7 @@ const emptySection: ISection = {
 }
 
 interface IProps extends WithStyles<typeof styles> {
-  section: ISection,
+  section: ISection | null,
   open: boolean
 }
 

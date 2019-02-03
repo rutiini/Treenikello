@@ -32,11 +32,10 @@ const styles = createStyles({
 
 interface IProps {
   classes: any,
-  exercises: IExercise[],
-  selectedExerciseIndex: number,
+  exercise: IExercise,
   setTime: (time: Date) => void,
   title: string,
-  saveExercises: (exercises: IExercise[]) => void
+  saveExercises: () => void
 }
 
 interface IState {
@@ -78,6 +77,6 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
   }
 
   private saveAllExercises = () => {
-    this.props.saveExercises(this.props.exercises)
+    this.props.saveExercises()
   }
 });

@@ -6,9 +6,11 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, Component, Context } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { IExerciseContext } from '../../DataInterfaces';
-import { ExerciseContext } from '../../ExerciseContext';
+// import { IExercise } from 'src/DataInterfaces';
+// import { IExerciseContext } from '../../DataInterfaces';
+// import { ExerciseContext } from '../../ExerciseContext';
 import ActionsMenuBar from '../ActionsMenuBar';
+import { AppContext, IAppContext } from '../AppContext';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';
@@ -94,7 +96,8 @@ const styles = (theme: Theme) => createStyles({
 });
 
 class BottomNavTabs extends Component<IProps, IState> {
-  public static contextType: Context<IExerciseContext> = ExerciseContext;
+  public static contextType: Context<IAppContext> = AppContext;
+  public context!: React.ContextType<typeof AppContext>
 
   constructor(props: IProps) {
     super(props);
@@ -114,18 +117,22 @@ class BottomNavTabs extends Component<IProps, IState> {
   public render() {
     const { classes } = this.props;
     const {
+      activeSection,
       exercises,
-      selectedExerciseIndex,
-      activeSectionIndex,
-      setTime, 
-      saveExercises,
-      toggleSectionDialog,
+      selectedExercise,
+      selectedSection
+    } = this.context.state;
+
+    const {
+      setTime,
+      setEditSection,
       deleteSection,
       updateSectionOrder,
-      toggleExerciseDialog,
+      setEditExercise,
+      setSelectedExercise,
       deleteExercise,
-      selectExercise
-    } = this.context;
+      save
+    } = this.context.dispatch;
 
     const tabLabels = ["Treeni", "Osiot", "Harjoitukset"]
     const workoutIcon = <i className="material-icons">timer</i>
@@ -136,10 +143,11 @@ class BottomNavTabs extends Component<IProps, IState> {
       <div className={classes.menuBlock}>
         <ActionsMenuBar
           title={tabLabels[this.state.value]}
-          exercises={exercises}
-          selectedExerciseIndex={selectedExerciseIndex}
+          // TODO: replace with just exercise?
+          exercise={selectedExercise}
           setTime={setTime}
-          saveExercises={saveExercises} />
+          saveExercises={save} 
+          />
         <div className={classes.controlsContainer}>
           <SwipeableViews containerStyle={{height: '100%'}}
             style={{ height: '100%' }}
@@ -149,22 +157,22 @@ class BottomNavTabs extends Component<IProps, IState> {
             onChangeIndex={this.handleChangeIndex}
           >
             <WorkoutMonitorTab
-              exercise={exercises[selectedExerciseIndex]}
-              activeSectionIndex={activeSectionIndex}
+              exercise={selectedExercise}
+              activeSection={activeSection}
             />
             <SectionListTab 
-              selected={selectedExerciseIndex}
-              exercise={exercises[selectedExerciseIndex]}
-              expandedIndex={0}
-              toggleSectionDialog={toggleSectionDialog}
+              selected={exercises.indexOf(selectedExercise)}
+              exercise={selectedExercise}
+              expandedIndex={selectedSection ? selectedExercise.defaultSections.indexOf(selectedSection) : -1}
+              toggleSectionDialog={setEditSection}
               deleteSection={deleteSection}
               updateSectionOrder={updateSectionOrder}/>
             <ExerciseListTab 
               exercises={exercises}
-              selected={selectedExerciseIndex}
-              toggleExerciseDialog={toggleExerciseDialog}
+              selected={exercises.indexOf(selectedExercise)}
+              toggleExerciseDialog={setEditExercise}
               deleteExercise={deleteExercise}
-              selectExercise={selectExercise}/>
+              selectExercise={setSelectedExercise}/>
           </SwipeableViews>
         </div>
         <AppBar

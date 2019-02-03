@@ -72,7 +72,10 @@ class SectionListTab extends Component<IProps, IState>{
     })
 
     const addNewButton = <ListItem className={classes.listItem} key="add-section-button">
-      <Fab size="medium" color="primary" aria-label="add" onClick={this.addNewSection}><i className="material-icons">add</i></Fab>
+      <Fab size="medium" color="primary" aria-label="add" 
+      onClick={this.addNewSection}
+      ><i className="material-icons">add</i>
+      </Fab>
     </ListItem>
 
     // const list = SortableContainer(() => <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>{[...sections, addNewButton]}</List>)

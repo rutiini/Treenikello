@@ -9,7 +9,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import React, { Component } from 'react';
-import { IExercise } from '../../DataInterfaces';
+import { IExercise, ISection } from '../../DataInterfaces';
 
 const styles = createStyles({
   root: {
@@ -30,7 +30,7 @@ const styles = createStyles({
 interface IProps {
   classes: any,
   exercise: IExercise,
-  activeSectionIndex: number
+  activeSection: ISection | null
 }
 
 interface IState {
@@ -42,7 +42,7 @@ const temporalConstant: number = 60;
 
 class WorkoutMonitorTab extends Component<IProps, IState> {
   
-  private timer: any;
+  private timer: NodeJS.Timeout;
 
   constructor(props: IProps) {
     super(props);
@@ -50,7 +50,6 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
       countDownSeconds: 0
     };
   }
-
 
   public componentDidMount(){
     
@@ -68,11 +67,12 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
 
   // TODO: rerenders the whole component a lot but not a problem? => change shouldcomponentupdate with the index checking: if <0 then we should rerender but otherwise only when index changes
   public render() {
-    const { classes, exercise, activeSectionIndex } = this.props;
+    const { classes, exercise, activeSection } = this.props;
     const steps = exercise.defaultSections.map(section => section.name);
     // render different content based on the time
+    const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
     let tabContent: JSX.Element;
-    if (activeSectionIndex < 0) {
+    if (!activeSection) {
 
       const countDown: string = this.getCountDownTime(exercise.startTime).toLocaleTimeString("fi");
 
@@ -80,20 +80,20 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
       <div className={classes.textContainer}>
         <Typography variant="h2" className={classes.textContent}>{`Treenin alkuun: ${countDown}`}</Typography>
       </div>
-    } else if (activeSectionIndex === steps.length) {
+    } else if (sectionIndex === steps.length) {
       tabContent =
       <div className={classes.textContainer}>
         <Typography variant="h2" className={classes.textContent}>Treeni suoritettu!</Typography>
       </div>
     } else {
       tabContent = <div className={classes.root}>
-        <Stepper activeStep={activeSectionIndex} orientation="vertical">
+        <Stepper activeStep={sectionIndex} orientation="vertical">
           {steps.map((label, index) => {
             const section = exercise.defaultSections[index];
             let icon;
-            if (index < activeSectionIndex) {
+            if (index < sectionIndex) {
               icon = <Icon color="secondary" className="material-icons">done</Icon>
-            } else if (index === activeSectionIndex) {
+            } else if (index === sectionIndex) {
               icon = <Icon color="primary" className="material-icons">timer</Icon>
             } else {
               icon = <Icon color="action" className="material-icons">fitness_center</Icon>
@@ -116,7 +116,7 @@ class WorkoutMonitorTab extends Component<IProps, IState> {
             );
           })}
         </Stepper>
-        {activeSectionIndex === steps.length && (
+        {sectionIndex === steps.length && (
             <Typography>Treeni suoritettu!</Typography>
         )}
       </div>
