@@ -1,13 +1,14 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
+import bind from 'bind-decorator';
 import React, { Component, Context, ContextType } from 'react';
-import { AppContext, ContextInstance, IAppContext, IAppState } from './Components/AppContext';
+import { AppContext, ContextInstance, deleteExercise, deleteSection, IAppContext, IAppState, mutateState, setActiveSection, setEditExercise, setEditSection, setSelectedExercise, setSelectedSection } from './Components/AppContext';
 import Clock from './Components/Clock';
 import ConfirmationDialog from './Components/dialogs/ConfirmationDialog';
 import EditExerciseDialog from './Components/dialogs/EditExerciseDialog';
 import EditSectionDialog from './Components/dialogs/EditSectionDialog';
 import NotificationSnackBar from './Components/NotificationSnackBar';
 import BottomNavTabs from './Components/tabs/BottomNavTabs';
-import { IExercise } from './DataInterfaces';
+import { IExercise, ISection } from './DataInterfaces';
 import Store, { exercises } from './Store';
 
 interface IProps extends WithStyles<typeof styles> {
@@ -31,12 +32,11 @@ class App extends Component<IProps, IAppState> {
     let newExercises: IExercise[] = [...exercises];
 
     const customExercises = Store.getSavedExercises();
-    if (customExercises !== null && customExercises !== undefined && customExercises.length > 0) {
+    if (customExercises && customExercises.length > 0) {
       newExercises = newExercises.concat(customExercises);
     }
 
     this.state = ContextInstance.state;
-
   }
 
   public render() {
@@ -45,26 +45,43 @@ class App extends Component<IProps, IAppState> {
       selectedExercise, 
       editSection, 
       editExercise,
-      selectedSection,
-      // confirmOpen
+      // selectedSection,
     } = this.state;
     const { classes } = this.props;
-    const contextValue = {state: {...this.state}, dispatch: ContextInstance.dispatch }
+    const contextValue = {
+      dispatch: {
+        deleteExercise: this.deleteExercise,
+        deleteSection: this.deleteSection,
+        mutateState,
+        save: () => void 0, // TODO: rewrite localstorage handling.
+        setActiveSection: this.setActiveSection,
+        setConfirmOpen: () => mutateState(this.state, "confirmOpen", !this.state.confirmOpen),
+        setEditExercise: this.setEditExercise,
+        setEditSection: this.setEditSection,
+        setExercises: this.setExercises,
+        setSelectedExercise: this.setSelectedExercise,
+        setSelectedSection: this.setSelectedSection,
+        setTime: this.setTime,
+        showMessage: this.showMessage,
+        updateSection: this.updateSection,
+        updateSectionOrder: this.updateSectionOrder,
+      },
+      state: {...this.state}
+    }
 
     return (
       <AppContext.Provider value={contextValue}>
         <div className={classes.App}>
           <Clock canvasSide={100} />
           <BottomNavTabs />
-          <EditSectionDialog 
-            section={selectedSection} 
-            open={!!editSection}/>
-          <EditExerciseDialog 
-            exercise={selectedExercise}
+          {editSection && <EditSectionDialog 
+            section={editSection}/>}
+          {editExercise && <EditExerciseDialog 
+            exercise={editExercise}
             open={!!editExercise}
             validateExerciseName={this.validateExerciseName}
-            submit={contextValue.dispatch.save}/>
-          <ConfirmationDialog open = {contextValue.state.confirmOpen} exercise={selectedExercise} deleteExercise={contextValue.dispatch.deleteExercise} setConfirmOpen={contextValue.dispatch.setConfirmOpen}/>
+            submit={contextValue.dispatch.save}/>}
+          <ConfirmationDialog open = {contextValue.state.confirmOpen} exercise={selectedExercise} deleteExercise={this.deleteExercise} setConfirmOpen={contextValue.dispatch.setConfirmOpen}/>
           <NotificationSnackBar open={snackBarOpen} handleHide={contextValue.dispatch.setConfirmOpen} />
         </div>
       </AppContext.Provider>
@@ -74,6 +91,87 @@ class App extends Component<IProps, IAppState> {
   private validateExerciseName(name: string){
     return this.state.exercises.map(e => e.name).indexOf(name) !== -1;
   }
+
+  @bind
+  private deleteExercise(exercise: IExercise){
+    this.setState({
+      ...deleteExercise(this.state, exercise)
+    });
+    return true;
+  }
+  @bind
+  private deleteSection(section: ISection){
+    this.setState({
+      ...deleteSection(this.state, section)
+    });
+    return true;
+  }
+  @bind
+  private setActiveSection(section: ISection){
+    if(section !== this.state.activeSection){
+      this.setState({
+        ...setActiveSection(this.state, section)
+      });
+    }
+  }
+  @bind
+  private setEditExercise(exercise: IExercise){
+    this.setState({
+      ...setEditExercise(this.state, exercise)
+      });
+  }
+  @bind
+  private setEditSection(section: ISection | null){
+    this.setState({
+      ...setEditSection(this.state, section)
+      });
+  }
+  @bind
+  private setSelectedExercise(exercise: IExercise){
+    this.setState({
+      ...setSelectedExercise(this.state, exercise)
+      });
+  }
+  @bind
+  private setSelectedSection(section: ISection){
+    this.setState({
+      ...setSelectedSection(this.state, section)
+      });
+  }
+  @bind
+  private setExercises(newExercises: IExercise[]){
+    this.setState({
+      ...this.state,
+      exercises: newExercises
+    })
+  }
+  @bind
+  private updateSection(updatedSection: ISection){
+    // TODO: update the selected exercise as well?
+    this.setState({
+      ...this.state,
+      editSection: updatedSection 
+    })
+  }
+  @bind
+  private updateSectionOrder(sections: ISection[]){
+    "huaa";
+  }
+  @bind
+  private showMessage(openstate: boolean, message: string){
+    "huaa";
+  }
+  @bind
+  private setTime(){
+    const updatedExercise = {...this.state.selectedExercise};
+    updatedExercise.startTime = new Date();
+
+    this.setState({
+      ...this.state,
+      selectedExercise: updatedExercise
+    })
+  }
+
 
   // private setActiveSection = (sectionIndex: number) => {
   //   this.setState({

@@ -14,11 +14,11 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component, Context } from 'react';
-import { IExerciseContext, ISection } from '../../DataInterfaces';
-import { ExerciseContext } from '../../ExerciseContext';
+import React, { ChangeEvent, Component, Context, ContextType } from 'react';
+import { ISection } from 'src/DataInterfaces';
 // store
 import { colorOptions } from '../../Store';
+import { AppContext, IAppContext } from '../AppContext';
 
 const styles = createStyles({
   EditSectionDialog: {
@@ -41,29 +41,17 @@ const emptySection: ISection = {
 
 interface IProps extends WithStyles<typeof styles> {
   section: ISection | null,
-  open: boolean
 }
 
 interface IState {
-  section: ISection,
-  open: boolean
+  section: ISection
 }
 
 class EditSectionDialog extends Component<IProps, IState> {
 
-  public static contextType: Context<IExerciseContext> = ExerciseContext;
-
-  // just get the initial section from props and if there is none use the empty one?
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
-    // opening the dialog
-    if (prevState) {
-
-      // let section = {...nextProps.section};
-      // const { open } = nextProps;
-    }
-    return null;
-  }
-
+  public static contextType: Context<IAppContext> = AppContext;
+  public context!: ContextType<typeof AppContext>;
+  
   private colorOptions = colorOptions.map(optionItem => {
 
     return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{ backgroundColor: optionItem.colorValue }}>
@@ -74,25 +62,23 @@ class EditSectionDialog extends Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      open: false,
-      section: { ...emptySection }
+      section: props.section ? {...props.section} : {...emptySection}
     };
   }
 
   public render() {
     const { classes } = this.props;
-    const { exercises, selectedExerciseIndex, editSectionOpen } = this.context;
+    const { selectedExercise, editSection } = this.context.state;
     const { section } = this.state
 
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
     // does not update the exercise index correctly.
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercises[selectedExerciseIndex].name}` : `Muokkaa osiota`;
+    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${selectedExercise.name}` : `Muokkaa osiota`;
     const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
-    const activeSection = this.state.section ? this.state.section : emptySection;
 
     return (
       <Dialog
-        open={editSectionOpen}
+        open={!!editSection}
         onClose={this.handleClose}
         aria-labelledby="form-dialog-title"
       >
@@ -108,7 +94,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             id="name"
             label="Nimi"
             type="text"
-            value={activeSection.name}
+            value={section.name}
             onChange={this.updateProp}
             variant="filled"
           />
@@ -121,7 +107,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             type="text"
             multiline={true}
             rows="2"
-            value={this.state.section.description}
+            value={section.description}
             onChange={this.updateProp}
             variant="filled"
           />
@@ -150,7 +136,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             id="setupTime"
             label="Alustus/Tauko"
             type="number"
-            value={activeSection.setupTime}
+            value={section.setupTime}
             onChange={this.updateProp}
           />
           <TextField
@@ -161,7 +147,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             id="duration"
             label="Kesto"
             type="number"
-            value={activeSection.duration}
+            value={section.duration}
             onChange={this.updateProp}
           />
         </DialogContent>
@@ -178,23 +164,14 @@ class EditSectionDialog extends Component<IProps, IState> {
   }
 
 
-  private handleClose = () => {
-
-    this.context.toggleSectionDialog(this.state.section);
-    this.setState({
-      open: false,
-      section: { ...emptySection }
-    })
+  private handleClose = () =>{
+    this.context.dispatch.setEditSection(null);
   };
 
   private handleSubmit = () => {
-
-    const { exercises, selectedExerciseIndex, selectedSectionIndex } = this.context;
-    this.context.submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
-    this.context.toggleSectionDialog(this.state.section);
-
+    this.context.dispatch.updateSection(this.state.section);
+    this.handleClose();
     this.setState({
-      open: false,
       section: { ...emptySection }
     })
   }

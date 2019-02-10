@@ -46,20 +46,20 @@ const CompactSectionListItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'a
     expanded, 
     index, 
     setIndex, 
-    // deleteSection, 
-    // editSection,
+    deleteSection, 
+    editSection,
     section } = props;
   const { setupTime, duration, name, description, color } = section;
 
   const sectionCliked = (e: never) => {
     setIndex(index);
   }
-  // const deleteSectionClicked = () => {
-  //   deleteSection(section);
-  // }
-  // const editSectionClicked = (e: never) => {
-  //   editSection(section);
-  // }
+  const deleteSectionClicked = () => {
+    deleteSection(section);
+  }
+  const editSectionClicked = (e: never) => {
+    editSection(section);
+  }
 
   const expandIcon = <div onClick={sectionCliked}><i className="material-icons">expand_more</i></div>
   const DragHandle = SortableHandle(() => <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>unfold_more</i>);
@@ -81,14 +81,10 @@ const CompactSectionListItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'a
       <ExpansionPanelDetails className={props.classes.justifyCenter}>
         <Typography component="p" style={{width: "inherit"}}>{description}</Typography>
         <div className={classes.actionButtonContainer}>
-          {/* <div onClick={editSectionClicked}> */}
-          <IconButton>
+          <IconButton onClick={editSectionClicked}>
             <i className="material-icons">edit</i>
           </IconButton>
-          {/* </div> */}
-          <IconButton 
-          // onClick={deleteSectionClicked}
-          >
+          <IconButton onClick={deleteSectionClicked}>
             <i className="material-icons">delete</i>
           </IconButton>
         </div>

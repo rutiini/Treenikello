@@ -1,6 +1,6 @@
 import { createStyles, Fab, Theme, withStyles, WithStyles } from '@material-ui/core';
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
-import React, { SFC } from 'react';
+import React, { FunctionComponent } from 'react';
 import { IExercise } from '../../DataInterfaces';
 
 /** component props */
@@ -30,10 +30,10 @@ const styles = (theme: Theme) => createStyles({
 
 /**
  * Props exercise list tab
- * @param props {IProps}
+ * @param props
  * @returns Tab for managing exercises
  */
-const ExerciseListTab: SFC<IProps & WithStyles<'listItem' | 'selectedListItem'>> = (props) => {
+const ExerciseListTab: FunctionComponent<IProps & WithStyles<'listItem' | 'selectedListItem'>> = (props) => {
   const { classes } = props;
   const {
     exercises,
