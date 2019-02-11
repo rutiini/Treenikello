@@ -163,13 +163,16 @@ class EditSectionDialog extends Component<IProps, IState> {
     );
   }
 
-
   private handleClose = () =>{
     this.context.dispatch.setEditSection(null);
   };
 
   private handleSubmit = () => {
-    this.context.dispatch.updateSection(this.state.section);
+    if(this.props.section){
+      this.context.dispatch.updateSection(this.state.section);
+    }else{
+      this.context.dispatch.addSection(this.state.section);
+    }
     this.handleClose();
     this.setState({
       section: { ...emptySection }

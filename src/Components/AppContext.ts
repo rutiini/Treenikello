@@ -31,6 +31,8 @@ export interface IAppState {
 
 /** API for state control */
 export interface IAppDispatch {
+  readonly addExercise: (exercise: IExercise) => void,
+  readonly addSection: (section: ISection) => void,
   readonly deleteExercise: (exercise: IExercise) => boolean,
   readonly deleteSection: (section: ISection) => boolean,
   readonly save: () => void,
@@ -71,21 +73,23 @@ const initState: IAppState = {
   snackBarOpen: false
 }
 const testDispatch: IAppDispatch = {
+  addExercise: (exercise) => void 0,
+  addSection: (section) => void 0,
   deleteExercise: (exercise) => true,
   deleteSection: (section) => true,
   mutateState,
-  save: () => {"void"},
-  setActiveSection: (activeSection) => {"void"},
-  setConfirmOpen: (openState) => {"void"},
-  setEditExercise: (editSection) => {"void"},
-  setEditSection: (editSection) => {"void"},
-  setExercises: (newExercises) => {"void"},
-  setSelectedExercise: (exercise) => {"void"},
-  setSelectedSection: (section) => {"void"},
-  setTime: (newTime) => {"void"},
-  showMessage: (snackBarOpen, message) => {"void"},
-  updateSection: (section) => {"void"},
-  updateSectionOrder: (sections) => {"void"},
+  save: () => void 0,
+  setActiveSection: (activeSection) => void 0,
+  setConfirmOpen: (openState) => void 0,
+  setEditExercise: (editSection) => void 0,
+  setEditSection: (editSection) => void 0,
+  setExercises: (newExercises) => void 0,
+  setSelectedExercise: (exercise) => void 0,
+  setSelectedSection: (section) => void 0,
+  setTime: (newTime) => void 0,
+  showMessage: (snackBarOpen, message) => void 0,
+  updateSection: (section) => void 0,
+  updateSectionOrder: (sections) => void 0,
 }
 export const ContextInstance: IAppContext = {
   dispatch: testDispatch,
@@ -186,6 +190,43 @@ export function deleteExercise(state: IAppState, exercise: IExercise){
      [prop]: value
     }
  }
+
+ /**
+  * function for adding a new section to exercise
+  * TODO: write test
+  * @param state state to mutate
+  * @param newSection section to add to exercise
+  */
+ export function addSection(state: IAppState, newSection: ISection){
+   const exerciseList = state.exercises;
+   const exerciseIndex = getSelectedExerciseIndex(state);
+   exerciseList[exerciseIndex].defaultSections 
+   = [...exerciseList[exerciseIndex].defaultSections,newSection]
+
+   return {
+     ...state,
+     exercises: exerciseList,
+     selectedExercise: exerciseList[exerciseIndex]
+    }
+  }
+
+ /**
+  * function for adding a new exercise to state
+  * TODO: write test
+  * @param state state to mutate
+  * @param newExercise exercise to add to state
+  */
+ export function addExercise(state: IAppState, newExercise: IExercise){
+   return {
+     ...state,
+     exercises: [...state.exercises, newExercise],
+     selectedExercise: newExercise
+   }
+ }
+ function getSelectedExerciseIndex(state: IAppState){
+   return state.exercises.indexOf(state.selectedExercise);
+ }
+
  function logState(state: IAppState){
    console.table(state);
  }

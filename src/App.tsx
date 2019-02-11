@@ -1,7 +1,7 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import bind from 'bind-decorator';
 import React, { Component, Context, ContextType } from 'react';
-import { AppContext, ContextInstance, deleteExercise, deleteSection, IAppContext, IAppState, mutateState, setActiveSection, setEditExercise, setEditSection, setSelectedExercise, setSelectedSection } from './Components/AppContext';
+import { addExercise, addSection, AppContext, ContextInstance, deleteExercise, deleteSection, IAppContext, IAppState, mutateState, setActiveSection, setEditExercise, setEditSection, setSelectedExercise, setSelectedSection } from './Components/AppContext';
 import Clock from './Components/Clock';
 import ConfirmationDialog from './Components/dialogs/ConfirmationDialog';
 import EditExerciseDialog from './Components/dialogs/EditExerciseDialog';
@@ -50,6 +50,8 @@ class App extends Component<IProps, IAppState> {
     const { classes } = this.props;
     const contextValue = {
       dispatch: {
+        addExercise: this.addExercise,
+        addSection: this.addSection,
         deleteExercise: this.deleteExercise,
         deleteSection: this.deleteSection,
         mutateState,
@@ -141,16 +143,27 @@ class App extends Component<IProps, IAppState> {
   @bind
   private setExercises(newExercises: IExercise[]){
     this.setState({
-      ...this.state,
       exercises: newExercises
     })
   }
   @bind
   private updateSection(updatedSection: ISection){
-    // TODO: update the selected exercise as well?
+    // TODO: update the selected exercise (and the one in the exercises array)
+    // create external state change handler functions for these
     this.setState({
-      ...this.state,
       editSection: updatedSection 
+    })
+  }
+  @bind
+  private addSection(newSection: ISection){
+    this.setState({
+      ...addSection(this.state, newSection)
+    })
+  }
+  @bind
+  private addExercise(newExercise: IExercise){
+    this.setState({
+      ...addExercise(this.state, newExercise)
     })
   }
   @bind
