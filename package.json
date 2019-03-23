@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.2",
-    "@types/react-sortable-hoc": "^0.6.4",
+    "@types/react-sortable-hoc": "^0.6.5",
     "@types/react-swipeable-views": "^0.12.2",
     "date-fns": "^2.0.0-alpha.27",
-    "npm": "^6.7.0",
-    "react": "^16.8.1",
-    "react-dom": "^16.8.1",
+    "npm": "^6.9.0",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
     "react-html-id": "^0.1.5",
     "react-scripts-ts": "^2.17.0",
     "react-swipeable-views": "^0.12.18",
@@ -23,17 +23,17 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.14",
-    "@types/material-ui": "^0.21.5",
-    "@types/node": "^10.12.21",
-    "@types/react": "^16.8.2",
-    "@types/react-dom": "^16.8.0",
+    "@types/material-ui": "^0.21.6",
+    "@types/node": "^10.14.1",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.3",
     "@types/react-tap-event-plugin": "0.0.30",
     "bind-decorator": "^1.0.11",
     "css-loader": "^1.0.1",
     "react-sortable-hoc": "^0.8.4",
     "ts-loader": "^4.4.2",
     "tslint-react-hooks": "^1.1.0",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.4000"
   },
   "sideEffects": [
     "*.css"
