@@ -8,16 +8,14 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
-import React, { Component } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { IExercise, ISection } from '../../DataInterfaces';
 
 const styles = createStyles({
   root: {
-    // height: '100%',
-    // backgroundColor: theme.palette.background,
     overflow: 'auto',
   },
-  textContainer:{
+  textContainer: {
     height: "calc(100% - 50px)"
   },
   textContent: {
@@ -33,125 +31,109 @@ interface IProps {
   activeSection: ISection | null
 }
 
-interface IState {
-  countDownSeconds: number
-}
-
 // amount of minutes in hour, amount of seconds in minute.
 const temporalConstant: number = 60;
 
-class WorkoutMonitorTab extends Component<IProps, IState> {
+const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
+
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+  const [countDown, updateCountDown] = useState<number>(0);
   
-  private timer: NodeJS.Timeout;
+  useEffect(() => {
+      
+    setTimer(setInterval(() => {
+        const ticks = getCountDownTime(props.exercise.startTime).getTime();
+        updateCountDown(ticks);
+      }, 1000));
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      countDownSeconds: 0
-    };
-  }
+      return () => clearInterval(timer as NodeJS.Timer);
 
-  public componentDidMount(){
-    
-    this.timer = setInterval(() => {
-      const ticks = this.getCountDownTime(this.props.exercise.startTime).getTime();
-      this.setState({
-        countDownSeconds: ticks
-      })
-    },1000)
-  }
-
-  public componentWillUnmount(){
-    clearInterval(this.timer);
-  }
+  },[]);
 
   // TODO: rerenders the whole component a lot but not a problem? => change shouldcomponentupdate with the index checking: if <0 then we should rerender but otherwise only when index changes
-  public render() {
-    const { classes, exercise, activeSection } = this.props;
-    const steps = exercise.defaultSections.map(section => section.name);
-    // render different content based on the time
-    const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
-    let tabContent: JSX.Element;
-    if (!activeSection) {
+  const { classes, exercise, activeSection } = props;
+  const steps = exercise.defaultSections.map(section => section.name);
+  // render different content based on the time
+  const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
+  let tabContent: JSX.Element;
+  if (!activeSection) {
 
-      const countDown: string = this.getCountDownTime(exercise.startTime).toLocaleTimeString("fi");
+    const countDownTime: string = (new Date(countDown)).toLocaleTimeString("fi");
 
-      tabContent = 
+    tabContent =
       <div className={classes.textContainer}>
-        <Typography variant="h2" className={classes.textContent}>{`Treenin alkuun: ${countDown}`}</Typography>
+        <Typography variant="h2" className={classes.textContent}>{`Treenin alkuun: ${countDownTime}`}</Typography>
       </div>
-    } else if (sectionIndex === steps.length) {
-      tabContent =
+  } else if (sectionIndex === steps.length) {
+    tabContent =
       <div className={classes.textContainer}>
         <Typography variant="h2" className={classes.textContent}>Treeni suoritettu!</Typography>
       </div>
-    } else {
-      tabContent = <div className={classes.root}>
-        <Stepper activeStep={sectionIndex} orientation="vertical">
-          {steps.map((label, index) => {
-            const section = exercise.defaultSections[index];
-            let icon;
-            if (index < sectionIndex) {
-              icon = <Icon color="secondary" className="material-icons">done</Icon>
-            } else if (index === sectionIndex) {
-              icon = <Icon color="primary" className="material-icons">timer</Icon>
-            } else {
-              icon = <Icon color="action" className="material-icons">fitness_center</Icon>
-            }
+  } else {
+    tabContent = <div className={classes.root}>
+      <Stepper activeStep={sectionIndex} orientation="vertical">
+        {steps.map((label, index) => {
+          const section = exercise.defaultSections[index];
+          let icon;
+          if (index < sectionIndex) {
+            icon = <Icon color="secondary" className="material-icons">done</Icon>
+          } else if (index === sectionIndex) {
+            icon = <Icon color="primary" className="material-icons">timer</Icon>
+          } else {
+            icon = <Icon color="action" className="material-icons">fitness_center</Icon>
+          }
 
-            return (
-              <Step key={label}>
-                <StepLabel icon={icon}>
-                  {label}
-                </StepLabel>
-                <StepContent>
-                  <Typography>
-                    {section.description}
-                  </Typography>
-                  <Typography>
-                    {section.duration} min
+          return (
+            <Step key={label}>
+              <StepLabel icon={icon}>
+                {label}
+              </StepLabel>
+              <StepContent>
+                <Typography>
+                  {section.description}
+                </Typography>
+                <Typography>
+                  {section.duration} min
         </Typography>
-                </StepContent>
-              </Step>
-            );
-          })}
-        </Stepper>
-        {sectionIndex === steps.length && (
-            <Typography>Treeni suoritettu!</Typography>
-        )}
-      </div>
-    }
-
-    return (
-      // TODO: fix active section calculation and show different content outside of the exercise (before: countdown, after: workout finished message!)
-      tabContent
-    );
+              </StepContent>
+            </Step>
+          );
+        })}
+      </Stepper>
+      {sectionIndex === steps.length && (
+        <Typography>Treeni suoritettu!</Typography>
+      )}
+    </div>
   }
 
-  /**
-   * Compares input time agains current moment and outputs the time difference
-   * @param startTime comparison time
-   */
-  private getCountDownTime(startTime: Date) {
-    
-    // TODO: check the hour calculation bug!
-    const ticks: number = this.timeToSeconds(startTime) - this.timeToSeconds(new Date());
-    const hours: number = ticks / temporalConstant * temporalConstant;
-    const minutes: number = ticks % temporalConstant;
-    const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
+  return (
+    // TODO: fix active section calculation and show different content outside of the exercise (before: countdown, after: workout finished message!)
+    tabContent
+  );
+}
 
-    return new Date(0, 0, 0, hours, minutes, seconds);
-  }
+/**
+ * Compares input time agains current moment and outputs the time difference
+ * @param startTime comparison time
+ */
+function getCountDownTime(startTime: Date) {
 
-  /**
-   * This function transforms the time component of a date object to seconds,
-   * NOTE: ignores the date component!
-   * @param time input date object
-   */
-  private timeToSeconds(time: Date) {
-    return time.getHours() * temporalConstant * temporalConstant + time.getMinutes() * temporalConstant + time.getSeconds();
-  }
+  // TODO: check the hour calculation bug!
+  const ticks: number = timeToSeconds(startTime) - timeToSeconds(new Date());
+  const hours: number = ticks / temporalConstant * temporalConstant;
+  const minutes: number = ticks % temporalConstant;
+  const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
 
+  return new Date(0, 0, 0, hours, minutes, seconds);
+}
+
+/**
+ * This function transforms the time component of a date object to seconds,
+ * NOTE: ignores the date component!
+ * @param time input date object
+ */
+function timeToSeconds(time: Date) {
+  return time.getHours() * temporalConstant * temporalConstant + time.getMinutes() * temporalConstant + time.getSeconds();
 }
 
 export default withStyles(styles)(WorkoutMonitorTab);
