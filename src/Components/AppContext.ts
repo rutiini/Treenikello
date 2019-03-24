@@ -23,7 +23,7 @@ export interface IAppState {
   confirmOpen: boolean,
   editExercise: IExercise | null,
   editSection: ISection | null, 
-  exercises: IExercise[], 
+  exercises: ReadonlyArray<IExercise>, 
   selectedExercise: IExercise,
   selectedSection: ISection | null,
   snackBarOpen: boolean, 

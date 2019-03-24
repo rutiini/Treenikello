@@ -5,7 +5,7 @@ import { IExercise } from '../../DataInterfaces';
 
 /** component props */
 interface IProps extends WithStyles<typeof styles> {
-  exercises: IExercise[],
+  exercises: ReadonlyArray<IExercise>,
   selected: number,
   theme: Theme,
   toggleExerciseDialog: (exercise: IExercise) => void,

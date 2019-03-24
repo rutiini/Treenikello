@@ -1,5 +1,6 @@
 ﻿import * as React from "react";
 import { IExercise, ISection } from "./DataInterfaces";
+import { exercises } from "./Store";
 
 /** Exercise reducer action types */
 export enum ActionType {
@@ -14,39 +15,49 @@ export enum ActionType {
     SetActiveSection = "SET_ACTIVE_SECTION",
     SetEditSection = "SET_EDIT_SECTION",
     UpdateAllSections = "UPDATE_SECTIONS",
-    SaveExercises = "SAVE_EXERCISES"
+    SaveExercises = "SAVE_EXERCISES",
+    UpdateAllExercises = "UPDATE_EXERCISES",
+    UpdateStartTime = "UPDATE_START_TIME",
+    SetToastMessage = "SET_TOAST_MESSAGE"
 }
-export interface IAction {
-    readonly type: ActionType,
-    readonly payload: object
-}
+
+/** All possible actions */
+type IAction = {type: ActionType.AddExercise, payload: IExercise}
+| {type: ActionType.UpdateExercise, payload: IExercise}
+| {type: ActionType.DeleteExercise, payload: IExercise}
+| {type: ActionType.SetEditExercise, payload?: IExercise}
+| {type: ActionType.SetActiveExercise, payload: IExercise}
+| {type: ActionType.AddSection, payload: ISection}
+| {type: ActionType.UpdateSection, payload: ISection}
+| {type: ActionType.DeleteSection, payload: ISection}
+| {type: ActionType.SetActiveSection, payload?: ISection} 
+| {type: ActionType.SetEditSection, payload?: ISection}
+| {type: ActionType.UpdateAllSections, payload: ReadonlyArray<ISection>}
+| {type: ActionType.UpdateAllExercises, payload: ReadonlyArray<IExercise>}
+| {type: ActionType.UpdateStartTime, payload: Date}
+| {type: ActionType.SetToastMessage, payload: string}
+| {type: ActionType.SaveExercises}
 
 /** Application state */
 interface IAppState {
-    readonly exercises: ReadonlyArray<IExercise>,
-    readonly activeSectionIndex: number,
-    readonly selectedExerciseIndex: number,
-    readonly editSectionOpen: boolean,
-    readonly selectedSectionIndex: number,
-    readonly editExerciseOpen: boolean,
-    readonly editExerciseIndex: number,
-    readonly confirmationDialogOpen: boolean,
-    readonly deleteExerciseIndex: number,
+    readonly activeSection: ISection | null, // -> currentSection
+    readonly confirmOpen: boolean,
+    readonly editExercise: IExercise | null,
+    readonly editSection: ISection | null, 
+    readonly exercises: ReadonlyArray<IExercise>, 
+    readonly activeExercise: IExercise,
+    readonly selectedSection: ISection | null, // -> activeSection / unnecessary due to editSection?
     readonly snackBarOpen: boolean,
 }
+
 
 export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppState, action: IAction) => {
     // "middleware" can be implemented here
     switch(action.type) {
         case ActionType.AddExercise: {
-            if(isIExercise(action.payload)){
-                return {
-                    ...state,
-                    exercises: [...state.exercises, action.payload]
-                }
-            } else {
-                console.warn(`unsupported payolad type ${action.type} : ${action.payload}`)
-                return state;
+            return {
+                ...state,
+                exercises: [...state.exercises, action.payload]
             }
         }
         case ActionType.UpdateExercise: {
@@ -56,22 +67,19 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             return state;
         }
         case ActionType.SetActiveExercise: {
-            return state;
+            return {
+                ...state,
+                activeExercise: action.payload
+            };
         }
         case ActionType.SetEditExercise: {
             return state;
         }
         case ActionType.AddSection: {
-            if(isISection(action.payload)) {
-                return {
-                    ...state,
-                    // TODO: modify all that needs to be modified!
-                }
-            } else {
-                console.warn(`unsupported payolad type ${action.type} : ${action.payload}`)
-                return state;
+            return {
+                ...state,
+                // TODO: modify all that needs to be modified!
             }
-            break;
         }
         case ActionType.UpdateSection: {
             return state;
@@ -92,19 +100,25 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             return state;
         }
         default: {
+            // if nothing gets returned we fall through to here
+            logError(action);
             return state;
         }
     }
 }
 
-function isIExercise(payload: object): payload is IExercise {
-    return (payload !== null)
-    && (typeof payload === "object")
-    && ("defaultSections" in payload);
+function logError(action: IAction): void {
+    console.warn(`unsupported payolad type ${action.type} : ${"payload" in action && action.payload}`)
 }
 
-function isISection(payload: object): payload is ISection {
-    return (payload !== null)
-    && (typeof payload === "object")
-    && ("setupTime" in payload);
+
+export const DefaultAppState: IAppState = { 
+    activeExercise: exercises[0],
+    activeSection: null, 
+    confirmOpen: false,
+    editExercise: null, // set to null to be falsy and get rid of separate bits for the dialogs?!
+    editSection: null,
+    exercises: [...exercises], 
+    selectedSection: null,
+    snackBarOpen: false
 }
