@@ -36,6 +36,7 @@ const temporalConstant: number = 60;
 
 const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
 
+  // TODO: remove this as unncecessary.
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countDown, updateCountDown] = useState<number>(0);
   
@@ -46,7 +47,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
         updateCountDown(ticks);
       }, 1000));
 
-      return () => clearInterval(timer as NodeJS.Timer);
+      return () => clearInterval(timer as NodeJS.Timeout);
 
   },[]);
 

@@ -15,11 +15,11 @@ interface IClockFaceProps {
     midPoint: string,
     minuteMarker: string
   },
-  clockData: ClockData,
-  centerCoordinate: number,
-  sectionItems: JSX.Element[],
-  stopWatchRotation: number,
-  timerMode: TimerMode
+  readonly clockData: ClockData,
+  readonly centerCoordinate: number,
+  readonly sectionItems: ReadonlyArray<JSX.Element>,
+  readonly stopWatchRotation: number,
+  readonly timerMode: TimerMode
 }
 const styles = (theme: Theme) => createStyles({
   bigHourMarker: {
