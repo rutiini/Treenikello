@@ -44,7 +44,7 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
 
     const [clockData, setClockData] = useState(new ClockData(new Date()));
     const [stopWatchSeconds, setStopWatchSeconds] = useState(0);
-    const [timerMode, setTimerMode] = useState(0);
+    const [timerMode, setTimerMode] = useState(TimerMode.Hidden);
     const [stopWatch, setStopWatch] = useState<NodeJS.Timeout|null>(null);
 
     const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
@@ -61,7 +61,7 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
 
     // stopwatch should react to the timermode
     useEffect(() => {
-        if (timerMode === TimerMode.Running) {
+        if (timerMode === TimerMode.Running && stopWatchSeconds === 0) {
             setStopWatch(setInterval(updateStopwatch, 500));
         } else if (timerMode === TimerMode.Finished) {
             if (stopWatch) {
@@ -71,7 +71,7 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
             setStopWatchSeconds(0);
         }
 
-    }, [timerMode]);
+    }, [timerMode,stopWatchSeconds]);
 
     /**
      * calculate the active section index and update index if it has changed.
@@ -90,7 +90,7 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
      * Increases the stopWatchSeconds in state by one.
      */
     const updateStopwatch = () => {
-        setStopWatchSeconds(stopWatchSeconds + 1);
+        setStopWatchSeconds(seconds => seconds + 1);
     }
 
     /** cycle on tap -> make visible -> start -> stop -> hide and reset */

@@ -99,6 +99,15 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
         case ActionType.SaveExercises: {
             return state;
         }
+        case ActionType.UpdateStartTime: {
+            return {
+                ...state,
+                activeExercise: {
+                    ...state.activeExercise,
+                    startTime: action.payload
+                }
+            }
+        }
         default: {
             // if nothing gets returned we fall through to here
             logError(action);
