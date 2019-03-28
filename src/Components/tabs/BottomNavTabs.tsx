@@ -6,8 +6,8 @@ import {
 } from '@material-ui/core';
 import React, { FunctionComponent, useReducer, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
+import { ActionType, DefaultAppState, ExerciseReducer } from 'src/Components/AppReducer/ExerciseReducer';
 import { IExercise, ISection } from 'src/DataInterfaces';
-import { ActionType, DefaultAppState, ExerciseReducer } from 'src/ExerciseReducer';
 import ActionsMenuBar from '../ActionsMenuBar';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';

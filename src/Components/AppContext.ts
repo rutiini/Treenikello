@@ -2,21 +2,6 @@
 import { IExercise, ISection } from "src/DataInterfaces";
 import { exercises } from "../Store";
 
-/** Suggested context api, hard to extract state from this though. */
-// interface IAppState {
-//   startTime: { data: Date, setData: (newTime: Date) => void },
-//   exercises: { data: IExercise[], setData: (newExercises: IExercise[]) => void },
-//   activeSection: { data: ISection, setData: (activeSection: ISection) => void }
-//   selectedExercise: { data: IExercise, setData: (IExercise: IExercise) => void },
-//   editSectionOpen: { data: boolean, setData: (editSection: boolean) => void },
-//   selectedSectionIndex: { data: boolean, setData: (selectedSection: boolean) => void },
-//   editExerciseOpen: { data: boolean, setData: (editExercise: boolean) => void },
-//   editExerciseIndex: { data: boolean, setData: (selectedExercise: boolean) => void },
-//   confirmationDialogOpen: { data: boolean, setData: (editSection: boolean) => void },
-//   deleteExercise: { data: IExercise, setData: (deleteExercise: IExercise) => boolean }
-//   snackBarOpen: { data: boolean, setData: (snackBarOpen: boolean) => void }
-// }
-
 /** app state */
 export interface IAppState {
   activeSection: ISection | null,

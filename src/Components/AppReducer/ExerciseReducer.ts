@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
-import { IExercise, ISection } from "./DataInterfaces";
-import { exercises } from "./Store";
+import { IExercise, ISection } from "../../DataInterfaces";
+import { exercises } from "../../Store";
 
 /** Exercise reducer action types */
 export enum ActionType {
@@ -22,7 +22,7 @@ export enum ActionType {
 }
 
 /** All possible actions */
-type IAction = {type: ActionType.AddExercise, payload: IExercise}
+export type IAction = {type: ActionType.AddExercise, payload: IExercise}
 | {type: ActionType.UpdateExercise, payload: IExercise}
 | {type: ActionType.DeleteExercise, payload: IExercise}
 | {type: ActionType.SetEditExercise, payload?: IExercise}
@@ -39,7 +39,7 @@ type IAction = {type: ActionType.AddExercise, payload: IExercise}
 | {type: ActionType.SaveExercises}
 
 /** Application state */
-interface IAppState {
+export interface IAppState {
     readonly activeSection: ISection | null, // -> currentSection
     readonly confirmOpen: boolean,
     readonly editExercise: IExercise | null,
@@ -50,7 +50,21 @@ interface IAppState {
     readonly snackBarOpen: boolean,
 }
 
+export const DefaultAppState: IAppState = { 
+    activeExercise: exercises[0],
+    activeSection: null, 
+    confirmOpen: false,
+    editExercise: null, // set to null to be falsy and get rid of separate bits for the dialogs?!
+    editSection: null,
+    exercises: [...exercises], 
+    selectedSection: null,
+    snackBarOpen: false
+}
 
+/** This context can be used to share the reducer and state globally */
+//  export const AppState = React.createContext<(IAppState | React.Dispatch<IAction>)>([]);
+
+/** reducer for app state */
 export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppState, action: IAction) => {
     // "middleware" can be implemented here
     switch(action.type) {
@@ -118,16 +132,4 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
 
 function logError(action: IAction): void {
     console.warn(`unsupported payolad type ${action.type} : ${"payload" in action && action.payload}`)
-}
-
-
-export const DefaultAppState: IAppState = { 
-    activeExercise: exercises[0],
-    activeSection: null, 
-    confirmOpen: false,
-    editExercise: null, // set to null to be falsy and get rid of separate bits for the dialogs?!
-    editSection: null,
-    exercises: [...exercises], 
-    selectedSection: null,
-    snackBarOpen: false
 }

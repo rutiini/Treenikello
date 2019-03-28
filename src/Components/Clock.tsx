@@ -1,7 +1,8 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
-import React, { FunctionComponent, useEffect, useReducer, useState } from 'react';
-import { ActionType, DefaultAppState, ExerciseReducer } from 'src/ExerciseReducer';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { ActionType } from 'src/Components/AppReducer/ExerciseReducer';
 import { IExercise, ISection } from '../DataInterfaces'
+import ExerciseContext from './AppReducer/ExerciseContext';
 import ClockFace from './ClockFace';
 import SectionItem from './SectionItem';
 import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
@@ -47,7 +48,8 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
     const [timerMode, setTimerMode] = useState(TimerMode.Hidden);
     const [stopWatch, setStopWatch] = useState<NodeJS.Timeout|null>(null);
 
-    const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
+    // use the context to get the shared state and dispatch instace
+    const [state, dispatch] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
 
     // clock should always start when component renders first
     useEffect(() => {
@@ -79,9 +81,10 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
      */
     const checkActiveSection = (currentTime: Date) => {
         const { activeExercise, activeSection } = state;
+        // TODO: check why this gives active index even time has passed the exercise time
         const activeIndex = GetActiveSectionIndex(activeExercise, currentTime);
         const activeSectionIndex = activeSection ? activeExercise.defaultSections.indexOf(activeSection) : -1;
-        if (activeSectionIndex !== activeIndex) {
+        if (activeSectionIndex !== activeIndex && activeIndex !== activeExercise.defaultSections.length) {
             dispatch({ type: ActionType.SetActiveSection, payload: activeExercise.defaultSections[activeIndex] });
         }
     }
@@ -127,7 +130,7 @@ function updateFaceElements(selectedExercise: IExercise, activeSection: ISection
     const sectionItems: JSX.Element[] = [];
 
     // change to absolute
-    const currentPosition = TimeToDegrees(currentTime); // "absolute minute positio
+    const currentPosition = TimeToDegrees(currentTime); // "absolute minute position
     const startPosition = TimeToDegrees(startTime);
     let stopDrawAngle = CircleInDegrees; // opacity of sections is a good way of communication where we start and are..
 
@@ -135,7 +138,7 @@ function updateFaceElements(selectedExercise: IExercise, activeSection: ISection
 
         // calculate from start time
         let cumulativeAngle = startPosition;
-        defaultSections.map((sectionItem: ISection, index: number) => {
+        defaultSections.map((sectionItem: ISection) => {
 
             const setupStartAngle = cumulativeAngle;
             const setupStopAngle = cumulativeAngle + sectionItem.setupTime * MinuteInDegrees;
