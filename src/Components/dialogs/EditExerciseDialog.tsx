@@ -7,15 +7,14 @@ import  {
   DialogContentText,
   DialogTitle,
   TextField,
-  Theme,
   withStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component, Context } from 'react';
-import { IExercise, IExerciseContext } from '../../DataInterfaces';
-import { ExerciseContext } from '../../ExerciseContext';
+import React, { ChangeEvent, Component } from 'react';
+import { IExercise } from '../../DataInterfaces';
+import ExerciseContext from '../AppReducer/ExerciseContext';
 import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
 
-const styles = (theme: Theme) => createStyles({
+const styles = () => createStyles({
   EditForm: {
     width: '75%'
   }
@@ -44,9 +43,9 @@ interface IState{
 class EditExerciseDialog extends Component<IProps,IState> {
 
   // just initialize the controlled state from props and save that object on the save method, no need for this hook.
-  public static contextType: Context<IExerciseContext> = ExerciseContext;
+  public static contextType: typeof ExerciseContext = ExerciseContext;
   
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
+  public static getDerivedStateFromProps(nextProps: IProps){
     // opening the dialog
     const { exercise } = nextProps;
 

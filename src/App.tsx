@@ -1,6 +1,6 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import React, { FunctionComponent, useReducer } from 'react';
-import { AppContext, IAppContext, mutateState } from './Components/AppContext';
+import { IAppContext, mutateState } from './Components/AppContext';
 import ExerciseContext from './Components/AppReducer/ExerciseContext';
 import { ActionType, DefaultAppState, ExerciseReducer } from './Components/AppReducer/ExerciseReducer';
 import Clock from './Components/Clock';
@@ -40,6 +40,7 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   }
   const deleteExercise = (exercise: IExercise) => dispatch({ type: ActionType.DeleteExercise, payload: exercise });
   /** provide the reducer through context during transformation, after hooks are fully implemented the context becomes obsolete */
+  // Refactor as separate functions (only necessary ones should be declared here, not everything.)
   const contextValue: IAppContext = {
     dispatch: {
       addExercise: (exercise: IExercise) => dispatch({ type: ActionType.AddExercise, payload: exercise }),
@@ -67,7 +68,7 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   }
 
   return (
-    <AppContext.Provider value={contextValue}>
+    // <AppContext.Provider value={contextValue}>
       <ExerciseContext.Provider value={[state, dispatch]}>
         <div className={classes.App}>
           <Clock canvasSide={100} />
@@ -83,7 +84,7 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
           <NotificationSnackBar open={state.snackBarOpen} handleHide={contextValue.dispatch.setConfirmOpen} />
         </div>
       </ExerciseContext.Provider>
-    </AppContext.Provider>
+    // </AppContext.Provider>
   );
 }
 

@@ -4,11 +4,12 @@ import {
   Tab,
   Tabs
 } from '@material-ui/core';
-import React, { FunctionComponent, useReducer, useState } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { ActionType, DefaultAppState, ExerciseReducer } from 'src/Components/AppReducer/ExerciseReducer';
+import { ActionType } from 'src/Components/AppReducer/ExerciseReducer';
 import { IExercise, ISection } from 'src/DataInterfaces';
 import ActionsMenuBar from '../ActionsMenuBar';
+import ExerciseContext from '../AppReducer/ExerciseContext';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';
@@ -94,7 +95,7 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   // app state
-  const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
+  const [state, dispatch] = useContext(ExerciseContext);
 
   // used state properties
   const { exercises, activeExercise, activeSection } = state;
