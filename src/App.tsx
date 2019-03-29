@@ -1,6 +1,5 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
 import React, { FunctionComponent, useReducer, useState } from 'react';
-import { save } from './Components/AppContext';
 import ExerciseContext from './Components/AppReducer/ExerciseContext';
 import { ActionType, DefaultAppState, ExerciseReducer } from './Components/AppReducer/ExerciseReducer';
 import Clock from './Components/Clock';
@@ -29,10 +28,10 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   const { classes } = props;
   const { editSection, editExercise } = state
 
+  const save = () => void 0;
   const validateExerciseName = (name: string) => {
-
     const position = state.exercises.map(exercise => exercise.name).indexOf(name);
-
+    
     if (position === -1) {
       return true;
     } else {

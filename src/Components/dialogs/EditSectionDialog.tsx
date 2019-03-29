@@ -14,11 +14,12 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component, Context, ContextType } from 'react';
+import React, { ChangeEvent, FunctionComponent, useContext, useState } from 'react';
 import { ISection } from 'src/DataInterfaces';
 // store
 import { colorOptions } from '../../Store';
-import { AppContext, IAppContext } from '../AppContext';
+import ExerciseContext from '../AppReducer/ExerciseContext';
+import { ActionType } from '../AppReducer/ExerciseReducer';
 
 const styles = createStyles({
   EditSectionDialog: {
@@ -43,43 +44,43 @@ interface IProps extends WithStyles<typeof styles> {
   section: ISection | null,
 }
 
-interface IState {
-  section: ISection
-}
+const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
+  const [state, dispatch] = useContext(ExerciseContext);  
+  const [section, setSection] = useState(props.section ? props.section : emptySection);
 
-class EditSectionDialog extends Component<IProps, IState> {
+    
+  const handleClose = () =>{
+    // dispatch.setEditSection(null);
+    dispatch({type: ActionType.SetEditSection});
+  };
 
-  public static contextType: Context<IAppContext> = AppContext;
-  public context!: ContextType<typeof AppContext>;
-  
-  private colorOptions = colorOptions.map(optionItem => {
-
-    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{ backgroundColor: optionItem.colorValue }}>
-      {/* {optionItem.colorName} */}
-    </MenuItem>;
-  })
-
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      section: props.section ? {...props.section} : {...emptySection}
-    };
+  const handleSubmit = () => {
+    if(props.section){
+      // dispatch.updateSection(section);
+      dispatch({type: ActionType.UpdateSection, payload: section});
+    }else{
+      // dispatch.addSection(section);
+      dispatch({type: ActionType.AddSection, payload: section});
+    }
+    handleClose();
+    setSection({ ...emptySection });
   }
-
-  public render() {
-    const { classes } = this.props;
-    const { selectedExercise, editSection } = this.context.state;
-    const { section } = this.state
-
+  /** updates a property that matches the name of the sender element */
+  const updateProp = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSection({
+        ...section,
+        [event.target.name]: event.target.value
+    })
+  }
     const title = !section ? `Uusi osio` : `Muokkaa osiota`;
     // does not update the exercise index correctly.
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${selectedExercise.name}` : `Muokkaa osiota`;
+    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${state.activeExercise.name}` : `Muokkaa osiota`;
     const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
-
+    const {classes} = props;
     return (
       <Dialog
-        open={!!editSection}
-        onClose={this.handleClose}
+        open={!!state.editSection}
+        onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">{title}</DialogTitle>
@@ -95,7 +96,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             label="Nimi"
             type="text"
             value={section.name}
-            onChange={this.updateProp}
+            onChange={updateProp}
             variant="filled"
           />
           <br />
@@ -108,14 +109,14 @@ class EditSectionDialog extends Component<IProps, IState> {
             multiline={true}
             rows="2"
             value={section.description}
-            onChange={this.updateProp}
+            onChange={updateProp}
             variant="filled"
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
-            <Select style={{ backgroundColor: this.state.section.color }}
-              value={this.state.section.color}
-              onChange={this.updateProp}
+            <Select style={{ backgroundColor: section.color }}
+              value={section.color}
+              onChange={updateProp}
               // TODO: change
               inputProps={{
                 id: 'item-color',
@@ -125,7 +126,7 @@ class EditSectionDialog extends Component<IProps, IState> {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {this.colorOptions};
+              {colorOptions};
       </Select>
           </FormControl>
           <br />
@@ -137,7 +138,7 @@ class EditSectionDialog extends Component<IProps, IState> {
             label="Alustus/Tauko"
             type="number"
             value={section.setupTime}
-            onChange={this.updateProp}
+            onChange={updateProp}
           />
           <TextField
             name='duration'
@@ -148,45 +149,19 @@ class EditSectionDialog extends Component<IProps, IState> {
             label="Kesto"
             type="number"
             value={section.duration}
-            onChange={this.updateProp}
+            onChange={updateProp}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={handleClose} color="primary">
             Peruuta
       </Button>
-          <Button onClick={this.handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary">
             {acceptBtnText}
           </Button>
         </DialogActions>
       </Dialog>
     );
-  }
-
-  private handleClose = () =>{
-    this.context.dispatch.setEditSection(null);
-  };
-
-  private handleSubmit = () => {
-    if(this.props.section){
-      this.context.dispatch.updateSection(this.state.section);
-    }else{
-      this.context.dispatch.addSection(this.state.section);
-    }
-    this.handleClose();
-    this.setState({
-      section: { ...emptySection }
-    })
-  }
-  /** updates a property that matches the name of the sender element */
-  private updateProp = (event: ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      section: {
-        ...this.state.section,
-        [event.target.name]: event.target.value
-      }
-    })
-  }
 }
 
 export default withStyles(styles)(EditSectionDialog);

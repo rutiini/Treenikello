@@ -1,8 +1,8 @@
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { ActionType } from 'src/Components/AppReducer/ExerciseReducer';
 import { IExercise, ISection } from '../DataInterfaces'
 import ExerciseContext from './AppReducer/ExerciseContext';
+import { ActionType } from './AppReducer/ExerciseReducer';
 import ClockFace from './ClockFace';
 import SectionItem from './SectionItem';
 import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
