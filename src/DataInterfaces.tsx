@@ -5,12 +5,12 @@
  * as well as instructions and description what kind of exercise this section is.
  */
 interface ISection {
-  color: string
-  description: string,
-  setupTime: number,
-  duration: number,
-  key: string,
-  name: string,
+  color: string;
+  description: string;
+  setupTime: number;
+  duration: number;
+  key: string;
+  name: string;
 }
 
 /**
@@ -18,10 +18,10 @@ interface ISection {
  * and when the exercise is planned to start.
  */
 interface IExercise {
-  defaultSections: ISection[]
-  name: string,
-  preset: boolean,
-  startTime: Date,
+  defaultSections: ReadonlyArray<ISection>;
+  name: string;
+  preset: boolean;
+  startTime: Date;
 }
 
 /**
@@ -31,31 +31,31 @@ interface IExercise {
  * TODO: refactor to state / data and dispatch / actions (could do a hooks intermediate with [data, setter] structure?), move to the context.ts?
  */
 interface IExerciseContext {
-  exercises: IExercise[],
-  activeSectionIndex: number,
-  selectedExerciseIndex: number,
-  editSectionOpen: boolean,
-  selectedSectionIndex: number,
-  editExerciseOpen: boolean,
-  editExerciseIndex: number,
-  confirmationDialogOpen: boolean,
-  deleteExerciseIndex: number,
-  snackBarOpen: boolean,
+  exercises: IExercise[];
+  activeSectionIndex: number;
+  selectedExerciseIndex: number;
+  editSectionOpen: boolean;
+  selectedSectionIndex: number;
+  editExerciseOpen: boolean;
+  editExerciseIndex: number;
+  confirmationDialogOpen: boolean;
+  deleteExerciseIndex: number;
+  snackBarOpen: boolean;
   // general actions
-  saveExercises: () => void,
+  saveExercises(): void;
   // section controls
-  updateSectionOrder: (sections: ISection[]) => void,
-  submitSection: (oldSection: ISection, newSection: ISection) => void,
-  deleteSection: (section: ISection) => void,
-  setActiveSection: (sectionIndex: number) => void,
-  toggleSectionDialog: (section: ISection) => void,
-  toggleExerciseDialog: (section: IExercise) => void,
+  updateSectionOrder(sections: ISection[]): void;
+  submitSection(oldSection: ISection, newSection: ISection): void;
+  deleteSection(section: ISection): void;
+  setActiveSection(sectionIndex: number): void;
+  toggleSectionDialog(section: ISection): void;
+  toggleExerciseDialog(section: IExercise): void;
   // exercise controls
-  submitExercise: (oldExercise: IExercise, newExercise: IExercise) => void,
-  validateExerciseName: (name: string) => boolean,
-  deleteExercise: (deleteIndex: number ) => void,
-  selectExercise: (exercise: string) => void,
-  acceptDeleteExercise: () => void
+  submitExercise(oldExercise: IExercise, newExercise: IExercise): void;
+  validateExerciseName(name: string): boolean;
+  deleteExercise(deleteIndex: number ): void;
+  selectExercise(exercise: string): void;
+  acceptDeleteExercise(): void;
 }
 
 export { ISection, IExercise, IExerciseContext}

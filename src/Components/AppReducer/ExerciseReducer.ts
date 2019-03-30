@@ -1,6 +1,7 @@
 ﻿import * as React from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
 import { exercises } from "../../Store";
+import { addSectionToStateActiveExercise, deleteStateActiveExercise, updateSectionInStateActiveExercise, updateStateActiveExercise, deleteSectionFromStateActiveExercise, updateSectionsInStateActiveExercise } from "./StateUtils";
 
 /** Exercise reducer action types */
 export enum ActionType {
@@ -25,13 +26,13 @@ export enum ActionType {
 export type IAction = {type: ActionType.AddExercise, payload: IExercise}
 | {type: ActionType.UpdateExercise, payload: IExercise}
 | {type: ActionType.DeleteExercise, payload: IExercise}
-| {type: ActionType.SetEditExercise, payload?: IExercise}
+| {type: ActionType.SetEditExercise, payload: IExercise | null}
 | {type: ActionType.SetActiveExercise, payload: IExercise}
 | {type: ActionType.AddSection, payload: ISection}
 | {type: ActionType.UpdateSection, payload: ISection}
 | {type: ActionType.DeleteSection, payload: ISection}
-| {type: ActionType.SetActiveSection, payload?: ISection} 
-| {type: ActionType.SetEditSection, payload?: ISection}
+| {type: ActionType.SetActiveSection, payload: ISection | null} 
+| {type: ActionType.SetEditSection, payload: ISection | null}
 | {type: ActionType.UpdateAllSections, payload: ReadonlyArray<ISection>}
 | {type: ActionType.UpdateAllExercises, payload: ReadonlyArray<IExercise>}
 | {type: ActionType.UpdateStartTime, payload: Date}
@@ -52,9 +53,9 @@ export interface IAppState {
 
 export const DefaultAppState: IAppState = { 
     activeExercise: exercises[0],
-    activeSection: null, 
+    activeSection: null,
     confirmOpen: false,
-    editExercise: null, // set to null to be falsy and get rid of separate bits for the dialogs?!
+    editExercise: null,
     editSection: null,
     exercises: [...exercises], 
     selectedSection: null,
@@ -75,10 +76,10 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             }
         }
         case ActionType.UpdateExercise: {
-            return state;
+            return updateStateActiveExercise(state, action.payload);
         }
         case ActionType.DeleteExercise: {
-            return state;
+            return deleteStateActiveExercise(state, action.payload);
         }
         case ActionType.SetActiveExercise: {
             return {
@@ -87,31 +88,40 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             };
         }
         case ActionType.SetEditExercise: {
-            return state;
-        }
-        case ActionType.AddSection: {
             return {
                 ...state,
-                // TODO: modify all that needs to be modified!
-            }
+                editExercise: action.payload
+            };
+        }
+        case ActionType.AddSection: {
+            return addSectionToStateActiveExercise(state, action.payload);
         }
         case ActionType.UpdateSection: {
-            return state;
+            return updateSectionInStateActiveExercise(state, action.payload);
         }
         case ActionType.DeleteSection: {
-            return state;
+            return deleteSectionFromStateActiveExercise(state, action.payload);
         }
         case ActionType.UpdateAllSections: {
-            return state;
+            return updateSectionsInStateActiveExercise(state, action.payload);
         }
         case ActionType.SetActiveSection: {
-            return state;
+            return {
+                ...state,
+                activeSection: action.payload
+            };
         }
         case ActionType.SetEditSection: {
-            return state;
+            return {
+                ...state,
+                editSection: action.payload
+            };
         }
         case ActionType.SaveExercises: {
-            return state;
+            // store.save? does this belong here at all?
+            return {
+                ...state,
+            };
         }
         case ActionType.UpdateStartTime: {
             return {
