@@ -46,7 +46,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
     // props.submit(exercise);
     // replace with dispatch add / update
     dispatch({type: ActionType.UpdateExercise, payload: exercise});
-    dispatch({type: ActionType.SetEditExercise});
+    dispatch({type: ActionType.SetEditExercise, payload: null});
   };
 
   const setStartTime = (event: ChangeEvent<HTMLInputElement>) => {

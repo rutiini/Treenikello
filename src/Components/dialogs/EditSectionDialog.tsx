@@ -51,7 +51,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
     
   const handleClose = () =>{
     // dispatch.setEditSection(null);
-    dispatch({type: ActionType.SetEditSection});
+    dispatch({type: ActionType.SetEditSection, payload: null});
   };
 
   const handleSubmit = () => {

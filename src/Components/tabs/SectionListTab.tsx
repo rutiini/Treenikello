@@ -20,7 +20,7 @@ interface IProps extends WithStyles {
   deleteSection: (section: ISection) => void,
   exercise: IExercise,
   selected: number,
-  updateSectionOrder: (sections: ISection[]) => void
+  updateSectionOrder: (sections: ReadonlyArray<ISection>) => void
 }
 
 const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
@@ -53,7 +53,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const sorted = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
-    const rearranged = arrayMove(exercise.defaultSections, oldIndex, newIndex);
+    const rearranged: ReadonlyArray<ISection> = arrayMove([...exercise.defaultSections], oldIndex, newIndex);
     updateSectionOrder(rearranged);
   }
 
