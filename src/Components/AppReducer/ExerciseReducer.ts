@@ -1,7 +1,7 @@
 ﻿import * as React from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
 import { exercises } from "../../Store";
-import { addSectionToStateActiveExercise, deleteStateActiveExercise, updateSectionInStateActiveExercise, updateStateActiveExercise, deleteSectionFromStateActiveExercise, updateSectionsInStateActiveExercise } from "./StateUtils";
+import { addSectionToStateActiveExercise, deleteSectionFromStateActiveExercise, deleteStateActiveExercise, updateSectionInStateActiveExercise, updateSectionsInStateActiveExercise, updateStateActiveExercise } from "./StateUtils";
 
 /** Exercise reducer action types */
 export enum ActionType {
