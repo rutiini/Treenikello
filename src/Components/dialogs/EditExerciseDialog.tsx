@@ -29,8 +29,8 @@ const emptyExercise = {
 }
 
 interface IProps {
-  exercise: IExercise,
-  open: boolean,
+  readonly exercise: IExercise,
+  readonly open: boolean,
   submit: (exercise: IExercise) => void,
   validateExerciseName: (name: string) => boolean
 }
@@ -45,8 +45,8 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
   const handleClose = () => {
     // props.submit(exercise);
     // replace with dispatch add / update
-    dispatch({type: ActionType.UpdateExercise, payload: exercise});
-    dispatch({type: ActionType.SetEditExercise, payload: null});
+    dispatch({ type: ActionType.UpdateExercise, payload: exercise });
+    dispatch({ type: ActionType.SetEditExercise, payload: null });
   };
 
   const setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +91,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
       <TextField
         autoFocus={true}
         margin="dense"
-        id="name"
+        name="name"
         label="Nimi"
         type="text"
         value={exercise.name}
@@ -105,7 +105,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
       <TextField
         autoFocus={true}
         margin="dense"
-        id="name"
+        name="name"
         label="Nimi"
         type="text"
         value={exercise.name}
@@ -127,7 +127,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
         {nameInput}
         <i className="material-icons">access_time</i>
         <TextField
-          id="time"
+          name="time"
           label="start"
           type="time"
           defaultValue={GetTimeAsHHmmString(state.editExercise ? state.editExercise.startTime : new Date())}
@@ -143,7 +143,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Peruuta
-      </Button>
+    </Button>
         <Button onClick={handleSubmit} color="primary">
           {submitBtnText}
         </Button>

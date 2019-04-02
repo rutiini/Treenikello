@@ -41,7 +41,7 @@ const emptySection: ISection = {
 }
 
 interface IProps extends WithStyles<typeof styles> {
-  section: ISection | null,
+  readonly section: ISection | null,
 }
 
 const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
@@ -76,6 +76,9 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
     // does not update the exercise index correctly.
     const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${state.activeExercise.name}` : `Muokkaa osiota`;
     const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
+    const colors = colorOptions.map((o, index) => {
+      return <MenuItem key={index} value={o.colorValue} style={{backgroundColor: o.colorValue}} />
+    });
     const {classes} = props;
     return (
       <Dialog
@@ -93,7 +96,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
             autoFocus={true}
             margin="dense"
             id="name"
-            label="Nimi"
+            label="Nimi"            
             type="text"
             value={section.name}
             onChange={updateProp}
@@ -126,7 +129,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {colorOptions};
+              {colors};
       </Select>
           </FormControl>
           <br />

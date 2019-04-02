@@ -16,11 +16,11 @@ const styles = createStyles({
 });
 
 interface IProps extends WithStyles {
-  toggleSectionDialog: (section: ISection) => void,
-  deleteSection: (section: ISection) => void,
   exercise: IExercise,
   selected: number,
-  updateSectionOrder: (sections: ReadonlyArray<ISection>) => void
+  toggleSectionDialog(section: ISection): void,
+  deleteSection(section: ISection): void,
+  updateSectionOrder(sections: ReadonlyArray<ISection>): void
 }
 
 const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {

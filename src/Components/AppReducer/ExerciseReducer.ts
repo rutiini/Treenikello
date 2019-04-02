@@ -72,6 +72,7 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
         case ActionType.AddExercise: {
             return {
                 ...state,
+                activeExercise: action.payload,
                 exercises: [...state.exercises, action.payload]
             }
         }
