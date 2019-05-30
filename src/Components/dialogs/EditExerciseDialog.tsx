@@ -37,15 +37,19 @@ interface IProps {
 
 const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
 
-  const [state, dispatch] = useContext(ExerciseContext);
+  const [appState, dispatch] = useContext(ExerciseContext);
 
   const [errorText, setErrorText] = useState();
-  const [exercise, setExercise] = useState(state.editExercise ? state.editExercise : emptyExercise);
+  const [exercise, setExercise] = useState(appState.editExercise ? appState.editExercise : emptyExercise);
 
   const handleClose = () => {
-    // props.submit(exercise);
     // replace with dispatch add / update
-    dispatch({ type: ActionType.UpdateExercise, payload: exercise });
+    if(appState.editExercise && appState.editExercise.name){
+      dispatch({ type: ActionType.UpdateExercise, payload: exercise });
+    }else{
+      dispatch({type: ActionType.AddExercise, payload: exercise});
+    }
+    // close dialog by removing editexercise
     dispatch({ type: ActionType.SetEditExercise, payload: null });
   };
 
@@ -68,7 +72,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const handleSubmit = () => {
-    const nameOK = state.exercises.map(e => e.name).indexOf(exercise.name) === -1;
+    const nameOK = appState.exercises.map(e => e.name).indexOf(exercise.name) === -1;
     if ((nameOK || exercise) && exercise.name !== '') {
       handleClose();
     } else {
@@ -80,7 +84,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
   let titleText = 'Uusi harjoitus'
   let descriptionText = 'Lisää harjoituksen tiedot'
 
-  if (state.editExercise) {
+  if (appState.editExercise && appState.editExercise.name) {
     submitBtnText = 'Päivitä';
     titleText = 'Muokkaa harjoitusta';
     descriptionText = 'Päivitä harjoituksen tiedot';
@@ -130,7 +134,7 @@ const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
           name="time"
           label="start"
           type="time"
-          defaultValue={GetTimeAsHHmmString(state.editExercise ? state.editExercise.startTime : new Date())}
+          defaultValue={GetTimeAsHHmmString(appState.editExercise ? appState.editExercise.startTime : new Date())}
           onChange={setStartTime}
           InputLabelProps={{
             shrink: true,

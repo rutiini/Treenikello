@@ -47,19 +47,18 @@ interface IProps extends WithStyles<typeof styles> {
 const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
   const [state, dispatch] = useContext(ExerciseContext);  
   const [section, setSection] = useState(props.section ? props.section : emptySection);
+  
+  // determine the mode of the dialog
+  const newSection = !(state.editSection && state.editSection.name);  
 
-    
   const handleClose = () =>{
-    // dispatch.setEditSection(null);
     dispatch({type: ActionType.SetEditSection, payload: null});
   };
 
   const handleSubmit = () => {
-    if(props.section){
-      // dispatch.updateSection(section);
+    if(!newSection){
       dispatch({type: ActionType.UpdateSection, payload: section});
     }else{
-      // dispatch.addSection(section);
       dispatch({type: ActionType.AddSection, payload: section});
     }
     handleClose();
@@ -72,10 +71,11 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
         [event.target.name]: event.target.value
     })
   }
-    const title = !section ? `Uusi osio` : `Muokkaa osiota`;
+
+    const title = newSection ? `Uusi osio` : `Muokkaa osiota`;
     // does not update the exercise index correctly.
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${state.activeExercise.name}` : `Muokkaa osiota`;
-    const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
+    const dialogDescription = newSection ? `Lisää uusi osio harjoitukseen ${state.activeExercise.name}` : `Muokkaa osiota`;
+    const acceptBtnText = newSection ? 'Lisää' : 'Tallenna';
     const colors = colorOptions.map((o, index) => {
       return <MenuItem key={index} value={o.colorValue} style={{backgroundColor: o.colorValue}} />
     });

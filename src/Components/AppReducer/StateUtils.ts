@@ -1,6 +1,6 @@
 ﻿import { IExercise, ISection } from "../../DataInterfaces";
+import { exercises } from "../../Store";
 import { IAppState } from "./ExerciseReducer";
-
 
 // TODO: redo to more exact methods instead of manipulating the whole state to optimize logic and improve reusability
 export function updateStateActiveExercise(state: IAppState, updatedExercise: IExercise): IAppState {
@@ -22,21 +22,33 @@ export function updateStateActiveExercise(state: IAppState, updatedExercise: IEx
     }
 }
 
-export function deleteStateActiveExercise(state: IAppState, updatedExercise: IExercise): IAppState {
+export function deleteStateActiveExercise(state: IAppState, deleteTarget: IExercise): IAppState {
+    // set another active exercise if it is the one that is being deleted.
+    let activeExercise = state.activeExercise;
+    if(state.activeExercise === deleteTarget){
+        activeExercise = exercises[0];
+    }
     return {
         ...state,
-        exercises: [...state.exercises].filter(e => e !== updatedExercise)
+        activeExercise,
+        exercises: [...state.exercises].filter(e => e !== deleteTarget)
     };
 }
 
 export function addSectionToStateActiveExercise(state: IAppState, newSection: ISection): IAppState {
     const newSections: ReadonlyArray<ISection> = [...state.activeExercise.defaultSections, newSection];
+    const activeExercise: IExercise = {
+        ...state.activeExercise,
+        defaultSections: newSections
+    };
+    const stateExercises = [...state.exercises];
+    stateExercises[exercises.indexOf(state.activeExercise)] = activeExercise;
+
     return {
         ...state,
-        activeExercise: {
-            ...state.activeExercise,
-            defaultSections: newSections
-        }
+        activeExercise,
+        // update applies to the corresponding exercise in the array as well
+        exercises: stateExercises
     }
 }
 
@@ -45,6 +57,7 @@ export function updateSectionInStateActiveExercise(state: IAppState, updatedSect
         const sectionIndex = state.activeExercise.defaultSections.indexOf(state.editSection);
         const newSections = [...state.activeExercise.defaultSections]
         newSections[sectionIndex] = updatedSection;
+        
         const updatedExercise: IExercise = {
             ...state.activeExercise,
             defaultSections: newSections
