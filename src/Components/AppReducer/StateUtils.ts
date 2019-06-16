@@ -3,12 +3,10 @@ import { exercises } from "../../Store";
 import { IAppState } from "./ExerciseReducer";
 
 // TODO: redo to more exact methods instead of manipulating the whole state to optimize logic and improve reusability
-export function updateStateActiveExercise(state: IAppState, updatedExercise: IExercise): IAppState {
+export function updateActiveExercise(state: IAppState, updatedExercise: IExercise): IAppState {
     if(updatedExercise && state.editExercise){
         const replaceIndex = state.exercises.indexOf(state.editExercise);
         const updatedExercises = [...state.exercises];
-        // use splice to simplify? => not really simpler for replacing 1 exercise.
-        // updatedExercises.splice(replaceIndex,1, action.payload);
         updatedExercises[replaceIndex] = updatedExercise;
         return {
             ...state,
@@ -22,8 +20,17 @@ export function updateStateActiveExercise(state: IAppState, updatedExercise: IEx
     }
 }
 
-export function deleteStateActiveExercise(state: IAppState, deleteTarget: IExercise): IAppState {
+/** replace targetExercise with given replacement in exercises array */
+export function replaceExercise(exerciseArray: ReadonlyArray<IExercise>, targetExercise: IExercise, replacementExercise: IExercise): ReadonlyArray<IExercise>{
+    const replaceIndex = exerciseArray.indexOf(targetExercise);
+    const updatedExercises = [...exerciseArray];
+    updatedExercises[replaceIndex] = replacementExercise;
+    return updatedExercises;
+}
+
+export function deleteExercise(state: IAppState, deleteTarget: IExercise): IAppState {
     // set another active exercise if it is the one that is being deleted.
+    // TODO: disallow preset deletion?
     let activeExercise = state.activeExercise;
     if(state.activeExercise === deleteTarget){
         activeExercise = exercises[0];
@@ -35,24 +42,21 @@ export function deleteStateActiveExercise(state: IAppState, deleteTarget: IExerc
     };
 }
 
-export function addSectionToStateActiveExercise(state: IAppState, newSection: ISection): IAppState {
-    const newSections: ReadonlyArray<ISection> = [...state.activeExercise.defaultSections, newSection];
+export function addSectionToActiveExercise(state: IAppState, newSection: ISection): IAppState {
     const activeExercise: IExercise = {
         ...state.activeExercise,
-        defaultSections: newSections
+        defaultSections: [...state.activeExercise.defaultSections, newSection]
     };
-    const stateExercises = [...state.exercises];
-    stateExercises[exercises.indexOf(state.activeExercise)] = activeExercise;
-
+    
     return {
         ...state,
         activeExercise,
         // update applies to the corresponding exercise in the array as well
-        exercises: stateExercises
+        exercises: replaceExercise(state.exercises, state.activeExercise, activeExercise)
     }
 }
 
-export function updateSectionInStateActiveExercise(state: IAppState, updatedSection: ISection): IAppState {
+export function updateSectionInActiveExercise(state: IAppState, updatedSection: ISection): IAppState {
     if(state.editSection){
         const sectionIndex = state.activeExercise.defaultSections.indexOf(state.editSection);
         const newSections = [...state.activeExercise.defaultSections]
@@ -64,14 +68,16 @@ export function updateSectionInStateActiveExercise(state: IAppState, updatedSect
         };
         return {
             ...state,
-            activeExercise: updatedExercise
+            activeExercise: updatedExercise,
+            // in exercises as well
+            exercises: replaceExercise(state.exercises, state.activeExercise, updatedExercise)
         };
     } else {
         return state;
     }
 }
 
-export function deleteSectionFromStateActiveExercise(state: IAppState, deleteSection: ISection): IAppState {
+export function deleteSectionFromActiveExercise(state: IAppState, deleteSection: ISection): IAppState {
     const updatedExercise = {
         ...state.activeExercise,
         defaultSections: state.activeExercise.defaultSections.filter(s => s !== deleteSection)
@@ -82,7 +88,7 @@ export function deleteSectionFromStateActiveExercise(state: IAppState, deleteSec
     };
 }
 
-export function updateSectionsInStateActiveExercise(state: IAppState, sections: ReadonlyArray<ISection>): IAppState {
+export function updateSectionsInActiveExercise(state: IAppState, sections: ReadonlyArray<ISection>): IAppState {
     return {
         ...state,
         activeExercise: {

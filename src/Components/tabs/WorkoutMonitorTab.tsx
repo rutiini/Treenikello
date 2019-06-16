@@ -40,19 +40,35 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [countDown, updateCountDown] = useState<number>(0);
   
+  const { classes, exercise, activeSection } = props;
+
+  // content should reflect selected exercise and possibly active section
   useEffect(() => {
-      
-    setTimer(setInterval(() => {
-        const ticks = getCountDownTime(props.exercise.startTime).getTime();
-        updateCountDown(ticks);
-      }, 1000));
+    // clear timer when exercise changes or section activates
+    if(activeSection || timer){
+      clearInterval(timer as NodeJS.Timeout);
+    }
+    // if no section is active show timer
+    if(!activeSection){
+        setTimer(setInterval(() => {
+            const ticks = timerFunction().getTime();
+            updateCountDown(ticks);
+          }, 1000));
+      }
+  },[exercise]);
 
-      return () => clearInterval(timer as NodeJS.Timeout);
+  const timerFunction = () => {
 
-  },[]);
+    // TODO: check the hour calculation bug!
+    const ticks: number = timeToSeconds(exercise.startTime) - timeToSeconds(new Date());
+    const hours: number = ticks / temporalConstant * temporalConstant;
+    const minutes: number = ticks % temporalConstant;
+    const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
+  
+    return new Date(0, 0, 0, hours, minutes, seconds);
+  }
 
   // TODO: rerenders the whole component a lot but not a problem? => change shouldcomponentupdate with the index checking: if <0 then we should rerender but otherwise only when index changes
-  const { classes, exercise, activeSection } = props;
   const steps = exercise.defaultSections.map(section => section.name);
   // render different content based on the time
   const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
@@ -108,7 +124,6 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   return (
-    // TODO: fix active section calculation and show different content outside of the exercise (before: countdown, after: workout finished message!)
     tabContent
   );
 }
@@ -117,16 +132,16 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
  * Compares input time agains current moment and outputs the time difference
  * @param startTime comparison time
  */
-function getCountDownTime(startTime: Date) {
+// function getCountDownTime(startTime: Date) {
 
-  // TODO: check the hour calculation bug!
-  const ticks: number = timeToSeconds(startTime) - timeToSeconds(new Date());
-  const hours: number = ticks / temporalConstant * temporalConstant;
-  const minutes: number = ticks % temporalConstant;
-  const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
+//   // TODO: check the hour calculation bug!
+//   const ticks: number = timeToSeconds(startTime) - timeToSeconds(new Date());
+//   const hours: number = ticks / temporalConstant * temporalConstant;
+//   const minutes: number = ticks % temporalConstant;
+//   const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
 
-  return new Date(0, 0, 0, hours, minutes, seconds);
-}
+//   return new Date(0, 0, 0, hours, minutes, seconds);
+// }
 
 /**
  * This function transforms the time component of a date object to seconds,

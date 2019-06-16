@@ -64,11 +64,20 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
     handleClose();
     setSection({ ...emptySection });
   }
-  /** updates a property that matches the name of the sender element */
-  const updateProp = (event: ChangeEvent<HTMLSelectElement>) => {
+
+  /** updates a property with string value that matches the name of the sender element */
+  const updateStringProp = (event: ChangeEvent<HTMLSelectElement>) => {
     setSection({
         ...section,
         [event.target.name]: event.target.value
+    })
+  }
+
+  /** updates a property with numeric value that matches the name of the sender element */
+  const updateNumberProp = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSection({
+        ...section,
+        [event.target.name]: parseInt(event.target.value,10)
     })
   }
 
@@ -99,7 +108,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
             label="Nimi"            
             type="text"
             value={section.name}
-            onChange={updateProp}
+            onChange={updateStringProp}
             variant="filled"
           />
           <br />
@@ -112,14 +121,14 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
             multiline={true}
             rows="2"
             value={section.description}
-            onChange={updateProp}
+            onChange={updateStringProp}
             variant="filled"
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
             <Select style={{ backgroundColor: section.color }}
               value={section.color}
-              onChange={updateProp}
+              onChange={updateStringProp}
               // TODO: change
               inputProps={{
                 id: 'item-color',
@@ -141,7 +150,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
             label="Alustus/Tauko"
             type="number"
             value={section.setupTime}
-            onChange={updateProp}
+            onChange={updateNumberProp}
           />
           <TextField
             name='duration'
@@ -152,7 +161,7 @@ const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
             label="Kesto"
             type="number"
             value={section.duration}
-            onChange={updateProp}
+            onChange={updateNumberProp}
           />
         </DialogContent>
         <DialogActions>

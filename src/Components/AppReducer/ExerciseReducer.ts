@@ -1,7 +1,7 @@
 ﻿import * as React from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
 import { exercises } from "../../Store";
-import { addSectionToStateActiveExercise, deleteSectionFromStateActiveExercise, deleteStateActiveExercise, updateSectionInStateActiveExercise, updateSectionsInStateActiveExercise, updateStateActiveExercise } from "./StateUtils";
+import { addSectionToActiveExercise, deleteExercise, deleteSectionFromActiveExercise, updateActiveExercise, updateSectionInActiveExercise, updateSectionsInActiveExercise } from "./StateUtils";
 
 /** Exercise reducer action types */
 export enum ActionType {
@@ -67,8 +67,16 @@ export const DefaultAppState: IAppState = {
 
 /** reducer for app state */
 export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppState, action: IAction) => {
+    
     // "middleware" can be implemented here
     console.log('action dispatched:', action);
+    const updatedState = stateController(state, action);
+    console.log(updatedState);
+    
+    return updatedState;
+}
+
+function stateController(state: IAppState, action: IAction): IAppState{
     switch(action.type) {
         case ActionType.AddExercise: {
             return {
@@ -78,10 +86,10 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             }
         }
         case ActionType.UpdateExercise: {
-            return updateStateActiveExercise(state, action.payload);
+            return updateActiveExercise(state, action.payload);
         }
         case ActionType.DeleteExercise: {
-            return deleteStateActiveExercise(state, action.payload);
+            return deleteExercise(state, action.payload);
         }
         case ActionType.SetActiveExercise: {
             return {
@@ -96,16 +104,16 @@ export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppSt
             };
         }
         case ActionType.AddSection: {
-            return addSectionToStateActiveExercise(state, action.payload);
+            return addSectionToActiveExercise(state, action.payload);
         }
         case ActionType.UpdateSection: {
-            return updateSectionInStateActiveExercise(state, action.payload);
+            return updateSectionInActiveExercise(state, action.payload);
         }
         case ActionType.DeleteSection: {
-            return deleteSectionFromStateActiveExercise(state, action.payload);
+            return deleteSectionFromActiveExercise(state, action.payload);
         }
         case ActionType.UpdateAllSections: {
-            return updateSectionsInStateActiveExercise(state, action.payload);
+            return updateSectionsInActiveExercise(state, action.payload);
         }
         case ActionType.SetActiveSection: {
             return {

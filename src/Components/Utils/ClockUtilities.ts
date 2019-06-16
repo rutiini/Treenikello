@@ -11,7 +11,7 @@ import { TimerMode } from "../Clock";
   export const HourInMinutes = 60;
   export const MinuteInDegrees = CircleInDegrees / HourInMinutes;
 
-  // fix this, the last active section stays active even when the exercise should be finished
+  // TODO: fix this, the last active section stays active even when the exercise should be finished
   /**
    * returns an int describing which section is currently active based on the time given, 
    * exercise start time and section durations and order.

@@ -76,12 +76,13 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
     }, [timerMode,stopWatchSeconds]);
 
     /**
+     * TODO: check if this could be on the monitor tab bound to common time context?
      * calculate the active section index and update index if it has changed.
      * @param currentTime date to compare to the exercise timings
      */
     const checkActiveSection = (currentTime: Date) => {
         const { activeExercise, activeSection } = state;
-        // TODO: check why this gives active index even time has passed the exercise time
+        // TODO: check why this gives active index even when time has passed the exercise time
         const activeIndex = GetActiveSectionIndex(activeExercise, currentTime);
         const activeSectionIndex = activeSection ? activeExercise.defaultSections.indexOf(activeSection) : -1;
         if (activeSectionIndex !== activeIndex && activeIndex !== activeExercise.defaultSections.length) {
