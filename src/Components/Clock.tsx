@@ -6,6 +6,7 @@ import { ActionType } from './AppReducer/ExerciseReducer';
 import ClockFace from './ClockFace';
 import SectionItem from './SectionItem';
 import { CircleInDegrees, ClockData, CycleTimerMode, GetActiveSectionIndex, MinuteInDegrees, TimeToDegrees } from './Utils/ClockUtilities';
+import TimeContext from './AppReducer/TimeContext';
 
 interface IProps extends WithStyles<typeof styles> {
     canvasSide: number
@@ -43,12 +44,12 @@ const centerCoordinate = 100 / 2;
  */
 const Clock: FunctionComponent<IProps> = (props: IProps) => {
 
-    const [clockData, setClockData] = useState(new ClockData(new Date()));
     const [stopWatchSeconds, setStopWatchSeconds] = useState(0);
     const [timerMode, setTimerMode] = useState(TimerMode.Hidden);
     const [stopWatch, setStopWatch] = useState<NodeJS.Timeout|null>(null);
-
+    
     // use the context to get the shared state and dispatch instace
+    const time = useContext(TimeContext);
     const [state, dispatch] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
 
     // clock should always start when component renders first
@@ -56,7 +57,6 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
         const timer = setInterval(() => {
             const currentTime = new Date()
             checkActiveSection(currentTime);
-            setClockData(new ClockData(currentTime));
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -106,6 +106,8 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
 
     const sectionItems: ReadonlyArray<JSX.Element> = updateFaceElements(state.activeExercise, state.activeSection, props.classes);
     const { classes } = props;
+    const clockData = new ClockData(time);
+    
     return (
         <div className={classes.clockContainer} onClick={cycleTimerFunctions}>
             <ClockFace clockData={clockData}

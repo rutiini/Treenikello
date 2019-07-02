@@ -62,9 +62,6 @@ export const DefaultAppState: IAppState = {
     snackBarOpen: false
 }
 
-/** This context can be used to share the reducer and state globally */
-//  export const AppState = React.createContext<(IAppState | React.Dispatch<IAction>)>([]);
-
 /** reducer for app state */
 export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppState, action: IAction) => {
     
