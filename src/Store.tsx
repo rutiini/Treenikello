@@ -9,12 +9,12 @@ export default class Store{
     if(customsJSON !== undefined){
       const customs : IExercise[] = JSON.parse(customsJSON as string);
       if(customs === null){
-        return null;
+        return [];
       }
       if(customs === undefined){
         console.log(`local storage value was ${customs}. clearing cached data.`)
         localStorage.clear();
-        return null;
+        return [];
       }
 
       customs.map( (customExercise : IExercise) => {
@@ -24,11 +24,11 @@ export default class Store{
       return customs;
     }
 
-    return null;
+    return [];
   }
   
   // save users custom exercises to browser cache
-  public static saveExercises = (modifiedExercises : IExercise[]) =>{
+  public static saveExercises = (modifiedExercises : ReadonlyArray<IExercise>) =>{
 
     const nonPresets = modifiedExercises.filter((x : IExercise) => x.preset !== true)
     console.log(`saving ${nonPresets.length} exercises`)

@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
-import { exercises } from "../../Store";
+import Store, { exercises } from "../../Store";
 import { addSectionToActiveExercise, deleteExercise, deleteSectionFromActiveExercise, updateActiveExercise, updateSectionInActiveExercise, updateSectionsInActiveExercise } from "./StateUtils";
 import { GetActiveSectionIndex } from "../Utils/ClockUtilities";
 
@@ -60,7 +60,7 @@ export const DefaultAppState: IAppState = {
     confirmOpen: false,
     editExercise: null,
     editSection: null,
-    exercises: [...exercises], 
+    exercises: [...exercises, ...Store.getSavedExercises()], 
     selectedSection: null,
     snackBarOpen: false
 }
@@ -129,9 +129,8 @@ function stateController(state: IAppState, action: IAction): IAppState{
         }
         case ActionType.SaveExercises: {
             // store.save? does this belong here at all?
-            return {
-                ...state,
-            };
+            Store.saveExercises(state.exercises);
+            return state;
         }
         case ActionType.UpdateStartTime: {
             return {
