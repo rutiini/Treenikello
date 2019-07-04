@@ -14,11 +14,12 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component } from 'react';
-import { IExerciseContext, ISection } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import React, { ChangeEvent, FunctionComponent, useContext, useState } from 'react';
+import { ISection } from 'src/DataInterfaces';
 // store
 import { colorOptions } from '../../Store';
+import ExerciseContext from '../AppReducer/ExerciseContext';
+import { ActionType } from '../AppReducer/ExerciseReducer';
 
 const styles = createStyles({
   EditSectionDialog: {
@@ -40,84 +41,58 @@ const emptySection: ISection = {
 }
 
 interface IProps extends WithStyles<typeof styles> {
-  exerciseContext: IExerciseContext
+  readonly section: ISection | null,
 }
 
-interface IState {
-  section: ISection,
-  open: boolean
-}
+const EditSectionDialog: FunctionComponent<IProps> = (props: IProps) => {
+  const [state, dispatch] = useContext(ExerciseContext);  
+  const [section, setSection] = useState(props.section ? props.section : emptySection);
+  
+  // determine the mode of the dialog
+  const newSection = !(state.editSection && state.editSection.name);  
 
-class EditSectionDialog extends Component<IProps, IState> {
+  const handleClose = () =>{
+    dispatch({type: ActionType.SetEditSection, payload: null});
+  };
 
-  // just get the initial section from props and if there is none use the empty one?
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState) {
-    // opening the dialog
-    if (prevState) {
-
-      let section = nextProps.exerciseContext.exercises[nextProps.exerciseContext.selectedExerciseIndex].defaultSections[nextProps.exerciseContext.selectedSectionIndex]
-      const { editSectionOpen } = nextProps.exerciseContext
-
-      if (!prevState.open && editSectionOpen) {
-
-        if (section) {
-          return {
-            open: true,
-            section
-          };
-        } else {
-          section = {
-            color: '',
-            description: '',
-            duration: 0,
-            key: '',
-            name: '',
-            setupTime: 0
-          }
-          return {
-            open: true,
-            section
-          };
-        }
-      } else {
-        return null;
-      }
-    } else {
-      return null;
+  const handleSubmit = () => {
+    if(!newSection){
+      dispatch({type: ActionType.UpdateSection, payload: section});
+    }else{
+      dispatch({type: ActionType.AddSection, payload: section});
     }
+    handleClose();
+    setSection({ ...emptySection });
   }
 
-  private colorOptions = colorOptions.map(optionItem => {
-
-    return <MenuItem key={optionItem.colorName} value={optionItem.colorValue} style={{ backgroundColor: optionItem.colorValue }}>
-      {/* {optionItem.colorName} */}
-    </MenuItem>;
-  })
-
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      open: false,
-      section: { ...emptySection }
-    };
+  /** updates a property with string value that matches the name of the sender element */
+  const updateStringProp = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSection({
+        ...section,
+        [event.target.name]: event.target.value
+    })
   }
 
-  public render() {
-    const { classes } = this.props;
-    const { exercises, selectedExerciseIndex, selectedSectionIndex, editSectionOpen } = this.props.exerciseContext;
-    const section = exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex];
+  /** updates a property with numeric value that matches the name of the sender element */
+  const updateNumberProp = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSection({
+        ...section,
+        [event.target.name]: parseInt(event.target.value,10)
+    })
+  }
 
-    const title = !section ? `Uusi osio` : `Muokkaa osiota`;
+    const title = newSection ? `Uusi osio` : `Muokkaa osiota`;
     // does not update the exercise index correctly.
-    const dialogDescription = !section ? `Lisää uusi osio harjoitukseen ${exercises[selectedExerciseIndex].name}` : `Muokkaa osiota`;
-    const acceptBtnText = !section ? 'Lisää' : 'Tallenna';
-    const activeSection = this.state.section ? this.state.section : emptySection;
-
+    const dialogDescription = newSection ? `Lisää uusi osio harjoitukseen ${state.activeExercise.name}` : `Muokkaa osiota`;
+    const acceptBtnText = newSection ? 'Lisää' : 'Tallenna';
+    const colors = colorOptions.map((o, index) => {
+      return <MenuItem key={index} value={o.colorValue} style={{backgroundColor: o.colorValue}} />
+    });
+    const {classes} = props;
     return (
       <Dialog
-        fullWidth={true}
-        open={editSectionOpen}
-        onClose={this.handleClose}
+        open={!!state.editSection}
+        onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">{title}</DialogTitle>
@@ -130,11 +105,11 @@ class EditSectionDialog extends Component<IProps, IState> {
             autoFocus={true}
             margin="dense"
             id="name"
-            label="Nimi"
+            label="Nimi"            
             type="text"
-            value={activeSection.name}
-            onChange={this.updateProp}
-            fullWidth={true}
+            value={section.name}
+            onChange={updateStringProp}
+            variant="filled"
           />
           <br />
           <TextField
@@ -145,15 +120,15 @@ class EditSectionDialog extends Component<IProps, IState> {
             type="text"
             multiline={true}
             rows="2"
-            value={this.state.section.description}
-            onChange={this.updateProp}
-            fullWidth={true}
+            value={section.description}
+            onChange={updateStringProp}
+            variant="filled"
           />
           <FormControl className={classes.EditSectionDialog}>
             <InputLabel htmlFor="item-color">Väri</InputLabel>
-            <Select style={{ backgroundColor: this.state.section.color }}
-              value={this.state.section.color}
-              onChange={this.updateProp}
+            <Select style={{ backgroundColor: section.color }}
+              value={section.color}
+              onChange={updateStringProp}
               // TODO: change
               inputProps={{
                 id: 'item-color',
@@ -163,7 +138,7 @@ class EditSectionDialog extends Component<IProps, IState> {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {this.colorOptions};
+              {colors};
       </Select>
           </FormControl>
           <br />
@@ -174,8 +149,8 @@ class EditSectionDialog extends Component<IProps, IState> {
             id="setupTime"
             label="Alustus/Tauko"
             type="number"
-            value={activeSection.setupTime}
-            onChange={this.updateProp}
+            value={section.setupTime}
+            onChange={updateNumberProp}
           />
           <TextField
             name='duration'
@@ -185,52 +160,20 @@ class EditSectionDialog extends Component<IProps, IState> {
             id="duration"
             label="Kesto"
             type="number"
-            value={activeSection.duration}
-            onChange={this.updateProp}
+            value={section.duration}
+            onChange={updateNumberProp}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
+          <Button onClick={handleClose} color="primary">
             Peruuta
       </Button>
-          <Button onClick={this.handleSubmit} color="primary">
+          <Button onClick={handleSubmit} color="primary">
             {acceptBtnText}
           </Button>
         </DialogActions>
       </Dialog>
     );
-  }
-
-
-  private handleClose = () => {
-
-    this.props.exerciseContext.toggleSectionDialog(this.state.section);
-    this.setState({
-      open: false,
-      section: { ...emptySection }
-    })
-  };
-
-  private handleSubmit = () => {
-
-    const { exercises, selectedExerciseIndex, selectedSectionIndex } = this.props.exerciseContext;
-    this.props.exerciseContext.submitSection(exercises[selectedExerciseIndex].defaultSections[selectedSectionIndex], this.state.section);
-    this.props.exerciseContext.toggleSectionDialog(this.state.section);
-
-    this.setState({
-      open: false,
-      section: { ...emptySection }
-    })
-  }
-  /** updates a property that matches the name of the sender element */
-  private updateProp = (event: ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      section: {
-        ...this.state.section,
-        [event.target.name]: event.target.value
-      }
-    })
-  }
 }
 
-export default withExerciseContext(withStyles(styles)(EditSectionDialog));
+export default withStyles(styles)(EditSectionDialog);

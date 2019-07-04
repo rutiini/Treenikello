@@ -15,11 +15,11 @@ interface IClockFaceProps {
     midPoint: string,
     minuteMarker: string
   },
-  clockData: ClockData,
-  centerCoordinate: number,
-  sectionItems: JSX.Element[],
-  stopWatchRotation: number,
-  timerMode: TimerMode
+  readonly clockData: ClockData,
+  readonly centerCoordinate: number,
+  readonly sectionItems: ReadonlyArray<JSX.Element>,
+  readonly stopWatchRotation: number,
+  readonly timerMode: TimerMode
 }
 const styles = (theme: Theme) => createStyles({
   bigHourMarker: {
@@ -90,7 +90,7 @@ function createMarker(position: number, length: number, className: string) {
   const idTag = "marker" + position;
   const y1 = canvasSide / 2 - faceRadius + length;
   const y2 = canvasSide / 2 - faceRadius + 0.9; // slight overlap (0.1) and stroke width..
-  const rotation = 'rotate(' + position * 6 + ' 50 50)';
+  const rotation = `rotate(${position * 6} 50 50)`;
   return (<line key={idTag} id={idTag} className={className} x1={centerCoordinate} y1={y1} x2={centerCoordinate} y2={y2} transform={rotation} />)
 }
 
@@ -100,13 +100,13 @@ function createMarker(position: number, length: number, className: string) {
       className={classes.face}
       cx={props.centerCoordinate}
       cy={props.centerCoordinate}
-      r="45" />
+      r={45} />
     {props.sectionItems}
     <circle
       className={classes.faceCover}
       cx={props.centerCoordinate}
       cy={props.centerCoordinate}
-      r="41" />
+      r={41} />
     <g id="minuteMarkers">
       {majors}
     </g>
@@ -115,23 +115,23 @@ function createMarker(position: number, length: number, className: string) {
         transform={`rotate(${props.clockData.getHourPosition()} ${props.centerCoordinate} ${props.centerCoordinate})`}
         id="hour"
         className={classes.hourMin}
-        x="48.5"
-        y="22.5"
-        width="3"
-        height="30"
-        rx="2.5"
-        ry="2.55"
+        x={48.5}
+        y={22.5}
+        width={3}
+        height={30}
+        rx={2.5}
+        ry={2.55}
         fill="red" />
       <rect
         transform={`rotate(${props.clockData.getMinutePosition()} ${props.centerCoordinate} ${props.centerCoordinate})`}
         id="min"
         className={classes.hourMin}
-        x="49"
-        y="12.5"
-        width="2"
-        height="40"
-        rx="2"
-        ry="2"
+        x={49}
+        y={12.5}
+        width={2}
+        height={40}
+        rx={2}
+        ry={2}
         fill="blue" />
       <StopWatchHand
         x1={props.centerCoordinate}
@@ -151,7 +151,7 @@ function createMarker(position: number, length: number, className: string) {
           x1={props.centerCoordinate}
           y1={props.centerCoordinate}
           x2={props.centerCoordinate}
-          y2="11"
+          y2={11}
           stroke="white" />
       </g>;
   </g>
@@ -159,7 +159,7 @@ function createMarker(position: number, length: number, className: string) {
       className={classes.midPoint}
       cx={props.centerCoordinate}
       cy={props.centerCoordinate}
-      r="3" />
+      r={3} />
   </svg>
 }
 

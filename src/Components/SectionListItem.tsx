@@ -1,9 +1,9 @@
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
   createStyles,
+  Fab,
   Typography,
   withStyles
 } from '@material-ui/core';
@@ -107,16 +107,16 @@ class SectionListItem extends PureComponent<IProps>{
                 <tbody>
                   <tr>
                     <td>
-                      <Button variant="fab" className={classes.button} mini={true} style={{ backgroundColor: section.color }} onClick={this.deleteSelf}>
+                      <Fab className={classes.button} style={{ backgroundColor: section.color }} onClick={this.deleteSelf}>
                         <i className="material-icons">delete</i>
-                      </Button>
+                      </Fab>
                     </td>
                   </tr>
                   <tr>
                     <td>
-                      <Button variant="fab" mini={true} style={{ backgroundColor: section.color }} onClick={this.openEdit}>
+                      <Fab style={{ backgroundColor: section.color }} onClick={this.openEdit}>
                         <i className="material-icons">settings</i>
-                      </Button>
+                      </Fab>
                     </td>
                   </tr>
                 </tbody>

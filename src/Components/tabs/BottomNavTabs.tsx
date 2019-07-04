@@ -4,22 +4,17 @@ import {
   Tab,
   Tabs
 } from '@material-ui/core';
-import React, { ChangeEvent, Component } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import { IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import { IExercise, ISection } from 'src/DataInterfaces';
 import ActionsMenuBar from '../ActionsMenuBar';
+import ExerciseContext from '../AppReducer/ExerciseContext';
+import { ActionType } from '../AppReducer/ExerciseReducer';
 import ExerciseListTab from './ExerciseListTab';
 import SectionListTab from './SectionListTab';
 import WorkoutMonitorTab from './WorkoutMonitorTab';
 
-// TODO: remove state, make sfc
-interface IState {
-  value: number
-}
-
 interface IProps extends WithStyles<typeof styles> {
-  exerciseContext?: IExerciseContext
 }
 
 const styles = (theme: Theme) => createStyles({
@@ -31,7 +26,7 @@ const styles = (theme: Theme) => createStyles({
     [theme.breakpoints.between("md", "xl")]: {
       borderLeftStyle: 'solid',
       borderLeftWidth: 2,
-  }
+    }
   },
   menuBlock: {
     [theme.breakpoints.up('sm')]: {
@@ -77,10 +72,6 @@ const styles = (theme: Theme) => createStyles({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
-    // fontWeight: theme.typography.fontWeightRegular,
-    // marginRight: theme.spacing.unit * 4,
-    // minWidth: 72,
-    // textTransform: 'initial',
   },
   tabSelected: {},
   tabsIndicator: {
@@ -94,83 +85,89 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-class BottomNavTabs extends Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      value: 0,
-    };
+const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
+
+  // local state
+  const [activeTab, setActiveTab] = useState<number>(0);
+
+  const handleTabChange = (event: React.ChangeEvent, value: number) => {
+    setActiveTab(value);
   }
 
-  public handleChange = (event: ChangeEvent<{}>, value: number) => {
-    this.setState({ value });
-  };
+  // app state
+  const [state, dispatch] = useContext(ExerciseContext);
 
-  public handleChangeIndex = (index: number) => {
-    this.setState({ value: index });
-  };
+  // used state properties
+  const { exercises, activeExercise, activeSection } = state;
 
-  public render() {
-    const { classes } = this.props;
-    const {
-      exercises,
-      selectedExerciseIndex,
-      activeSectionIndex,
-      setTime, 
-      saveExercises
-    } = this.ctxt();
+  // dispatch functions
+  const setTime = (time: Date) => dispatch({ type: ActionType.UpdateStartTime, payload: time });
+  const save = () => dispatch({ type: ActionType.SaveExercises });
+  const setEditSection = (section: ISection) => dispatch({ type: ActionType.SetEditSection, payload: section }); // TODO: should we move this from app to here?
+  const deleteSection = (section: ISection) => dispatch({ type: ActionType.DeleteSection, payload: section });
+  const updateSectionOrder = (sections: ReadonlyArray<ISection>) => dispatch({ type: ActionType.UpdateAllSections, payload: sections });
+  const setEditExercise = (exercise: IExercise) => dispatch({ type: ActionType.SetEditExercise, payload: exercise });
+  const deleteExercise = (exercise: IExercise) => { dispatch({ type: ActionType.DeleteExercise, payload: exercise }); return true; };
+  const selectExercise = (exercise: IExercise) => dispatch({ type: ActionType.SetActiveExercise, payload: exercise });
 
-    const tabLabels = ["Treeni", "Osiot", "Harjoitukset"]
-    const workoutIcon = <i className="material-icons">timer</i>
-    const sectionsIcon = <i className="material-icons">build</i>
-    const exercisesIcon = <i className="material-icons">fitness_center</i>
+  const tabLabels = ["Treeni", "Osiot", "Harjoitukset"];
+  const workoutIcon = <i className="material-icons">timer</i>;
+  const sectionsIcon = <i className="material-icons">build</i>;
+  const exercisesIcon = <i className="material-icons">fitness_center</i>;
 
-    return (
-      <div className={classes.menuBlock}>
-        <ActionsMenuBar
-          title={tabLabels[this.state.value]}
-          exercises={exercises}
-          selectedExerciseIndex={selectedExerciseIndex}
-          setTime={setTime}
-          saveExercises={saveExercises} />
-        <div className={classes.controlsContainer}>
-          <SwipeableViews containerStyle={{height: '100%'}}
-            style={{ height: '100%' }}
-            // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            axis={'x'}
-            index={this.state.value}
-            onChangeIndex={this.handleChangeIndex}
-          >
-            <WorkoutMonitorTab
-              exercise={exercises[selectedExerciseIndex]}
-              activeSectionIndex={activeSectionIndex}
-            />
-            <SectionListTab/>
-            <ExerciseListTab/>
-          </SwipeableViews>
-        </div>
-        <AppBar
-          position="static"
-          color="default">
-          <Tabs
-            value={this.state.value}
-            onChange={this.handleChange}
-            indicatorColor="secondary"
-            textColor="secondary"
-            fullWidth={true}
-            centered={true}
-          >
-            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[0]} icon={workoutIcon} />
-            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[1]} icon={sectionsIcon} />
-            <Tab classes={{root: classes.tabRoot, selected: classes.tabSelected}} label={tabLabels[2]} icon={exercisesIcon} />
-          </Tabs>
-        </AppBar>
+
+  const { classes } = props;
+  return (
+    <div className={classes.menuBlock}>
+      <ActionsMenuBar
+        title={tabLabels[activeTab]}
+        exercise={state.activeExercise}
+        setTime={setTime}
+        saveExercises={save}
+      />
+      <div className={classes.controlsContainer}>
+        <SwipeableViews containerStyle={{ height: '100%' }}
+          style={{ height: '100%' }}
+          axis={'x'}
+          index={activeTab}
+          onChangeIndex={setActiveTab}
+        >
+          <WorkoutMonitorTab
+            exercise={activeExercise}
+            activeSection={activeSection}
+          />
+          <SectionListTab
+            selected={exercises.indexOf(activeExercise)}
+            exercise={activeExercise}
+            toggleSectionDialog={setEditSection}
+            deleteSection={deleteSection}
+            updateSectionOrder={updateSectionOrder} />
+          <ExerciseListTab
+            exercises={exercises}
+            selected={exercises.indexOf(activeExercise)}
+            toggleExerciseDialog={setEditExercise}
+            deleteExercise={deleteExercise}
+            selectExercise={selectExercise} />
+        </SwipeableViews>
       </div>
-    );
-  }
-  
-  // todo: refactor the context to come directly from props..
-  private ctxt = () => this.props.exerciseContext as IExerciseContext;
+      <AppBar
+        position="static"
+        color="default">
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          indicatorColor="secondary"
+          textColor="secondary"
+          variant="standard"
+          centered={true}
+        >
+          <Tab classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label={tabLabels[0]} icon={workoutIcon} />
+          <Tab classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label={tabLabels[1]} icon={sectionsIcon} />
+          <Tab classes={{ root: classes.tabRoot, selected: classes.tabSelected }} label={tabLabels[2]} icon={exercisesIcon} />
+        </Tabs>
+      </AppBar>
+    </div>
+  );
 }
 
-export default withExerciseContext(withStyles(styles, { withTheme: true })(BottomNavTabs));
+export default React.memo(withStyles(styles, { withTheme: true })(BottomNavTabs));

@@ -40,21 +40,28 @@ interface IProps {
  * well to mobile UI.
  * Role of this component is to serve as the content of a list item representing an exercise sections properties
  */
-const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
-  const { classes, expanded, index, setIndex, deleteSection, editSection,section } = props;
+const CompactSectionListItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'actionButtonContainer' | 'iconButtonContainer'>> = (props: IProps) => {
+  const { 
+    classes, 
+    expanded, 
+    index, 
+    setIndex, 
+    deleteSection, 
+    editSection,
+    section } = props;
   const { setupTime, duration, name, description, color } = section;
 
-  const sectionCliked = () => {
+  const sectionCliked = (e: never) => {
     setIndex(index);
   }
   const deleteSectionClicked = () => {
     deleteSection(section);
   }
-  const editSectionClicked = () => {
+  const editSectionClicked = (e: never) => {
     editSection(section);
   }
 
-  const expandIcon = <i className="material-icons" onClick={sectionCliked}>expand_more</i>
+  const expandIcon = <div onClick={sectionCliked}><i className="material-icons">expand_more</i></div>
   const DragHandle = SortableHandle(() => <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>unfold_more</i>);
 
   // TODO: implement optional icon property for section, find a suitable set of icons
@@ -91,4 +98,4 @@ const CompactSectionLitItem: React.SFC<IProps & WithStyles<'justifyCenter' | 'ac
   );
 }
 
-export default withStyles(styles)(CompactSectionLitItem);
+export default withStyles(styles)(CompactSectionListItem);

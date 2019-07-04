@@ -1,10 +1,10 @@
 import { 
-  AppBar, 
-  Button, 
+  AppBar,
   createStyles, 
+  Fab, 
   Toolbar, 
   Typography, 
-  withStyles } from '@material-ui/core';
+  withStyles} from '@material-ui/core';
 import React, { Component } from 'react';
 import { IExercise } from '../DataInterfaces';
 
@@ -32,11 +32,10 @@ const styles = createStyles({
 
 interface IProps {
   classes: any,
-  exercises: IExercise[],
-  selectedExerciseIndex: number,
+  exercise: IExercise,
   setTime: (time: Date) => void,
   title: string,
-  saveExercises: (exercises: IExercise[]) => void
+  saveExercises: () => void
 }
 
 interface IState {
@@ -62,11 +61,11 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
       <div className={classes.root}>
         <AppBar position="static" color="secondary">
           <Toolbar>
-            <Button variant="fab" mini={true} color="primary" onClick={this.saveAllExercises}><i className="material-icons">save</i></Button>
+            <Fab color="primary" onClick={this.saveAllExercises}><i className="material-icons">save</i></Fab>
             <Typography variant="h4" color="inherit" className={classes.flex}>
               {title}
             </Typography>
-            <Button variant="fab" mini={true} color="primary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Button>
+            <Fab color="primary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Fab>
           </Toolbar>
         </AppBar>
       </div>
@@ -78,6 +77,6 @@ export default withStyles(styles)(class ActionsMenuBar extends Component<IProps,
   }
 
   private saveAllExercises = () => {
-    this.props.saveExercises(this.props.exercises)
+    this.props.saveExercises()
   }
 });

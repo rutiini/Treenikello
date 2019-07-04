@@ -1,4 +1,4 @@
-import  {
+import {
   Button,
   createStyles,
   Dialog,
@@ -7,16 +7,15 @@ import  {
   DialogContentText,
   DialogTitle,
   TextField,
-  Theme,
-  withStyles,
-  WithStyles
+  withStyles
 } from '@material-ui/core';
-import React, { ChangeEvent, Component } from 'react';
-import { IExercise, IExerciseContext } from '../../DataInterfaces';
-import { withExerciseContext } from '../../ExerciseContext';
+import React, { ChangeEvent, FunctionComponent, useContext, useState } from 'react';
+import { IExercise } from '../../DataInterfaces';
+import ExerciseContext from '../AppReducer/ExerciseContext';
+import { ActionType } from '../AppReducer/ExerciseReducer';
 import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
 
-const styles = (theme: Theme) => createStyles({
+const styles = () => createStyles({
   EditForm: {
     width: '75%'
   }
@@ -29,190 +28,132 @@ const emptyExercise = {
   startTime: new Date(),
 }
 
-interface IProps extends WithStyles<typeof styles>{
-  exerciseContext: IExerciseContext
+interface IProps {
+  readonly exercise: IExercise,
+  readonly open: boolean,
+  submit: (exercise: IExercise) => void,
+  validateExerciseName: (name: string) => boolean
 }
 
-interface IState{
-  errorText: string;
-  exercise: IExercise,
-  open: boolean
-}
+const EditExerciseDialog: FunctionComponent<IProps> = (props: IProps) => {
 
+  const [appState, dispatch] = useContext(ExerciseContext);
 
-class EditExerciseDialog extends Component<IProps,IState> {
+  const [errorText, setErrorText] = useState();
+  const [exercise, setExercise] = useState(appState.editExercise ? appState.editExercise : emptyExercise);
 
-  // just initialize the controlled state from props and save that object on the save method, no need for this hook.
-  public static getDerivedStateFromProps(nextProps: IProps, prevState: IState){
-    // opening the dialog
-    const { exercises,editExerciseOpen, editExerciseIndex } = nextProps.exerciseContext;
-    
-    let exercise: IExercise = exercises[editExerciseIndex];
-    
-    if(!prevState.open && editExerciseOpen){
-      if(exercise){
-        return {
-          exercise: {...exercise},
-          open: true
-        };
-      }else{
-        exercise = {
-          defaultSections: [],
-          name: '',
-          preset: false,
-          startTime: new Date(),
-        }
-        return{
-          exercise: {...exercise},
-          open: true
-        };
-      }
-    // default
+  const handleClose = () => {
+    // replace with dispatch add / update
+    if(appState.editExercise && appState.editExercise.name){
+      dispatch({ type: ActionType.UpdateExercise, payload: exercise });
     }else{
-      return null;
+      dispatch({type: ActionType.AddExercise, payload: exercise});
     }
+    // close dialog by removing editexercise
+    dispatch({ type: ActionType.SetEditExercise, payload: null });
+  };
+
+  const setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
+    const newStart = event.target.value.split(':');
+    const newStartTime = new Date();
+    newStartTime.setHours(parseInt(newStart[0], 10), parseInt(newStart[1], 10));
+    setExercise({
+      ...exercise,
+      startTime: newStartTime
+    })
 
   }
-  constructor(props: IProps){
-    super(props);
-    this.state = {
-      errorText: '',
-      exercise: {...emptyExercise},
-      open: false,
-    };
+
+  const updateExercise = (event: ChangeEvent<HTMLInputElement>) => {
+    setExercise({
+      ...exercise,
+      [event.target.name]: event.target.value
+    })
   }
 
-  public render() {
-    const { exercises, editExerciseIndex, editExerciseOpen } = this.props.exerciseContext;
-    const originalExercise = exercises[editExerciseIndex];
-    const { errorText } = this.state;
-
-    let submitBtnText = 'Lisää'
-    let titleText = 'Uusi harjoitus'
-    let descriptionText = 'Lisää harjoituksen tiedot'
-    
-    if (exercises[editExerciseIndex]) {
-      submitBtnText = 'Päivitä';
-      titleText = 'Muokkaa harjoitusta';
-      descriptionText = 'Päivitä harjoituksen tiedot';
+  const handleSubmit = () => {
+    const nameOK = appState.exercises.map(e => e.name).indexOf(exercise.name) === -1;
+    if ((nameOK || exercise) && exercise.name !== '') {
+      handleClose();
+    } else {
+      setErrorText('virheellinen nimi');
     }
-    let nameInput
-    if(errorText){
-      nameInput =
+  }
+
+  let submitBtnText = 'Lisää'
+  let titleText = 'Uusi harjoitus'
+  let descriptionText = 'Lisää harjoituksen tiedot'
+
+  if (appState.editExercise && appState.editExercise.name) {
+    submitBtnText = 'Päivitä';
+    titleText = 'Muokkaa harjoitusta';
+    descriptionText = 'Päivitä harjoituksen tiedot';
+  }
+  let nameInput
+  if (errorText) {
+    nameInput =
       <TextField
         autoFocus={true}
         margin="dense"
-        id="name"
+        name="name"
         label="Nimi"
         type="text"
-        value={this.state.exercise.name}
-        onChange={this.updateName}
+        value={exercise.name}
+        onChange={updateExercise}
         helperText={errorText}
-        fullWidth={true}
+        variant="filled"
         error={true}
       />
-      }else{
-        nameInput =
-        <TextField
+  } else {
+    nameInput =
+      <TextField
         autoFocus={true}
         margin="dense"
-        id="name"
+        name="name"
         label="Nimi"
         type="text"
-        value={this.state.exercise.name}
-        onChange={this.updateName}
-        fullWidth={true}
+        value={exercise.name}
+        onChange={updateExercise}
+        variant="filled"
       />
-      }
-
-    return (
-      <Dialog
-        open={editExerciseOpen}
-        onClose={this.handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">{titleText}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {descriptionText}
-          </DialogContentText>
-          {nameInput}
-          <i className="material-icons">access_time</i>
-          <TextField
-        id="time"
-        label="start"
-        type="time"
-        defaultValue={GetTimeAsHHmmString(originalExercise ? originalExercise.startTime : new Date())}
-        onChange={this.setStartTime}
-        InputLabelProps={{
-          shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 min
-        }}
-      />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleClose} color="primary">
-            Peruuta
-      </Button>
-          <Button onClick={this.handleSubmit} color="primary">
-            {submitBtnText}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
   }
-
-  private handleClose = () => {
-    const {exercises, editExerciseIndex, toggleExerciseDialog} = this.props.exerciseContext;
-    toggleExerciseDialog(exercises[editExerciseIndex]);
-    this.setState({
-      open: false
-    });
-  };
-  
-  private setStartTime = (event: ChangeEvent<HTMLInputElement>) => {
-    const newStart = event.target.value.split(':');
-    const newStartTime = new Date();
-    newStartTime.setHours(parseInt(newStart[0],10),parseInt(newStart[1],10));
-    this.setState({
-      exercise:{
-        ...this.state.exercise,
-        startTime: newStartTime
-      }
-    })
-
-  }
-
-  private updateName = (event: ChangeEvent<HTMLInputElement>) => {
-    
-    this.setState({
-      exercise: {
-        ...this.state.exercise,
-        name: event.target.value
-      }
-    })
-  }
-
-  private handleSubmit = () => {
-    
-    const { exercise } = this.state;
-    const { exercises, editExerciseIndex, validateExerciseName, submitExercise } = this.props.exerciseContext;
-    // validate that the name is unique
-    // for updates the same name should be allowed
-    const nameOK = validateExerciseName(exercise.name);
-    if ((nameOK || exercises[editExerciseIndex] ) && exercise.name !== '') {
-      submitExercise(exercises[editExerciseIndex], exercise);
-      this.handleClose();
-      this.setState({
-        open: false
-      });
-    } else {
-      console.log(`invalid name`)
-      this.setState({ errorText: 'virheellinen nimi' })
-    }
-  }
+  return (
+    <Dialog
+      open={props.open}
+      onClose={handleClose}
+      aria-labelledby="form-dialog-title"
+    >
+      <DialogTitle id="form-dialog-title">{titleText}</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {descriptionText}
+        </DialogContentText>
+        {nameInput}
+        <i className="material-icons">access_time</i>
+        <TextField
+          name="time"
+          label="start"
+          type="time"
+          defaultValue={GetTimeAsHHmmString(appState.editExercise ? appState.editExercise.startTime : new Date())}
+          onChange={setStartTime}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, // 5 min
+          }}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Peruuta
+    </Button>
+        <Button onClick={handleSubmit} color="primary">
+          {submitBtnText}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
-export default withExerciseContext(withStyles(styles, { withTheme: true })(EditExerciseDialog));
+export default withStyles(styles, { withTheme: true })(EditExerciseDialog)
