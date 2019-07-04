@@ -2,6 +2,7 @@
 import { IExercise, ISection } from "../../DataInterfaces";
 import { exercises } from "../../Store";
 import { addSectionToActiveExercise, deleteExercise, deleteSectionFromActiveExercise, updateActiveExercise, updateSectionInActiveExercise, updateSectionsInActiveExercise } from "./StateUtils";
+import { GetActiveSectionIndex } from "../Utils/ClockUtilities";
 
 /** Exercise reducer action types */
 export enum ActionType {
@@ -19,7 +20,8 @@ export enum ActionType {
     SaveExercises = "SAVE_EXERCISES",
     UpdateAllExercises = "UPDATE_EXERCISES",
     UpdateStartTime = "UPDATE_START_TIME",
-    SetToastMessage = "SET_TOAST_MESSAGE"
+    SetToastMessage = "SET_TOAST_MESSAGE",
+    UpdateActiveSection = "UPDATE_ACTIVE_SECTION"
 }
 
 /** All possible actions */
@@ -38,6 +40,7 @@ export type IAction = {type: ActionType.AddExercise, payload: IExercise}
 | {type: ActionType.UpdateStartTime, payload: Date}
 | {type: ActionType.SetToastMessage, payload: string}
 | {type: ActionType.SaveExercises}
+| {type: ActionType.UpdateActiveSection, payload: Date}
 
 /** Application state */
 export interface IAppState {
@@ -138,6 +141,18 @@ function stateController(state: IAppState, action: IAction): IAppState{
                     startTime: action.payload
                 }
             }
+        }
+        case ActionType.UpdateActiveSection: {
+            
+            const activeIndex = GetActiveSectionIndex(state.activeExercise, action.payload);
+            const currentActive = state.activeSection ? state.activeExercise.defaultSections.indexOf(state.activeSection) : -1;
+            if(currentActive !== activeIndex && activeIndex !== state.activeExercise.defaultSections.length){
+                return {
+                    ...state,
+                    activeSection: state.activeExercise.defaultSections[activeIndex]
+                }
+            }
+            return state;
         }
         default: {
             // if nothing gets returned we fall through to here

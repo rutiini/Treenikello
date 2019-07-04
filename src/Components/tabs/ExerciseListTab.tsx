@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-  const MS_IN_M: number = 60000;
+const MS_IN_M: number = 60000;
 
 /**
  * Props exercise list tab
@@ -90,7 +90,7 @@ const ExerciseListTab: FunctionComponent<
     let duration: number = 0;
 
     exercise.defaultSections.forEach(element => {
-      duration =+ element.duration + element.setupTime; // todo: this gets interpreted as string for some reason.
+      duration = +element.duration + element.setupTime; // todo: this gets interpreted as string for some reason.
     });
 
     // parse timestamps for start and stop
@@ -98,12 +98,13 @@ const ExerciseListTab: FunctionComponent<
       hour: "2-digit",
       minute: "2-digit"
     })}`;
-    const stopTime = new Date(exercise.startTime.getTime() + duration * MS_IN_M);
+    const stopTime = new Date(
+      exercise.startTime.getTime() + duration * MS_IN_M
+    );
     const stops = `${stopTime.toLocaleTimeString("FI", {
       hour: "2-digit",
       minute: "2-digit"
     })}`;
-
     const exerciseKey = exercise.name;
     return (
       <ListItem

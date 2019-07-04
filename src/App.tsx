@@ -25,21 +25,26 @@ const styles = createStyles({
   }
 });
 
-/** TODO: refactor using hooks, replace context with reducer */
 const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [time, setTime] = useState(new Date());
   const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
   const { classes } = props;
   const { editSection, editExercise } = state;
-
+  
+  const [time, setTime] = useState(new Date()); // move out of here. will cause unnecessary rerenders.
   useEffect(() => {
     const timer = setInterval(() => {
-        setTime(new Date());
+        const now = new Date();
+        setTime(now);
+        dispatch(
+          {
+            payload: now,
+            type: ActionType.UpdateActiveSection 
+          });
     }, 1000);
     return () => clearInterval(timer);
 }, []);
-
+  
   const save = () => void 0;
   const validateExerciseName = (name: string) => {
     const position = state.exercises

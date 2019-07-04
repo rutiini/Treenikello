@@ -170,4 +170,4 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
   );
 }
 
-export default withStyles(styles, { withTheme: true })(BottomNavTabs);
+export default React.memo(withStyles(styles, { withTheme: true })(BottomNavTabs));

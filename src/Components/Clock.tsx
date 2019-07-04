@@ -7,14 +7,12 @@ import React, {
 } from "react";
 import { IExercise, ISection } from "../DataInterfaces";
 import ExerciseContext from "./AppReducer/ExerciseContext";
-import { ActionType } from "./AppReducer/ExerciseReducer";
 import ClockFace from "./ClockFace";
 import SectionItem from "./SectionItem";
 import {
   CircleInDegrees,
   ClockData,
   CycleTimerMode,
-  GetActiveSectionIndex,
   MinuteInDegrees,
   TimeToDegrees
 } from "./Utils/ClockUtilities";
@@ -62,12 +60,7 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
 
   // use the context to get the shared state and dispatch instace
   const time = useContext(TimeContext);
-  const [state, dispatch] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
-
-  // TODO: this doees not belong here; move active section handling to app
-  useEffect(() => {
-    checkActiveSection(time);
-  }, [time]);
+  const [state,] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
 
   // stopwatch should react to the timermode
   useEffect(() => {
@@ -81,29 +74,6 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
       setStopWatchSeconds(0);
     }
   }, [timerMode, stopWatchSeconds]);
-
-  /**
-   * TODO: check if this could be on the monitor tab bound to common time context?
-   * calculate the active section index and update index if it has changed.
-   * @param currentTime date to compare to the exercise timings
-   */
-  const checkActiveSection = (currentTime: Date) => {
-    const { activeExercise, activeSection } = state;
-    // TODO: check why this gives active index even when time has passed the exercise time
-    const activeIndex = GetActiveSectionIndex(activeExercise, currentTime);
-    const activeSectionIndex = activeSection
-      ? activeExercise.defaultSections.indexOf(activeSection)
-      : -1;
-    if (
-      activeSectionIndex !== activeIndex &&
-      activeIndex !== activeExercise.defaultSections.length
-    ) {
-      dispatch({
-        payload: activeExercise.defaultSections[activeIndex],
-        type: ActionType.SetActiveSection
-      });
-    }
-  };
 
   /**
    * Increases the stopWatchSeconds in state by one.

@@ -125,21 +125,6 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
 };
 
 /**
- * Compares input time agains current moment and outputs the time difference
- * @param startTime comparison time
- */
-// function getCountDownTime(startTime: Date) {
-
-//   // TODO: check the hour calculation bug!
-//   const ticks: number = timeToSeconds(startTime) - timeToSeconds(new Date());
-//   const hours: number = ticks / temporalConstant * temporalConstant;
-//   const minutes: number = ticks % temporalConstant;
-//   const seconds: number = ticks - hours * temporalConstant * temporalConstant - minutes * temporalConstant;
-
-//   return new Date(0, 0, 0, hours, minutes, seconds);
-// }
-
-/**
  * This function transforms the time component of a date object to seconds,
  * NOTE: ignores the date component!
  * @param time input date object
