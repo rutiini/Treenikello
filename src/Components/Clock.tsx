@@ -14,9 +14,9 @@ import {
   ClockData,
   CycleTimerMode,
   MinuteInDegrees,
-  TimeToDegrees
+  TimeToDegrees,
+  useInterval
 } from "./Utils/ClockUtilities";
-import TimeContext from "./AppReducer/TimeContext";
 
 interface IProps extends WithStyles<typeof styles> {
   canvasSide: number;
@@ -57,9 +57,11 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
   const [stopWatchSeconds, setStopWatchSeconds] = useState(0);
   const [timerMode, setTimerMode] = useState(TimerMode.Hidden);
   const [stopWatch, setStopWatch] = useState<NodeJS.Timeout | null>(null);
+  const [time, setTime] = useState(new Date());
+
+  useInterval(() => setTime(new Date()), 1000);
 
   // use the context to get the shared state and dispatch instace
-  const time = useContext(TimeContext);
   const [state,] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
 
   // stopwatch should react to the timermode
@@ -73,7 +75,10 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
     } else if (timerMode === TimerMode.Hidden) {
       setStopWatchSeconds(0);
     }
-  }, [timerMode, stopWatchSeconds]);
+  }, [
+    timerMode, 
+    stopWatchSeconds
+  ]);
 
   /**
    * Increases the stopWatchSeconds in state by one.

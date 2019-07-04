@@ -9,11 +9,12 @@ import {
   withStyles
 } from "@material-ui/core";
 import React, {
-  FunctionComponent,
-  useContext
+  FunctionComponent, useState, useContext,
 } from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
-import TimeContext from "../AppReducer/TimeContext";
+import { useInterval, GetActiveSectionIndex } from "../Utils/ClockUtilities";
+import ExerciseContext from "../AppReducer/ExerciseContext";
+import { ActionType } from "../AppReducer/ExerciseReducer";
 
 const styles = createStyles({
   root: {
@@ -39,8 +40,23 @@ interface IProps {
 const temporalConstant: number = 60;
 
 const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
-  const time = useContext(TimeContext);
   const { classes, exercise, activeSection } = props;
+  const [, dispatch] = useContext(ExerciseContext);
+  
+  const [time, setTime] = useState(new Date());
+
+  const updateActiveSection = () => {
+    const currentIndex = GetActiveSectionIndex(exercise, time);
+    const currentSection = currentIndex >= 0 && currentIndex < exercise.defaultSections.length ? exercise.defaultSections[currentIndex] : null;
+    if(activeSection !== currentSection) {
+      dispatch({type: ActionType.UpdateActiveSection, payload: time});
+    }
+  }
+
+  useInterval(() => {
+    setTime(new Date()); 
+    updateActiveSection();
+  }, 1000);
 
   // TODO: rerenders the whole component a lot but not a problem? => change shouldcomponentupdate with the index checking: if <0 then we should rerender but otherwise only when index changes
   const steps = exercise.defaultSections.map(section => section.name);

@@ -1,5 +1,5 @@
 import { createStyles, WithStyles, withStyles } from "@material-ui/core";
-import React, { FunctionComponent, useReducer, useState, useEffect } from "react";
+import React, { FunctionComponent, useReducer, useState } from "react";
 import ExerciseContext from "./Components/AppReducer/ExerciseContext";
 import {
   ActionType,
@@ -13,7 +13,6 @@ import EditSectionDialog from "./Components/dialogs/EditSectionDialog";
 import NotificationSnackBar from "./Components/NotificationSnackBar";
 import BottomNavTabs from "./Components/tabs/BottomNavTabs";
 import { IExercise } from "./DataInterfaces";
-import TimeContext from "./Components/AppReducer/TimeContext";
 
 interface IProps extends WithStyles<typeof styles> {
   // just for style injection
@@ -31,20 +30,6 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   const { classes } = props;
   const { editSection, editExercise } = state;
   
-  const [time, setTime] = useState(new Date()); // move out of here. will cause unnecessary rerenders.
-  useEffect(() => {
-    const timer = setInterval(() => {
-        const now = new Date();
-        setTime(now);
-        dispatch(
-          {
-            payload: now,
-            type: ActionType.UpdateActiveSection 
-          });
-    }, 1000);
-    return () => clearInterval(timer);
-}, []);
-  
   const save = () => void 0;
   const validateExerciseName = (name: string) => {
     const position = state.exercises
@@ -57,12 +42,12 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
       return false;
     }
   };
+
   const deleteExercise = (exercise: IExercise) =>
     dispatch({ type: ActionType.DeleteExercise, payload: exercise });
 
   return (
     <ExerciseContext.Provider value={[state, dispatch]}>
-      <TimeContext.Provider value={time}>
         <div className={classes.App}>
           <Clock canvasSide={100} />
           <BottomNavTabs />
@@ -86,7 +71,6 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
             handleHide={setConfirmOpen}
           />
         </div>
-      </TimeContext.Provider>
     </ExerciseContext.Provider>
   );
 };

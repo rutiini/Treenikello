@@ -1,15 +1,10 @@
 ﻿import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Clock, { TimerMode } from '../Clock';
-import { ClockData } from '../Utils/ClockUtilities';
+import Clock from '../Clock';
 
 const testProps = {
   canvasSide: 100,
-  centerCoordinate: 10,
-  clockData: new ClockData(new Date),
-  sectionItems: [],
-  stopWatchRotation: 230,
-  timerMode: TimerMode.Hidden,
+  time: new Date()
 }
 
 it('Clock renders without crashing', () => {
