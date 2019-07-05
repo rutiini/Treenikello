@@ -17,6 +17,7 @@ steps:
 
 - script: |
     echo building at $(Build.SourcesDirectory)
+    echo binaries $(Build.BinariesDirectory)
     npm install
     npm run build
   displayName: 'npm install and build'
@@ -30,6 +31,8 @@ steps:
 - script: |
     cd build
     ls -l
+    cd..
+    cd $(Build.BinariesDirectory)
   displayName: 'check outputs files'
 
 # Publish Build Artifacts
