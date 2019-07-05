@@ -23,8 +23,8 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: $(Build.SourcesDirectory)\build
-    contents: '*\**'
+    SourceFolder: $(Build.SourcesDirectory)/build
+    contents: '*/**'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 - script: |
