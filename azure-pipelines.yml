@@ -16,17 +16,21 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    echo $(Agent.BuildDirectory)
-    echo $(Build.SourcesDirectory)
-    #npm install
-    #npm run build
+    echo building at $(Build.SourcesDirectory)
+    npm install
+    npm run build
   displayName: 'npm install and build'
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: $(Agent.BuildDirectory)
-    contents: '*\**'
+    SourceFolder: $(Build.SourcesDirectory)
+    contents: 'build\**'
     targetFolder: $(Build.ArtifactStagingDirectory)
+
+- script: |
+    cd build
+    ls -l
+  displayName: 'check outputs files'
 
 # Publish Build Artifacts
 # Publish build artifacts to Azure Pipelines/TFS or a file share
