@@ -20,6 +20,11 @@ steps:
     npm run build
   displayName: 'npm install and build'
 
+- task: CopyFiles@2
+  inputs:
+    contents: '_buildOutput\**'
+    targetFolder: $(Build.ArtifactStagingDirectory)
+
 # Publish Build Artifacts
 # Publish build artifacts to Azure Pipelines/TFS or a file share
 - task: PublishBuildArtifacts@1
