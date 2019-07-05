@@ -17,7 +17,7 @@ steps:
 
 - script: |
     echo building at $(Build.SourcesDirectory)
-    echo binaries $(Build.BinariesDirectory)
+    echo binaries at $(Build.BinariesDirectory)
     npm install
     npm run build
   displayName: 'npm install and build'
@@ -31,9 +31,17 @@ steps:
 - script: |
     cd build
     ls -l
-    cd..
     cd $(Build.BinariesDirectory)
+    ls -l
   displayName: 'check outputs files'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: $(Build.ArtifactStagingDirectory)
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    includeRootFolder: false
+
 
 # Publish Build Artifacts
 # Publish build artifacts to Azure Pipelines/TFS or a file share
