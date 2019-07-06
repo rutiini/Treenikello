@@ -25,8 +25,15 @@ steps:
 - task: CopyFiles@2
   inputs:
     SourceFolder: $(Build.SourcesDirectory)/build
-    contents: '*/**'
+    contents: '*'
     targetFolder: $(Build.ArtifactStagingDirectory)
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: $(Build.ArtifactStagingDirectory)
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    includeRootFolder: false
 
 - script: |
     cd build
@@ -35,12 +42,6 @@ steps:
     ls -l
   displayName: 'check outputs files'
 
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: $(Build.ArtifactStagingDirectory)
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    includeRootFolder: false
 
 
 # Publish Build Artifacts
