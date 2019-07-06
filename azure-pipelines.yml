@@ -48,7 +48,7 @@ steps:
 # Publish build artifacts to Azure Pipelines/TFS or a file share
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/*.zip' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
     artifactName: 'drop' 
     #publishLocation: 'Container' # Options: container, filePath
     #targetPath: # Required when publishLocation == FilePath
