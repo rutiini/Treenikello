@@ -9,6 +9,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  appname: 'hajimeapp'
+  configuration: 'release'
+  package: $(appname)-$(configuration)-$(Build.BuildId)
+
 steps:
 - task: NodeTool@0
   inputs:
@@ -16,41 +21,32 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    echo building at $(Build.SourcesDirectory)
-    echo binaries at $(Build.BinariesDirectory)
     npm install
     npm run build
+    npm run test-coverage
   displayName: 'npm install and build'
+
+- script: npm run test-coverage
+  displayName: 'run tests and check coverage'
 
 - task: CopyFiles@2
   inputs:
     SourceFolder: $(Build.SourcesDirectory)/build
-    contents: |
-      '*'
-      '*/**'
+    contents: '**'
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: $(Build.ArtifactStagingDirectory)
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(package).zip'
     includeRootFolder: false
-
-- script: |
-    cd build
-    ls -l
-    cd $(Build.BinariesDirectory)
-    ls -l
-  displayName: 'check outputs files'
-
-
 
 # Publish Build Artifacts
 # Publish build artifacts to Azure Pipelines/TFS or a file share
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    pathtoPublish: '$(package).zip'
     artifactName: 'drop' 
     #publishLocation: 'Container' # Options: container, filePath
     #targetPath: # Required when publishLocation == FilePath
