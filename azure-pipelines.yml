@@ -21,10 +21,9 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    echo building at $(Build.SourcesDirectory)
-    echo binaries at $(Build.BinariesDirectory)
     npm install
     npm run build
+    npm run test-coverage
   displayName: 'npm install and build'
 
 - task: CopyFiles@2
@@ -39,15 +38,6 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(package).zip'
     includeRootFolder: false
-
-- script: |
-    cd build
-    ls -l
-    cd $(Build.BinariesDirectory)
-    ls -l
-  displayName: 'check outputs files'
-
-
 
 # Publish Build Artifacts
 # Publish build artifacts to Azure Pipelines/TFS or a file share
