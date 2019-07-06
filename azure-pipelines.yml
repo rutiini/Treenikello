@@ -9,6 +9,11 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  appname: 'hajimeapp'
+  configuration: 'release'
+  package: $(appname)-$(configuration)-$(Build.BuildId)
+
 steps:
 - task: NodeTool@0
   inputs:
@@ -32,7 +37,7 @@ steps:
   inputs:
     rootFolderOrFile: $(Build.ArtifactStagingDirectory)
     archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    archiveFile: '$(package).zip'
     includeRootFolder: false
 
 - script: |
@@ -48,7 +53,7 @@ steps:
 # Publish build artifacts to Azure Pipelines/TFS or a file share
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip' 
+    pathtoPublish: '$(package).zip'
     artifactName: 'drop' 
     #publishLocation: 'Container' # Options: container, filePath
     #targetPath: # Required when publishLocation == FilePath
