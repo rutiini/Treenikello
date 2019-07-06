@@ -26,6 +26,9 @@ steps:
     npm run test-coverage
   displayName: 'npm install and build'
 
+- script: npm run test-coverage
+  displayName: 'run tests and check coverage'
+
 - task: CopyFiles@2
   inputs:
     SourceFolder: $(Build.SourcesDirectory)/build
