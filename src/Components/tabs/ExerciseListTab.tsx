@@ -114,7 +114,7 @@ const ExerciseListTab: FunctionComponent<
         key={exerciseKey}
         value={exercise.name}
         onClick={clicked(exercise)}
-        button={true}
+        // button={true}
       >
         <ListItemIcon>{placeHolderIcon}</ListItemIcon>
         <ListItemText

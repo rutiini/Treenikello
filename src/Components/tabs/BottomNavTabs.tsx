@@ -81,7 +81,7 @@ const styles = (theme: Theme) => createStyles({
     borderBottom: '1px solid #e8e8e8',
   },
   typography: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.length * 3,
   },
 });
 

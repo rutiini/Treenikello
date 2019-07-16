@@ -9,7 +9,7 @@ import {
 import Clock from "./Components/Clock";
 import ConfirmationDialog from "./Components/dialogs/ConfirmationDialog";
 import EditExerciseDialog from "./Components/dialogs/EditExerciseDialog";
-import EditSectionDialog from "./Components/dialogs/EditSectionDialog";
+// import EditSectionDialog from "./Components/dialogs/EditSectionDialog";
 import NotificationSnackBar from "./Components/NotificationSnackBar";
 import BottomNavTabs from "./Components/tabs/BottomNavTabs";
 import { IExercise } from "./DataInterfaces";
@@ -28,7 +28,7 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
   const { classes } = props;
-  const { editSection, editExercise } = state;
+  const { /*editSection,*/ editExercise } = state;
   
   const save = () => void 0;
   const validateExerciseName = (name: string) => {
@@ -51,7 +51,7 @@ const App: FunctionComponent<IProps & WithStyles> = (props: IProps) => {
         <div className={classes.App}>
           <Clock canvasSide={100} />
           <BottomNavTabs />
-          {editSection && <EditSectionDialog section={editSection} />}
+          {/* {editSection && <EditSectionDialog section={editSection} />} */}
           {editExercise && (
             <EditExerciseDialog
               exercise={editExercise}

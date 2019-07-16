@@ -1,8 +1,11 @@
 import { createStyles, Fab, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState, useContext } from 'react';
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { IExercise, ISection } from '../../DataInterfaces';
 import CompactSectionListItem from '../CompactSectionListItem';
+import ExerciseContext from '../AppReducer/ExerciseContext';
+import { SectionEditor } from '../dialogs/SectionEditor';
+import { ActionType } from '../AppReducer/ExerciseReducer';
 
 const styles = createStyles({
   listItem: {
@@ -26,7 +29,7 @@ interface IProps extends WithStyles {
 const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
 
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-
+  const [state, dispatch] = useContext(ExerciseContext);
   const { classes,
   } = props;
   const {
@@ -55,6 +58,10 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   const sorted = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
     const rearranged: ReadonlyArray<ISection> = arrayMove([...exercise.defaultSections], oldIndex, newIndex);
     updateSectionOrder(rearranged);
+  }
+
+  const updateSection = (section:ISection) => {
+    dispatch({type: ActionType.UpdateSection, payload: section });
   }
 
   const SortableItem = SortableElement(({ value }: { value: JSX.Element }) =>
@@ -94,8 +101,14 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
+      {
+        state.editSection ? 
+        <SectionEditor section={state.editSection} updateSection={updateSection}/> :
+      <>
+        <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
       {addNewButton}
+      </>
+      }
     </div>
   );
 }
