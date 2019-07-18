@@ -4,7 +4,7 @@ import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-ho
 import { IExercise, ISection } from '../../DataInterfaces';
 import CompactSectionListItem from '../CompactSectionListItem';
 import ExerciseContext from '../AppReducer/ExerciseContext';
-import { SectionEditor } from '../dialogs/SectionEditor';
+import SectionEditor from '../dialogs/SectionEditor';
 import { ActionType } from '../AppReducer/ExerciseReducer';
 
 const styles = createStyles({
@@ -21,7 +21,7 @@ const styles = createStyles({
 interface IProps extends WithStyles {
   exercise: IExercise,
   selected: number,
-  toggleSectionDialog(section: ISection): void,
+  setEditSection(section: ISection): void,
   deleteSection(section: ISection): void,
   updateSectionOrder(sections: ReadonlyArray<ISection>): void
 }
@@ -35,7 +35,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   const {
     exercise,
     deleteSection,
-    toggleSectionDialog,
+    setEditSection,
     updateSectionOrder
   } = props;
 
@@ -48,7 +48,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
       name: "",
       setupTime: 0
     }
-    props.toggleSectionDialog(newSection);
+    props.setEditSection(newSection);
   }
 
   const setSelectedIndex = (index: number) => {
@@ -61,7 +61,8 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const updateSection = (section:ISection) => {
-    dispatch({type: ActionType.UpdateSection, payload: section });
+    dispatch({ type: ActionType.UpdateSection, payload: section });
+    dispatch({ type: ActionType.SetEditSection, payload: null });
   }
 
   const SortableItem = SortableElement(({ value }: { value: JSX.Element }) =>
@@ -85,7 +86,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
       expanded={index === expandedIndex}
       index={index}
       setIndex={setSelectedIndex}
-      editSection={toggleSectionDialog}
+      editSection={setEditSection}
       deleteSection={deleteSection}
     />)
   })

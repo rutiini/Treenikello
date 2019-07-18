@@ -13,7 +13,7 @@ const sectionTabProps = {
   },
   expandedIndex: 0,
   selected: 0,
-  toggleSectionDialog: (section: ISection) => {""},
+  setEditSection: (section: ISection) => {""},
   updateSectionOrder: (sections: ISection[]) => {""}
 }
 
