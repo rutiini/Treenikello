@@ -4,7 +4,7 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { MuiThemeProvider } from 'material-ui/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
   overrides:{
@@ -30,7 +30,7 @@ const theme = createMuiTheme({
 });
 
 render(
-  <MuiThemeProvider muiTheme={theme}>
+  <MuiThemeProvider theme={theme}>
       <CssBaseline/>
       <App />
   </MuiThemeProvider>,
