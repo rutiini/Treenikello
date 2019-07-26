@@ -15,7 +15,18 @@ const styles = createStyles({
   root: {
     overflow: 'auto',
     userSelect: 'none',
-  }
+  },
+  contentContainer: {
+    transition: "height .35s ease-in-out, display .35s ease-in-out"
+  },
+  open: {
+    height: "100%",
+    display: "block"
+  },
+  closed: {
+    height: 0,
+    display: "none"
+  },
 });
 
 interface IProps extends WithStyles {
@@ -60,7 +71,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
     updateSectionOrder(rearranged);
   }
 
-  const updateSection = (section:ISection) => {
+  const updateSection = (section: ISection) => {
     dispatch({ type: ActionType.UpdateSection, payload: section });
     dispatch({ type: ActionType.SetEditSection, payload: null });
   }
@@ -103,12 +114,15 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   return (
     <div className={classes.root}>
       {
-        state.editSection ? 
-        <SectionEditor section={state.editSection} updateSection={updateSection}/> :
-      <>
-        <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
-      {addNewButton}
-      </>
+        <>
+          <div className={`${props.classes.contentContainer} ${state.editSection ? props.classes.closed : props.classes.open}`}>
+            <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
+            {addNewButton}
+          </div>
+          <div className={`${props.classes.contentContainer}  ${state.editSection ? props.classes.open : props.classes.closed}`}>
+            <SectionEditor section={state.editSection} updateSection={updateSection} />
+          </div>
+        </>
       }
     </div>
   );

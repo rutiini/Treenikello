@@ -3,9 +3,18 @@ import { ISection } from 'src/DataInterfaces';
 import { TextField, createStyles, WithStyles, withStyles, Button } from '@material-ui/core';
 
 interface ISectionEditorProps extends WithStyles<typeof styles> {
-    readonly section: ISection;
+    readonly section: ISection | null;
     updateSection(section: ISection): void;
 }
+
+const emptySection: ISection = {
+    color: '',
+    description: '',
+    duration: 0,
+    key: '',
+    name: '',
+    setupTime: 0
+  }
 
 const styles = createStyles({
     input: {
@@ -34,7 +43,13 @@ const styles = createStyles({
 });
 
 const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
-    const [section, setSection] = useState(props.section);
+    const initialSection = props.section ? props.section : emptySection;
+    const [section, setSection] = useState(initialSection);
+
+    React.useEffect(() => {
+        setSection(initialSection);
+    },
+    [props.section]);
 
     /** updates a property with string value that matches the name of the sender element */
     const updateStringProp = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -57,7 +72,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
     }
 
     const cancel = () => {
-        props.updateSection(props.section);
+        props.updateSection(initialSection);
     }
 
     return <div className={props.classes.inputContainer}>
