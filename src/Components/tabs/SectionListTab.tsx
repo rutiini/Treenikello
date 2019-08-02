@@ -15,17 +15,23 @@ const styles = createStyles({
   root: {
     overflow: 'auto',
     userSelect: 'none',
+    height:"100%"
   },
-  contentContainer: {
-    transition: "height .35s ease-in-out, display .35s ease-in-out"
-  },
-  open: {
+  list: {
     height: "100%",
-    display: "block"
+    transition: "height 300ms ease-in-out",
+    "$root.expanded>&": {
+      height: 0,
+      overflow: "hidden"
+    }
   },
-  closed: {
+  editor: {
     height: 0,
-    display: "none"
+    overflow: "hidden",
+    transition: "height 300ms ease-in-out",
+    "$root.expanded>&": {
+      height: "100%",
+    }
   },
 });
 
@@ -112,18 +118,14 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   // const list = SortableContainer(() => <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>{[...sections, addNewButton]}</List>)
 
   return (
-    <div className={classes.root}>
-      {
-        <>
-          <div className={`${props.classes.contentContainer} ${state.editSection ? props.classes.closed : props.classes.open}`}>
+    <div className={`${classes.root} ${state.editSection ? "expanded" : "collapsed"}`}>
+          <div className={`${props.classes.list}`}>
             <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
             {addNewButton}
           </div>
-          <div className={`${props.classes.contentContainer}  ${state.editSection ? props.classes.open : props.classes.closed}`}>
+          <div className={`${props.classes.editor}`}>
             <SectionEditor section={state.editSection} updateSection={updateSection} />
           </div>
-        </>
-      }
     </div>
   );
 }
