@@ -1,5 +1,5 @@
 import { createStyles, Fab, List, ListItem, withStyles, WithStyles } from '@material-ui/core';
-import React, { FunctionComponent, useState, useContext } from 'react';
+import React, { FunctionComponent, useContext, useState } from 'react';
 import { arrayMove, SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { IExercise, ISection } from '../../DataInterfaces';
 import CompactSectionListItem from '../CompactSectionListItem';
@@ -13,24 +13,25 @@ const styles = createStyles({
     textAlign: 'center',
   },
   root: {
-    overflow: 'auto',
+    overflow: 'hidden',
     userSelect: 'none',
-    height:"100%"
+    height: "100%"
   },
   list: {
     height: "100%",
-    transition: "height 300ms ease-in-out",
+    overflow: "auto",
+    transition: "transform 300ms ease-in-out",
     "$root.expanded>&": {
-      height: 0,
+      transform: "translateY(-100%)",
       overflow: "hidden"
     }
   },
   editor: {
-    height: 0,
+    height: "100%",
     overflow: "hidden",
-    transition: "height 300ms ease-in-out",
+    transition: "transform 300ms ease-in-out",
     "$root.expanded>&": {
-      height: "100%",
+      transform: "translateY(-100%)",
     }
   },
 });
@@ -39,19 +40,18 @@ interface IProps extends WithStyles {
   exercise: IExercise,
   selected: number,
   setEditSection(section: ISection): void,
-  deleteSection(section: ISection): void,
   updateSectionOrder(sections: ReadonlyArray<ISection>): void
 }
 
 const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
 
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [state, dispatch] = useContext(ExerciseContext);
+  const [addingNewSection, setAddingNewSection] = useState(false);
+
   const { classes,
   } = props;
   const {
     exercise,
-    deleteSection,
     setEditSection,
     updateSectionOrder
   } = props;
@@ -65,11 +65,8 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
       name: "",
       setupTime: 0
     }
-    props.setEditSection(newSection);
-  }
-
-  const setSelectedIndex = (index: number) => {
-    setExpandedIndex(index === expandedIndex ? -1 : index);
+    dispatch({ type: ActionType.SetEditSection, payload: newSection });
+    setAddingNewSection(true);
   }
 
   const sorted = ({ oldIndex, newIndex }: { oldIndex: number, newIndex: number }) => {
@@ -78,8 +75,24 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
   }
 
   const updateSection = (section: ISection) => {
-    dispatch({ type: ActionType.UpdateSection, payload: section });
+    // if section is new, add it to the exercise.
+    if (addingNewSection) {
+      dispatch({ type: ActionType.AddSection, payload: section });
+    } else {
+      dispatch({ type: ActionType.UpdateSection, payload: section });
+    }
     dispatch({ type: ActionType.SetEditSection, payload: null });
+    setAddingNewSection(false);
+  }
+
+  const deleteSection = (section: ISection) => {
+    dispatch({ type: ActionType.DeleteSection, payload: section });
+    dispatch({ type: ActionType.SetEditSection, payload: null });
+  }
+
+  const closeEditor = () => {
+    dispatch({ type: ActionType.SetEditSection, payload: null });
+    setAddingNewSection(false);
   }
 
   const SortableItem = SortableElement(({ value }: { value: JSX.Element }) =>
@@ -100,32 +113,44 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
     return (<CompactSectionListItem
       key={`item-${index}`}
       section={sectionItem}
-      expanded={index === expandedIndex}
       index={index}
-      setIndex={setSelectedIndex}
       editSection={setEditSection}
-      deleteSection={deleteSection}
     />)
   })
 
-  const addNewButton = <ListItem className={classes.listItem} key="add-section-button">
-    <Fab size="medium" color="primary" aria-label="add"
+  const addNewButton = <ListItem
+    className={classes.listItem}
+    key="add-section-button">
+    <Fab
+      size="medium"
+      color="primary"
+      aria-label="add"
       onClick={addNewSection}
-    ><i className="material-icons">add</i>
+    >
+      <i className="material-icons">add</i>
     </Fab>
   </ListItem>
 
-  // const list = SortableContainer(() => <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>{[...sections, addNewButton]}</List>)
-
   return (
     <div className={`${classes.root} ${state.editSection ? "expanded" : "collapsed"}`}>
-          <div className={`${props.classes.list}`}>
-            <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={300} useDragHandle={true} />
-            {addNewButton}
-          </div>
-          <div className={`${props.classes.editor}`}>
-            <SectionEditor section={state.editSection} updateSection={updateSection} />
-          </div>
+      <div className={`${props.classes.list}`}>
+        <SortableList
+          items={sections}
+          onSortEnd={sorted}
+          lockAxis={"y"}
+          pressDelay={300}
+          useDragHandle={true}
+        />
+        {addNewButton}
+      </div>
+      <div className={`${props.classes.editor}`}>
+        <SectionEditor
+          section={state.editSection}
+          updateSection={updateSection}
+          deleteSection={deleteSection}
+          cancel={closeEditor}
+        />
+      </div>
     </div>
   );
 }

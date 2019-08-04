@@ -104,7 +104,6 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
   const setTime = (time: Date) => dispatch({ type: ActionType.UpdateStartTime, payload: time });
   const save = () => dispatch({ type: ActionType.SaveExercises });
   const setEditSection = (section: ISection) => dispatch({ type: ActionType.SetEditSection, payload: section }); // TODO: should we move this from app to here?
-  const deleteSection = (section: ISection) => dispatch({ type: ActionType.DeleteSection, payload: section });
   const updateSectionOrder = (sections: ReadonlyArray<ISection>) => dispatch({ type: ActionType.UpdateAllSections, payload: sections });
   const setEditExercise = (exercise: IExercise) => dispatch({ type: ActionType.SetEditExercise, payload: exercise });
   const deleteExercise = (exercise: IExercise) => { dispatch({ type: ActionType.DeleteExercise, payload: exercise }); return true; };
@@ -140,7 +139,6 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
             selected={exercises.indexOf(activeExercise)}
             exercise={activeExercise}
             setEditSection={setEditSection}
-            deleteSection={deleteSection}
             updateSectionOrder={updateSectionOrder} />
           <ExerciseListTab
             exercises={exercises}

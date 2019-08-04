@@ -1,10 +1,13 @@
 import React, { useState, ChangeEvent } from 'react';
 import { ISection } from 'src/DataInterfaces';
-import { TextField, createStyles, WithStyles, withStyles, Button } from '@material-ui/core';
+import { TextField, createStyles, WithStyles, withStyles, Button, Select, MenuItem } from '@material-ui/core';
+import { colorOptions } from 'src/Store';
 
 interface ISectionEditorProps extends WithStyles<typeof styles> {
     readonly section: ISection | null;
     updateSection(section: ISection): void;
+    deleteSection(section: ISection): void;
+    cancel():void;
 }
 
 const emptySection: ISection = {
@@ -71,8 +74,8 @@ const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
         props.updateSection(section);
     }
 
-    const cancel = () => {
-        props.updateSection(initialSection);
+    const deleteSection = () => {
+        props.deleteSection(section);
     }
 
     return <div className={props.classes.inputContainer}>
@@ -111,10 +114,25 @@ const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
                 onChange={updateNumberProp}
                 className={props.classes.numericInput}
             />
+            {/* add a label for this control */}
+            <Select 
+              style={{ backgroundColor: section.color }}
+              value={section.color}
+              onChange={updateStringProp}
+              name='color'
+            >
+            {
+                colorOptions.map(
+                    (o, index) => {
+                    return <MenuItem key={index} value={o.colorValue} style={{backgroundColor: o.colorValue}} />
+                    })
+            }
+      </Select>
         </div>
         <div className={props.classes.inputGroup}>
-            <Button size="large" color="primary" onClick={apply}>OK</Button>
-            <Button size="large" onClick={cancel}>Peruuta</Button>
+            <Button size="large" color="primary" onClick={apply}>Tallenna</Button>
+            <Button size="large" onClick={props.cancel}>Peruuta</Button>
+            <Button size="large" onClick={deleteSection}>Poista</Button>
         </div>
     </div>
 }
