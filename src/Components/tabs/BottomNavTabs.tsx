@@ -136,7 +136,6 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
             activeSection={activeSection}
           />
           <SectionListTab
-            selected={exercises.indexOf(activeExercise)}
             exercise={activeExercise}
             setEditSection={setEditSection}
             updateSectionOrder={updateSectionOrder} />

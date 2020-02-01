@@ -38,7 +38,6 @@ const styles = createStyles({
 
 interface IProps extends WithStyles {
   exercise: IExercise,
-  selected: number,
   setEditSection(section: ISection): void,
   updateSectionOrder(sections: ReadonlyArray<ISection>): void
 }
