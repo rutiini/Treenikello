@@ -13,8 +13,9 @@ import {
   ListItemSecondaryAction,
   ListItemText
 } from "@material-ui/core";
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useContext } from "react";
 import { IExercise } from "../../DataInterfaces";
+import ExerciseContext from "../AppReducer/ExerciseContext";
 
 /** component props */
 interface IProps extends WithStyles<typeof styles> {
@@ -39,6 +40,28 @@ const styles = (theme: Theme) =>
       justifyContent: "center",
       textAlign: "center",
       width: "100%"
+    },
+    root: {
+      overflow: 'hidden',
+      userSelect: 'none',
+      height: "100%"
+    },
+    list: {
+      height: "100%",
+      overflow: "auto",
+      transition: "transform 300ms ease-in-out",
+      "$root.expanded>&": {
+        transform: "translateY(-100%)",
+        overflow: "hidden"
+      }
+    },
+    editor: {
+      height: "100%",
+      overflow: "hidden",
+      transition: "transform 300ms ease-in-out",
+      "$root.expanded>&": {
+        transform: "translateY(-100%)",
+      }
     }
   });
 
@@ -60,6 +83,8 @@ const ExerciseListTab: FunctionComponent<
     deleteExercise,
     selected
   } = props;
+  
+  const [state, /*dispatch*/] = useContext(ExerciseContext);
 
   const placeHolderIcon = <i className="material-icons">whatshot</i>;
   const deleteIcon = <i className="material-icons">delete</i>;
@@ -143,7 +168,8 @@ const ExerciseListTab: FunctionComponent<
   });
 
   return (
-    <div>
+    <div className={`${classes.root} ${state.editExercise ? "expanded" : "collapsed"}`}>
+      <div className={classes.list}>
       <List
         component="nav"
         style={{ height: "100%", paddingTop: 0, paddingBottom: 0 }}
@@ -155,6 +181,10 @@ const ExerciseListTab: FunctionComponent<
           </Fab>
         </ListItem>
       </List>
+      </div>
+      <div className={classes.editor}>
+        EDITOR
+      </div>
     </div>
   );
 };
