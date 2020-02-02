@@ -5,6 +5,7 @@ import { GetTimeAsHHmmString } from '../Utils/ClockUtilities';
 
 interface IExerciseEditorProps extends WithStyles<typeof styles> {
     readonly exercise: IExercise | null;
+    readonly usedNames: ReadonlyArray<string>;
     updateExercise(exercise: IExercise): void;
     deleteExercise(exercise: IExercise): void;
     cancel(): void;
@@ -44,7 +45,7 @@ const emptyExercise = {
     startTime: new Date(),
   }
 
-const SectionEditor: React.FC<IExerciseEditorProps> = (props) => {
+const ExerciseEditor: React.FC<IExerciseEditorProps> = (props) => {
     const initialExercise = props.exercise ? props.exercise : emptyExercise;
     const [exercise, setExercise] = useState(initialExercise);
 
@@ -80,16 +81,14 @@ const SectionEditor: React.FC<IExerciseEditorProps> = (props) => {
 
     return <div className={props.classes.inputContainer}>
         <TextField
-        autoFocus={true}
-        margin="dense"
         name="name"
         label="Nimi"
         type="text"
         value={exercise.name}
         onChange={updateName}
         helperText={validateName}
-        variant="filled"
         error={!!validateName}
+        className={props.classes.input}
       />
       <TextField
           name="time"
@@ -103,7 +102,7 @@ const SectionEditor: React.FC<IExerciseEditorProps> = (props) => {
           inputProps={{
             step: 300, // 5 min
           }}
-        />
+        /> 
         <div className={props.classes.inputGroup}>
             <Button size="large" color="primary" onClick={apply}>Tallenna</Button>
             <Button size="large" onClick={props.cancel}>Peruuta</Button>
@@ -112,8 +111,9 @@ const SectionEditor: React.FC<IExerciseEditorProps> = (props) => {
     </div>
 }
 
-function validateName(name: string): string | null {
-    return null;
+function validateName(name: string, usedNames: ReadonlyArray<string>): string | null {
+    const index = usedNames.findIndex(n => n === name);
+    return index !== -1 ? null : `nimi käytetty: ${usedNames[index]}`;
 }
 
-export default withStyles(styles)(SectionEditor);
+export default withStyles(styles)(ExerciseEditor);

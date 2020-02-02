@@ -132,7 +132,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
 
   return (
     <div className={`${classes.root} ${state.editSection ? "expanded" : "collapsed"}`}>
-      <div className={`${props.classes.list}`}>
+      <div className={classes.list}>
         <SortableList
           items={sections}
           onSortEnd={sorted}
@@ -142,7 +142,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
         />
         {addNewButton}
       </div>
-      <div className={`${props.classes.editor}`}>
+      <div className={classes.editor}>
         <SectionEditor
           section={state.editSection}
           updateSection={updateSection}

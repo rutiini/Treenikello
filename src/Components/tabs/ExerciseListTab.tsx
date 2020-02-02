@@ -2,15 +2,14 @@ import { createStyles, Fab, Theme, withStyles, WithStyles } from "@material-ui/c
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
 import React, { FunctionComponent, useContext, useState } from "react";
 import { IExercise } from "../../DataInterfaces";
-import ExerciseEditor from "../dialogs/ExerciseEditor";
 import ExerciseContext from "../AppReducer/ExerciseContext";
 import { ActionType } from "../AppReducer/ExerciseReducer";
+import ExerciseEditor from "../dialogs/ExerciseEditor";
 
 /** component props */
 interface IProps extends WithStyles {
     exercises: ReadonlyArray<IExercise>;
     selected: number;
-    theme: Theme;
     toggleExerciseDialog: (exercise: IExercise) => void;
     deleteExercise: (exercise: IExercise) => boolean;
     selectExercise: (exercise: IExercise) => void;
@@ -51,7 +50,7 @@ const styles = (theme: Theme) =>
       "$root.expanded>&": {
         transform: "translateY(-100%)",
       }
-    }
+    },
   });
 
 const MS_IN_M: number = 60000;
@@ -63,7 +62,7 @@ const MS_IN_M: number = 60000;
  */
 const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
     const [state, dispatch] = useContext(ExerciseContext);
-    const [addingNewExercise, setAddingNewExercise] = useState(false);
+    const [exerciseInEdit, setExerciseInEdit] = useState<IExercise | null>(null);
 
     const { classes } = props;
     const { exercises, selectExercise, selected } = props;
@@ -76,31 +75,38 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
     };
 
     const addClicked = () => {
-        const newExercise: IExercise = {
+      const newExercise: IExercise = {
             defaultSections: [],
             name: "",
             preset: false,
             startTime: new Date()
         };
-        dispatch({ type: ActionType.AddExercise, payload: newExercise });
+        setExerciseInEdit(newExercise);
+        // dispatch({ type: ActionType.AddExercise, payload: newExercise });
     };
 
     const editClicked = (exercise: IExercise) => () => {
-        dispatch({ type: ActionType.SetEditExercise, payload: exercise });
+      setExerciseInEdit(exercise);
+        // dispatch({ type: ActionType.SetEditExercise, payload: exercise });
     };
 
     function updateExercise(exercise: IExercise): void {
-        if (addingNewExercise) {
+        if (exerciseInEdit) {
           dispatch({ type: ActionType.AddExercise, payload: exercise });
-          setAddingNewExercise(false);
+          setExerciseInEdit(null);
         } else {
             dispatch({ type: ActionType.UpdateExercise, payload: exercise });
         }
     }
 
+    function deleteExercise(exercise: IExercise): void {
+      dispatch({type: ActionType.DeleteExercise, payload: exercise});
+      setExerciseInEdit(null);
+    }
+
     function closeEditor(): void {
-      dispatch({type: ActionType.SetEditExercise, payload: null});
-      setAddingNewExercise(false);
+      // dispatch({type: ActionType.SetEditExercise, payload: null});
+      setExerciseInEdit(null);
     }
     const exerciseItems = exercises.map((exercise, index) => {
         let duration: number = 0;
@@ -142,28 +148,28 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
         );
     });
 
-    return (
-        <div className={`${classes.root} ${state.editExercise ? "expanded" : "collapsed"}`}>
-            <div className={`${props.classes.list}`}>
-                <List component="nav" style={{ height: "100%", paddingTop: 0, paddingBottom: 0 }}>
-                    {exerciseItems}
-                    <ListItem className={classes.listItem} key="add-exercise-btn">
-                        <Fab color="primary" aria-label="add" onClick={addClicked}>
-                            <i className="material-icons">add</i>
-                        </Fab>
-                    </ListItem>
-                </List>
-            </div>
-            <div className={`${props.classes.editor}`}>
-                <ExerciseEditor
-                    exercise={state.editExercise}
-                    updateExercise={updateExercise}
-                    deleteExercise={props.deleteExercise}
-                    cancel={closeEditor}
-                />
-            </div>
+    return <div className={`${props.classes.root} ${exerciseInEdit ? "expanded" : "collapsed"}`}>
+      <div className={props.classes.list}>
+          <List>
+               {exerciseItems}
+               <ListItem className={classes.listItem} key="add-exercise-btn">
+                   <Fab color="primary" aria-label="add" onClick={addClicked}>
+                       <i className="material-icons">add</i>
+                   </Fab>
+               </ListItem>
+           </List>
+      </div>
+      <div className={props.classes.editor}>
+        {/* {exerciseInEdit && JSON.stringify(exerciseInEdit)} */}
+        <ExerciseEditor 
+        exercise={exerciseInEdit}
+        usedNames={state.exercises.map(e => e.name)}
+        updateExercise={updateExercise}
+        deleteExercise={deleteExercise}
+        cancel={closeEditor}
+        />
         </div>
-    );
+      </div>;
 };
 
-export default withStyles(styles, { withTheme: true })(ExerciseListTab);
+export default withStyles(styles)(ExerciseListTab);
