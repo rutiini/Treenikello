@@ -69,9 +69,9 @@ export const DefaultAppState: IAppState = {
 export const ExerciseReducer: React.Reducer<IAppState, IAction> = (state: IAppState, action: IAction) => {
     
     // "middleware" can be implemented here
-    console.log('action dispatched:', action);
+    // console.debug('action dispatched:', action);
     const updatedState = stateController(state, action);
-    console.log(updatedState);
+    // console.debug(updatedState);
     
     return updatedState;
 }

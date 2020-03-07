@@ -11,7 +11,6 @@ interface IExerciseEditorProps extends WithStyles<typeof styles> {
     cancel(): void;
 }
 
-
 const styles = createStyles({
     input: {
         display: "inline-block",
@@ -86,7 +85,6 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = (props) => {
         type="text"
         value={exercise.name}
         onChange={updateName}
-        helperText={validateName}
         error={!!validateName}
         className={props.classes.input}
       />
@@ -104,7 +102,7 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = (props) => {
           }}
         /> 
         <div className={props.classes.inputGroup}>
-            <Button size="large" color="primary" onClick={apply}>Tallenna</Button>
+            <Button size="large" color="primary" onClick={apply}>Käytä</Button>
             <Button size="large" onClick={props.cancel}>Peruuta</Button>
             <Button size="large" onClick={deleteExercise}>Poista</Button>
         </div>

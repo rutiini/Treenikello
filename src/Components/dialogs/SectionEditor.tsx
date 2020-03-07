@@ -130,7 +130,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
       </Select>
         </div>
         <div className={props.classes.inputGroup}>
-            <Button size="large" color="primary" onClick={apply}>Tallenna</Button>
+            <Button size="large" color="primary" onClick={apply}>Käytä</Button>
             <Button size="large" onClick={props.cancel}>Peruuta</Button>
             <Button size="large" onClick={deleteSection}>Poista</Button>
         </div>
