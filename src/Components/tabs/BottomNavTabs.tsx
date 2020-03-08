@@ -152,13 +152,10 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
                     <SectionListTab
                         exercise={activeExercise}
                         setEditSection={setEditSection}
-                        updateSectionOrder={updateSectionOrder}
                     />
                     <ExerciseListTab
                         exercises={exercises}
                         selected={exercises.indexOf(activeExercise)}
-                        toggleExerciseDialog={setEditExercise}
-                        deleteExercise={deleteExercise}
                         selectExercise={selectExercise}
                     />
                 </SwipeableViews>

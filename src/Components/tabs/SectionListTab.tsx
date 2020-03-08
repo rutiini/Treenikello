@@ -40,14 +40,13 @@ const styles = createStyles({
 interface IProps extends WithStyles {
     exercise: IExercise;
     setEditSection(section: ISection): void;
-    updateSectionOrder(sections: ReadonlyArray<ISection>): void;
 }
 
 const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
     const [state, dispatch] = useContext(ExerciseContext);
     const [addingNewSection, setAddingNewSection] = useState(false);
 
-    const { exercise, setEditSection, updateSectionOrder, classes } = props;
+    const { exercise, setEditSection, classes } = props;
 
     const addNewSection = React.useCallback(() => {
         const newSection: ISection = emptySection;
@@ -58,9 +57,9 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
     const sorted = React.useCallback(
         ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
             const rearranged: ReadonlyArray<ISection> = arrayMove([...exercise.defaultSections], oldIndex, newIndex);
-            updateSectionOrder(rearranged);
+            dispatch({ type: ActionType.UpdateAllSections, payload: rearranged });
         },
-        [updateSectionOrder]
+        [dispatch, exercise.defaultSections]
     );
 
     const updateSection = React.useCallback(
@@ -90,19 +89,6 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
         setAddingNewSection(false);
     }, [dispatch, setAddingNewSection]);
 
-    /** TODO: extract these to own components? */
-    const SortableItem = SortableElement(({ value }: { value: JSX.Element }) => (
-        <ListItem className={classes.listItem}>{value}</ListItem>
-    ));
-
-    const SortableList = SortableContainer(({ items }: { items: JSX.Element[] }) => (
-        <List component="nav" className={classes.nav} style={{ paddingTop: 0, paddingBottom: 0 }}>
-            {items.map((value: JSX.Element, index: number) => (
-                <SortableItem key={`item-${index}`} index={index} value={value} />
-            ))}
-        </List>
-    ));
-
     const sections = React.useMemo(
         () =>
             exercise.defaultSections.map((sectionItem: ISection, index: number) => {
@@ -126,8 +112,8 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
                     items={sections}
                     onSortEnd={sorted}
                     lockAxis={"y"}
-                    pressDelay={300}
-                    useDragHandle={true}
+                    pressDelay={100}
+                    // useDragHandle={true}
                 />
                 <ListItem className={classes.listItem} key="add-section-button">
                     <Fab size="medium" color="primary" aria-label="add" onClick={addNewSection}>
@@ -146,5 +132,18 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
         </div>
     );
 };
+
+/** TODO: extract these to own components? */
+const SortableItem = SortableElement(({ value }: { value: JSX.Element }) => (
+    <ListItem>{value}</ListItem>
+));
+
+const SortableList = SortableContainer(({ items }: { items: JSX.Element[] }) => (
+    <List component="nav" style={{ paddingTop: 0, paddingBottom: 0 }}>
+        {items.map((value: JSX.Element, index: number) => (
+            <SortableItem key={`item-${index}`} index={index} value={value} />
+        ))}
+    </List>
+));
 
 export default withStyles(styles)(SectionListTab);

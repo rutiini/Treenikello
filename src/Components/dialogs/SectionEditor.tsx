@@ -48,7 +48,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
 
     /** updates a property with string value that matches the name of the sender element */
     const updateStringProp = React.useCallback(
-        (event: ChangeEvent<HTMLSelectElement>) => {
+        (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
                 ...section,
                 [event.target.name]: event.target.value
@@ -59,7 +59,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
 
     /** updates a property with numeric value that matches the name of the sender element */
     const updateNumberProp = React.useCallback(
-        (event: ChangeEvent<HTMLSelectElement>) => {
+        (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
                 ...section,
                 [event.target.name]: parseInt(event.target.value, 10)

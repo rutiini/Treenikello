@@ -4,6 +4,7 @@ import { IExercise, ISection } from "../../DataInterfaces";
 import { useInterval, GetActiveSectionIndex } from "../Utils/ClockUtilities";
 import ExerciseContext from "../AppReducer/ExerciseContext";
 import { ActionType } from "../AppReducer/ExerciseReducer";
+import { getExerciseDuration } from "../Utils";
 
 const styles = createStyles({
     root: {
@@ -28,7 +29,7 @@ interface IProps {
 // amount of minutes in hour, amount of seconds in minute.
 const temporalConstant: number = 60;
 
-/** 
+/**
  * TODO: refactor this component..
  */
 const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
@@ -53,7 +54,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
         updateActiveSection();
     }, 1000);
 
-    const steps = React.useMemo(() => exercise.defaultSections.map(section => section.name),[exercise]);
+    const steps = React.useMemo(() => exercise.defaultSections.map(section => section.name), [exercise]);
     // render different content based on the time
     const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
 
@@ -74,7 +75,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
                 >{`Treenin alkuun: ${countDownTime}`}</Typography>
             </div>
         );
-    } else if (sectionIndex === steps.length) {
+    } else if (checkExerciseEnded(exercise, new Date())) {
         return (
             <div className={classes.textContainer}>
                 <Typography variant="h2" className={classes.textContent}>
@@ -135,6 +136,28 @@ function timeToSeconds(time: Date) {
     return (
         time.getHours() * temporalConstant * temporalConstant + time.getMinutes() * temporalConstant + time.getSeconds()
     );
+}
+
+function checkExerciseEnded(exercise: IExercise, comparedTime: Date): boolean {
+    const duration = getExerciseDuration(exercise);
+    const startTime = new Date();
+    startTime.setFullYear(comparedTime.getFullYear());
+    startTime.setMonth(comparedTime.getMonth());
+    startTime.setDate(comparedTime.getDate());
+    startTime.setHours(exercise.startTime.getHours());
+    startTime.setMinutes(exercise.startTime.getMinutes());
+    
+    const exerciseEnd: number = startTime.getTime() + duration * 60000; // minutes to ticks
+    console.debug(
+        "ex start: ",
+        startTime,
+        "ex end: ",
+        new Date(exerciseEnd),
+        "current: ",
+        comparedTime
+    );
+
+    return exerciseEnd < comparedTime.getTime();
 }
 
 export default withStyles(styles)(WorkoutMonitorTab);

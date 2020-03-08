@@ -1,7 +1,6 @@
 ﻿import { createStyles, IconButton, WithStyles, withStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import React from "react";
-import { SortableHandle } from "react-sortable-hoc";
 import { ISection } from "src/DataInterfaces";
 
 const styles = createStyles({
@@ -12,7 +11,10 @@ const styles = createStyles({
         flexDirection: "row",
         justifyItems: "space-between",
         maxHeight: "50px",
-        overflow: "hidden"
+        overflow: "hidden",
+        justifyContent: "center",
+        textAlign: "center",
+        cursor: "grab"
     },
     rightContainer: {
         width: "15%"
@@ -47,25 +49,15 @@ const CompactSectionListItem: React.FC<IProps & WithStyles> = (props: IProps) =>
         [editSection, section]
     );
 
-    const DragHandle = SortableHandle(() => (
-        <i className="material-icons" style={{ color: "white", fontSize: 40, cursor: "row-resize" }}>
-            unfold_more
-        </i>
-    ));
-
     const text = `${name} | ${setupTime} | ${duration}`;
     return (
         <div className={classes.content}>
-            <div className={classes.leftContainer}>
-                <DragHandle />
-            </div>
+            <div className={classes.leftContainer}>{/*TODO: section icon here when added*/}</div>
             <div className={classes.middleContainer}>
                 <Typography variant="h5" className={classes.justifyCenter}>
                     {text}
                 </Typography>
-                <Typography component="h6" style={{ overflow: "ellipsis" }}>
-                    {description}
-                </Typography>
+                <div style={{ overflow: "ellipsis" }}>{description}</div>
             </div>
             <div className={classes.rightContainer}>
                 <IconButton onClick={editSectionClicked}>

@@ -11,8 +11,6 @@ import { getExerciseDuration, emptyExercise } from "../Utils";
 interface IProps extends WithStyles {
     exercises: ReadonlyArray<IExercise>;
     selected: number;
-    toggleExerciseDialog: (exercise: IExercise) => void;
-    deleteExercise: (exercise: IExercise) => boolean;
     selectExercise: (exercise: IExercise) => void;
 }
 
