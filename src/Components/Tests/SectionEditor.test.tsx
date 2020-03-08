@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom';
 import SectionEditor from '../dialogs/SectionEditor';
 import { emptySection } from '../Utils';
 
+function mock(){
+    // mock function
+}
 it('SectionEditor renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<SectionEditor 
         section={emptySection} 
-        updateSection={() => void 0}
-        deleteSection={() => void 0}
-        cancel={() => void 0}
+        updateSection={mock}
+        deleteSection={mock}
+        cancel={mock}
         />, div);
     ReactDOM.unmountComponentAtNode(div);
   });

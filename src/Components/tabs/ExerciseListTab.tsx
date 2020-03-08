@@ -88,7 +88,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
     const updateExercise = React.useCallback(
         (exercise: IExercise): void => {
             // currently adds new every time instead of updating. FIX.
-            if (exerciseInEdit) {
+            if (exerciseInEdit && exerciseInEdit !== emptyExercise) {
                 dispatch({
                     type: ActionType.UpdateExercise,
                     payload: {
@@ -96,10 +96,10 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
                         targetExercise: exerciseInEdit
                     }
                 });
-                setExerciseInEdit(null);
             } else {
                 dispatch({ type: ActionType.AddExercise, payload: exercise });
             }
+            setExerciseInEdit(null);
         },
         [exerciseInEdit, dispatch, setExerciseInEdit]
     );
