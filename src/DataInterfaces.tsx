@@ -1,5 +1,8 @@
 // this file contains all the commonly used data interfaces needed for the project
 
+// TODO: internationalize at some point?
+export type NavTab = "Treeni" | "Osiot" | "Harjoitukset";
+
 /**
  * Section is the basic part of an exercise. It holds information used to draw a segment on the clock face
  * as well as instructions and description what kind of exercise this section is.

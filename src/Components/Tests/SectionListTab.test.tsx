@@ -4,7 +4,7 @@ import { ISection } from 'src/DataInterfaces';
 import SectionListTab from '../tabs/SectionListTab';
 
 const sectionTabProps = {
-  deleteSection: (section: ISection) => {""},
+  deleteSection: (section: ISection) => void 0,
   exercise: {
     defaultSections: [],
     name: "",
@@ -13,7 +13,7 @@ const sectionTabProps = {
   },
   expandedIndex: 0,
   selected: 0,
-  toggleSectionDialog: (section: ISection) => {""},
+  setEditSection: (section: ISection) => {""},
   updateSectionOrder: (sections: ISection[]) => {""}
 }
 

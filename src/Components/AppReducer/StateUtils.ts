@@ -3,9 +3,9 @@ import { exercises } from "../../Store";
 import { IAppState } from "./ExerciseReducer";
 
 // TODO: redo to more exact methods instead of manipulating the whole state to optimize logic and improve reusability
-export function updateActiveExercise(state: IAppState, updatedExercise: IExercise): IAppState {
-    if(updatedExercise && state.editExercise){
-        const replaceIndex = state.exercises.indexOf(state.editExercise);
+export function updateActiveExercise(state: IAppState, updatedExercise: IExercise, targetExercise: IExercise): IAppState {
+    if(updatedExercise){
+        const replaceIndex = state.exercises.indexOf(targetExercise);
         const updatedExercises = [...state.exercises];
         updatedExercises[replaceIndex] = updatedExercise;
         return {
