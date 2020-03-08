@@ -1,9 +1,10 @@
-import { createMuiTheme, CssBaseline, MuiThemeProvider } from '@material-ui/core';
+import { CssBaseline, createMuiTheme } from '@material-ui/core';
 import {amber, grey} from '@material-ui/core/colors';
 import * as React from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
   overrides:{
@@ -25,9 +26,6 @@ const theme = createMuiTheme({
       // secondary : amber[900],
     },
     type: "dark",
-  },
-  typography:{
-    useNextVariants: true,
   }
 });
 

@@ -1,82 +1,65 @@
-import { 
-  AppBar,
-  createStyles, 
-  Fab, 
-  Toolbar, 
-  Typography, 
-  withStyles} from '@material-ui/core';
-import React, { Component } from 'react';
-import { IExercise } from '../DataInterfaces';
+import { AppBar, createStyles, Fab, Toolbar, Typography, withStyles } from "@material-ui/core";
+import React from "react";
+import { IExercise } from "../DataInterfaces";
 
 const styles = createStyles({
-  button: {
-    marginRight: 10,
-  },
-  flex: {
-    flex: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  root: {
-    alignContent: "center",
-    flexGrow: 1,
-    userSelect: "none",
-  },
-  timeInput: {
-    fontSize: 20,
-    textColor: '#ffffff',
-  },
+    button: {
+        marginRight: 10
+    },
+    flex: {
+        flex: 1
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20
+    },
+    root: {
+        alignContent: "center",
+        flexGrow: 1,
+        userSelect: "none"
+    },
+    timeInput: {
+        fontSize: 20,
+        textColor: "#ffffff"
+    }
 });
 
 interface IProps {
-  classes: any,
-  exercise: IExercise,
-  setTime: (time: Date) => void,
-  title: string,
-  saveExercises: () => void
+    classes: any;
+    exercise: IExercise;
+    setTime: (time: Date) => void;
+    title: string;
+    saveExercises: () => void;
 }
 
-interface IState {
-  open: boolean
-}
+const ActionsMenuBar: React.FC<IProps> = props => {
+    const { classes, title } = props;
 
-export default withStyles(styles)(class ActionsMenuBar extends Component<IProps, IState> {
-  
-  public componentDidMount(){
+    const setTimeNow = React.useCallback(() => {
+        props.setTime(new Date());
+    }, [props.setTime]);
 
-    this.setState({
-      open: false
-    });
-  }
-
-  public render() {
-    const { 
-      classes,
-      title,
-    } = this.props;
+    const saveAllExercises = React.useCallback(() => {
+        props.saveExercises();
+    }, [props.saveExercises]);
 
     return (
-      <div className={classes.root}>
-        <AppBar position="static" color="secondary">
-          <Toolbar>
-            <Fab color="primary" onClick={this.saveAllExercises}><i className="material-icons">save</i></Fab>
-            <Typography variant="h4" color="inherit" className={classes.flex}>
-              {title}
-            </Typography>
-            <Fab color="primary" onClick={this.setTimeNow}><i className="material-icons">play_circle_outline</i></Fab>
-          </Toolbar>
-        </AppBar>
-      </div>
+        <div className={classes.root}>
+            <AppBar position="static" color="secondary">
+                <Toolbar>
+                    <Fab color="primary" onClick={saveAllExercises}>
+                        <i className="material-icons">save</i>
+                    </Fab>
+                    <Typography variant="h4" color="inherit" className={classes.flex}>
+                        {title}
+                    </Typography>
+                    <Fab color="primary" onClick={setTimeNow}>
+                        <i className="material-icons">play_circle_outline</i>
+                    </Fab>
+                </Toolbar>
+            </AppBar>
+        </div>
     );
-  }
-  
-  private setTimeNow = () => {
-    this.props.setTime(new Date());
-  }
+};
 
-  private saveAllExercises = () => {
-    this.props.saveExercises()
-  }
-});
+export default withStyles(styles)(ActionsMenuBar);

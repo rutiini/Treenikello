@@ -1,46 +1,56 @@
-import {
-  createStyles,
-  Fab,
-  Theme,
-  withStyles,
-  WithStyles
-} from "@material-ui/core";
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText
-} from "@material-ui/core";
-import React, { FunctionComponent } from "react";
+import { createStyles, Fab, Theme, withStyles, WithStyles } from "@material-ui/core";
+import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
+import React, { FunctionComponent, useContext, useState } from "react";
 import { IExercise } from "../../DataInterfaces";
+import ExerciseContext from "../AppReducer/ExerciseContext";
+import { ActionType } from "../AppReducer/ExerciseReducer";
+import ExerciseEditor from "../dialogs/ExerciseEditor";
+import { getExerciseDuration, emptyExercise } from "../Utils";
 
 /** component props */
-interface IProps extends WithStyles<typeof styles> {
-  exercises: ReadonlyArray<IExercise>;
-  selected: number;
-  theme: Theme;
-  toggleExerciseDialog: (exercise: IExercise) => void;
-  deleteExercise: (exercise: IExercise) => boolean;
-  selectExercise: (exercise: IExercise) => void;
+interface IProps extends WithStyles {
+    exercises: ReadonlyArray<IExercise>;
+    selected: number;
+    selectExercise: (exercise: IExercise) => void;
 }
 
 const styles = (theme: Theme) =>
-  createStyles({
-    listItem: {
-      backgroundColor: theme.palette.primary.main[400],
-      justifyContent: "center",
-      textAlign: "center",
-      width: "100%"
-    },
-    selectedListItem: {
-      backgroundColor: theme.palette.action.selected,
-      justifyContent: "center",
-      textAlign: "center",
-      width: "100%"
-    }
-  });
+    createStyles({
+        listItem: {
+            backgroundColor: theme.palette.primary.main[400],
+            justifyContent: "center",
+            textAlign: "center",
+            width: "100%"
+        },
+        selectedListItem: {
+            backgroundColor: theme.palette.action.selected,
+            justifyContent: "center",
+            textAlign: "center",
+            width: "100%"
+        },
+        root: {
+            overflow: "hidden",
+            userSelect: "none",
+            height: "100%"
+        },
+        list: {
+            height: "100%",
+            overflow: "auto",
+            transition: "transform 300ms ease-in-out",
+            "$root.expanded>&": {
+                transform: "translateY(-100%)",
+                overflow: "hidden"
+            }
+        },
+        editor: {
+            height: "100%",
+            overflow: "hidden",
+            transition: "transform 300ms ease-in-out",
+            "$root.expanded>&": {
+                transform: "translateY(-100%)"
+            }
+        }
+    });
 
 const MS_IN_M: number = 60000;
 
@@ -49,114 +59,158 @@ const MS_IN_M: number = 60000;
  * @param props
  * @returns Tab for managing exercises
  */
-const ExerciseListTab: FunctionComponent<
-  IProps & WithStyles<"listItem" | "selectedListItem">
-> = props => {
-  const { classes } = props;
-  const {
-    exercises,
-    selectExercise,
-    toggleExerciseDialog,
-    deleteExercise,
-    selected
-  } = props;
+const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
+    const [state, dispatch] = useContext(ExerciseContext);
+    const [exerciseInEdit, setExerciseInEdit] = useState<IExercise | null>(null);
 
-  const placeHolderIcon = <i className="material-icons">whatshot</i>;
-  const deleteIcon = <i className="material-icons">delete</i>;
-  const editIcon = <i className="material-icons">edit</i>;
+    const { classes } = props;
+    const { exercises, selectExercise, selected } = props;
 
-  const clicked = (exercise: IExercise) => () => {
-    selectExercise(exercise);
-  };
-
-  const addClicked = () => {
-    const newExercise: IExercise = {
-      defaultSections: [],
-      name: "",
-      preset: false,
-      startTime: new Date()
-    };
-    toggleExerciseDialog(newExercise);
-  };
-  const editClicked = (exercise: IExercise) => () => {
-    toggleExerciseDialog(exercise);
-  };
-  const deleteClicked = (exercise: IExercise) => () => {
-    // confirmation prompt?
-    deleteExercise(exercise);
-  };
-
-  const exerciseItems = exercises.map((exercise, index) => {
-    let duration: number = 0;
-
-    exercise.defaultSections.forEach(element => {
-      duration = +element.duration + element.setupTime; // todo: this gets interpreted as string for some reason.
-    });
-
-    // parse timestamps for start and stop
-    const starts = `${exercise.startTime.toLocaleTimeString("FI", {
-      hour: "2-digit",
-      minute: "2-digit"
-    })}`;
-    const stopTime = new Date(
-      exercise.startTime.getTime() + duration * MS_IN_M
+    const onClick = React.useCallback(
+        (exercise: IExercise) => {
+            selectExercise(exercise);
+        },
+        [selectExercise]
     );
-    const stops = `${stopTime.toLocaleTimeString("FI", {
-      hour: "2-digit",
-      minute: "2-digit"
-    })}`;
-    const exerciseKey = exercise.name;
+
+    const addClicked = React.useCallback(() => {
+        const newExercise: IExercise = emptyExercise;
+        setExerciseInEdit(newExercise);
+    }, [setExerciseInEdit]);
+
+    const editClicked = React.useCallback(
+        (exercise: IExercise) => {
+            setExerciseInEdit(exercise);
+        },
+        [setExerciseInEdit]
+    );
+
+    const updateExercise = React.useCallback(
+        (exercise: IExercise): void => {
+            // currently adds new every time instead of updating. FIX.
+            if (exerciseInEdit) {
+                dispatch({
+                    type: ActionType.UpdateExercise,
+                    payload: {
+                        updatedExercise: exercise,
+                        targetExercise: exerciseInEdit
+                    }
+                });
+                setExerciseInEdit(null);
+            } else {
+                dispatch({ type: ActionType.AddExercise, payload: exercise });
+            }
+        },
+        [exerciseInEdit, dispatch, setExerciseInEdit]
+    );
+
+    const deleteExercise = React.useCallback(
+        (exercise: IExercise): void => {
+            dispatch({ type: ActionType.DeleteExercise, payload: exercise });
+            setExerciseInEdit(null);
+        },
+        [dispatch, setExerciseInEdit]
+    );
+
+    const closeEditor = React.useCallback((): void => {
+        setExerciseInEdit(null);
+    }, [setExerciseInEdit]);
+
+    const exerciseItems = React.useMemo(
+        () =>
+            exercises.map((exercise, index) => (
+                <StyledExerciseListElement
+                    key={exercise.name}
+                    selected={selected === index}
+                    exercise={exercise}
+                    onClick={onClick}
+                    onEditClick={editClicked}
+                />
+            )),
+        [exercises, selected, onClick, editClicked]
+    );
+
     return (
-      <ListItem
-        className={
-          selected === index ? classes.selectedListItem : classes.listItem
-        }
-        key={exerciseKey}
-        value={exercise.name}
-        onClick={clicked(exercise)}
-        button={true}
-      >
-        <ListItemIcon>{placeHolderIcon}</ListItemIcon>
-        <ListItemText
-          primary={exercise.name}
-          secondary={`${starts} - ${stops} | ${duration} min | ${
-            exercise.defaultSections.length
-          } osiota`}
-        />
-        <ListItemSecondaryAction>
-          {/*buttons disabled for presets.*/}
-          <IconButton
-            onClick={deleteClicked(exercise)}
-            /*disabled={exercise.preset}*/
-          >
-            {deleteIcon}
-          </IconButton>
-          <IconButton
-            onClick={editClicked(exercise)}
-            disabled={exercise.preset}
-          >
-            {editIcon}
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
+        <div className={`${props.classes.root} ${exerciseInEdit ? "expanded" : "collapsed"}`}>
+            <div className={props.classes.list}>
+                <List>
+                    {exerciseItems}
+                    <ListItem className={classes.listItem} key="add-exercise-btn">
+                        <Fab color="primary" aria-label="add" onClick={addClicked}>
+                            <i className="material-icons">add</i>
+                        </Fab>
+                    </ListItem>
+                </List>
+            </div>
+            <div className={props.classes.editor}>
+                <ExerciseEditor
+                    exercise={exerciseInEdit}
+                    usedNames={state.exercises.map(e => e.name)}
+                    updateExercise={updateExercise}
+                    deleteExercise={deleteExercise}
+                    cancel={closeEditor}
+                />
+            </div>
+        </div>
     );
-  });
-
-  return (
-    <div>
-      <List
-        component="nav"
-        style={{ height: "100%", paddingTop: 0, paddingBottom: 0 }}
-      >
-        {exerciseItems}
-        <ListItem className={classes.listItem} key="add-exercise-btn">
-          <Fab color="primary" aria-label="add" onClick={addClicked}>
-            <i className="material-icons">add</i>
-          </Fab>
-        </ListItem>
-      </List>
-    </div>
-  );
 };
 
-export default withStyles(styles, { withTheme: true })(ExerciseListTab);
+interface IExerciseListElementProps extends WithStyles {
+    exercise: IExercise;
+    selected: boolean;
+    onClick(exercise: IExercise): void;
+    onEditClick(exercise: IExercise): void;
+}
+
+const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = props => {
+    const { exercise, selected, classes } = props;
+
+    const duration: number = getExerciseDuration(exercise);
+
+    const onClick = React.useCallback(() => {
+        props.onClick(exercise);
+    }, [exercise, props.onClick]);
+
+    const onEditClick = React.useCallback(() => {
+        props.onEditClick(exercise);
+    }, [exercise, props.onEditClick]);
+    // parse timestamps for start and stop
+    const starts = `${exercise.startTime.toLocaleTimeString("FI", {
+        hour: "2-digit",
+        minute: "2-digit"
+    })}`;
+
+    const stopTime = new Date(exercise.startTime.getTime() + duration * MS_IN_M);
+    const stops = `${stopTime.toLocaleTimeString("FI", {
+        hour: "2-digit",
+        minute: "2-digit"
+    })}`;
+
+    const exerciseKey = exercise.name;
+
+    return (
+        <ListItem
+            className={selected ? classes.selectedListItem : classes.listItem}
+            key={exerciseKey}
+            value={exercise.name}
+            onClick={onClick}
+        >
+            <ListItemIcon>
+                <i className="material-icons">whatshot</i>
+            </ListItemIcon>
+            <ListItemText
+                primary={exercise.name}
+                secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`}
+            />
+            <ListItemSecondaryAction>
+                <IconButton onClick={onEditClick} disabled={exercise.preset}>
+                    <i className="material-icons">edit</i>
+                </IconButton>
+            </ListItemSecondaryAction>
+        </ListItem>
+    );
+};
+
+const StyledExerciseListElement = withStyles(styles)(ExerciseListElement);
+
+export default withStyles(styles)(ExerciseListTab);

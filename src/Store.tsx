@@ -31,7 +31,7 @@ export default class Store{
   public static saveExercises = (modifiedExercises : ReadonlyArray<IExercise>) =>{
 
     const nonPresets = modifiedExercises.filter((x : IExercise) => x.preset !== true)
-    console.log(`saving ${nonPresets.length} exercises`)
+    console.debug(`saving ${nonPresets.length} exercises`)
     localStorage.setItem("customExercises",JSON.stringify(nonPresets));
   }
   
@@ -46,7 +46,7 @@ export default class Store{
   public static getSessionExercises = () => {
     let customsJSON = sessionStorage.getItem("customExercises");
     if(customsJSON === undefined){
-      console.log("sessionStorage is empty. checking localStorage");
+      console.debug("sessionStorage is empty. checking localStorage");
       customsJSON = localStorage.getItem("customExercises");
     }
     
@@ -62,7 +62,7 @@ export default class Store{
         customExercise.startTime = new Date(customExercise.startTime);
       })
 
-      console.log("store: found custom exercises: ", customs);
+      console.debug("store: found custom exercises: ", customs);
       return customs;
     }
     
