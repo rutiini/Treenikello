@@ -1,4 +1,4 @@
-﻿import {IExercise} from "../../DataInterfaces";
+﻿import {IExercise, ISection} from "../../DataInterfaces";
 
 /**
  * function returns the sum of all sections setup times and durations.
@@ -16,3 +16,21 @@ export function getExerciseDuration(exercise: IExercise): number {
 
     return 0;
 }
+
+/** empty exercise for creating new instances */
+export const emptyExercise: IExercise = {
+    defaultSections: [],
+    name: "",
+    preset: false,
+    startTime: new Date()
+};
+
+/** empty section for creating new instances */
+export const emptySection: ISection = {
+    color: "",
+    description: "",
+    duration: 0,
+    key: "",
+    name: "",
+    setupTime: 0
+};

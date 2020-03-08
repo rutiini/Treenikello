@@ -6,6 +6,7 @@ import CompactSectionListItem from "../CompactSectionListItem";
 import ExerciseContext from "../AppReducer/ExerciseContext";
 import SectionEditor from "../dialogs/SectionEditor";
 import { ActionType } from "../AppReducer/ExerciseReducer";
+import { emptySection } from "../Utils";
 
 const styles = createStyles({
     listItem: {
@@ -28,7 +29,7 @@ const styles = createStyles({
     },
     editor: {
         height: "100%",
-        overflow: "hidden",
+        overflow: "auto",
         transition: "transform 300ms ease-in-out",
         "$root.expanded>&": {
             transform: "translateY(-100%)"
@@ -49,14 +50,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
     const { exercise, setEditSection, updateSectionOrder, classes } = props;
 
     const addNewSection = React.useCallback(() => {
-        const newSection: ISection = {
-            color: "",
-            description: "",
-            duration: 0,
-            key: "",
-            name: "",
-            setupTime: 0
-        };
+        const newSection: ISection = emptySection;
         dispatch({ type: ActionType.SetEditSection, payload: newSection });
         setAddingNewSection(true);
     }, [dispatch, setAddingNewSection]);

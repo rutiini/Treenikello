@@ -5,7 +5,7 @@ import { IExercise } from "../../DataInterfaces";
 import ExerciseContext from "../AppReducer/ExerciseContext";
 import { ActionType } from "../AppReducer/ExerciseReducer";
 import ExerciseEditor from "../dialogs/ExerciseEditor";
-import { getExerciseDuration } from "../Utils";
+import { getExerciseDuration, emptyExercise } from "../Utils";
 
 /** component props */
 interface IProps extends WithStyles {
@@ -76,12 +76,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
     );
 
     const addClicked = React.useCallback(() => {
-        const newExercise: IExercise = {
-            defaultSections: [],
-            name: "",
-            preset: false,
-            startTime: new Date()
-        };
+        const newExercise: IExercise = emptyExercise;
         setExerciseInEdit(newExercise);
     }, [setExerciseInEdit]);
 
@@ -94,11 +89,18 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
 
     const updateExercise = React.useCallback(
         (exercise: IExercise): void => {
+            // currently adds new every time instead of updating. FIX.
             if (exerciseInEdit) {
-                dispatch({ type: ActionType.AddExercise, payload: exercise });
+                dispatch({
+                    type: ActionType.UpdateExercise,
+                    payload: {
+                        updatedExercise: exercise,
+                        targetExercise: exerciseInEdit
+                    }
+                });
                 setExerciseInEdit(null);
             } else {
-                dispatch({ type: ActionType.UpdateExercise, payload: exercise });
+                dispatch({ type: ActionType.AddExercise, payload: exercise });
             }
         },
         [exerciseInEdit, dispatch, setExerciseInEdit]
