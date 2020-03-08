@@ -1,6 +1,8 @@
 # Treenikello training clock app
 
-[![Build Status](https://travis-ci.org/rutiini/Treenikello.svg?branch=master)](https://travis-ci.org/rutiini/Treenikello)
+[![Travis CI Build Status](https://travis-ci.org/rutiini/Treenikello.svg?branch=master)](https://travis-ci.org/rutiini/Treenikello)
+[![Azure CI Build Status](https://dev.azure.com/rutiluz88/Treenikello/_apis/build/status/rutiini.Treenikello?branchName=master)](https://dev.azure.com/rutiluz88/Treenikello/_build/latest?definitionId=1&branchName=master)
+[![Azure App CD Status](https://vsrm.dev.azure.com/rutiluz88/_apis/public/Release/badge/24ea3282-1fa2-469a-910e-9b755980f2a4/1/1)](https://vsrm.dev.azure.com/rutiluz88/_apis/public/Release/badge/24ea3282-1fa2-469a-910e-9b755980f2a4/1/1)
 
 ![Treenikello app view](./images/overview.png)
 
