@@ -17,9 +17,11 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
+      "src/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/",
-      "!<rootDir>/path/to/dir/"
+      "!<rootDir>/path/to/dir/",
+      "!**/registerServiceWorker.ts",
+      "!**/index.tsx"
     ],
     "coverageThreshold": {
       "global": {
