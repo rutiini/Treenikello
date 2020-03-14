@@ -3,7 +3,6 @@ import React, { FunctionComponent, useContext, useState, useEffect } from "react
 import { IExercise, ISection } from "../DataInterfaces";
 import ExerciseContext from "./AppReducer/ExerciseContext";
 import ClockFace from "./ClockFace";
-import SectionItem from "./SectionItem";
 import {
     CircleInDegrees,
     ClockData,
@@ -11,6 +10,8 @@ import {
     MinuteInDegrees,
     TimeToDegrees,
     useInterval,
+    getPath,
+    IPathProps,
 } from "./Utils/ClockUtilities";
 
 interface IProps extends WithStyles<typeof styles> {
@@ -51,6 +52,7 @@ const centerCoordinate = 100 / 2;
 const Clock: FunctionComponent<IProps> = (props: IProps) => {
     const [stopWatchSeconds, setStopWatchSeconds] = useState(0);
     const [timerMode, setTimerMode] = useState(TimerMode.Hidden);
+    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
     const [time, setTime] = useState(new Date());
 
     useInterval(() => setTime(new Date()), 1000);
@@ -66,19 +68,18 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
     }, [setStopWatchSeconds]);
 
     // stopwatch should react to the timermode
-    // TODO: refactor this to a use-effect which handles the stopwatch outside state.
     useEffect(() => {
-        let timer: NodeJS.Timeout | null = null;
         if (timerMode === TimerMode.Running && timer === null) {
-            timer = setInterval(updateStopwatch, 500);
+            setTimer(setInterval(updateStopwatch, 500));
         } else if (timerMode === TimerMode.Finished) {
             if (timer) {
                 clearInterval(timer);
             }
         } else if (timerMode === TimerMode.Hidden) {
+            setTimer(null);
             setStopWatchSeconds(0);
         }
-    }, [timerMode, setStopWatchSeconds, updateStopwatch]);
+    }, [timerMode, setStopWatchSeconds, updateStopwatch, timer]);
 
     /** cycle on tap -> make visible -> start -> stop -> hide and reset */
     const cycleTimerFunctions = React.useCallback(() => {
@@ -151,39 +152,43 @@ function updateFaceElements(
                     cumulativeAngle = stopDrawAngle + startPosition;
                 }
 
+                const sectionClassName = sectionItem === activeSection ? classes.activeSection : classes.inactiveSection;
+                const setupArcProps: IPathProps = {
+                    cx: centerCoordinate,
+                    cy: centerCoordinate,
+                    radius: 44.1, // TODO: get rid of magic number
+                    startAngle: setupStartAngle,
+                    endAngle: setupStopAngle,
+                    thickness: 2,
+                }
+                const sectionArcProps: IPathProps = {
+                    cx: centerCoordinate,
+                    cy: centerCoordinate,
+                    radius: 44.1, // TODO: get rid of magic number
+                    startAngle: sectionStartAngle,
+                    endAngle: cumulativeAngle,
+                    thickness: 3,
+                }
                 // setup arc
                 sectionItems.push(
-                    <SectionItem
-                        cx={centerCoordinate}
-                        cy={centerCoordinate}
-                        radius={44.1} // TODO: get rid of magic number
-                        startAngle={setupStartAngle}
-                        endAngle={setupStopAngle}
-                        thickness={2}
-                        key={sectionItems.length}
-                        color={"#d3d0da"}
-                        className={sectionItem === activeSection ? classes.activeSection : classes.inactiveSection}
-                    />,
+                    getSectionItem(setupArcProps, sectionClassName, "#d3d0da"),
                 );
                 // section arc
                 sectionItems.push(
-                    <SectionItem
-                        cx={centerCoordinate}
-                        cy={centerCoordinate}
-                        radius={44.1} // TODO: get rid of magic number
-                        startAngle={sectionStartAngle}
-                        endAngle={cumulativeAngle}
-                        thickness={3}
-                        key={sectionItems.length}
-                        color={sectionItem.color}
-                        className={sectionItem === activeSection ? classes.activeSection : classes.inactiveSection}
-                    />,
+                    getSectionItem(sectionArcProps, sectionClassName, sectionItem.color),
                 );
                 // just check whether there is an active item set.
             }
         });
     }
     return sectionItems;
+}
+
+function getSectionItem(sectionPathProps: IPathProps, className: string, color: string): JSX.Element {
+
+    const pathString: string = getPath(sectionPathProps);
+
+    return <path id="arc" className={className} fill={color} fillRule="evenodd" d={pathString} />;
 }
 
 export default withStyles(styles)(Clock);
