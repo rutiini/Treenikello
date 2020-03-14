@@ -163,17 +163,17 @@ interface IExerciseListElementProps extends WithStyles {
 }
 
 const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = props => {
-    const { exercise, selected, classes } = props;
+    const { exercise, selected, onClick, onEditClick, classes } = props;
 
     const duration: number = getExerciseDuration(exercise);
 
-    const onClick = React.useCallback(() => {
-        props.onClick(exercise);
-    }, [exercise, props.onClick]);
+    const handleClick = React.useCallback(() => {
+        onClick(exercise);
+    }, [exercise, onClick]);
 
-    const onEditClick = React.useCallback(() => {
-        props.onEditClick(exercise);
-    }, [exercise, props.onEditClick]);
+    const handleEditClick = React.useCallback(() => {
+        onEditClick(exercise);
+    }, [exercise, onEditClick]);
     // parse timestamps for start and stop
     const starts = `${exercise.startTime.toLocaleTimeString("FI", {
         hour: "2-digit",
@@ -193,7 +193,7 @@ const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = 
             className={selected ? classes.selectedListItem : classes.listItem}
             key={exerciseKey}
             value={exercise.name}
-            onClick={onClick}
+            onClick={handleClick}
         >
             <ListItemIcon>
                 <i className="material-icons">whatshot</i>
@@ -203,7 +203,7 @@ const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = 
                 secondary={`${starts} - ${stops} | ${duration} min | ${exercise.defaultSections.length} osiota`}
             />
             <ListItemSecondaryAction>
-                <IconButton onClick={onEditClick} disabled={exercise.preset}>
+                <IconButton onClick={handleEditClick} disabled={exercise.preset}>
                     <i className="material-icons">edit</i>
                 </IconButton>
             </ListItemSecondaryAction>

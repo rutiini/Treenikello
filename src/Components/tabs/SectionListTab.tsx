@@ -102,7 +102,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
                     />
                 );
             }),
-        [exercise.defaultSections]
+        [exercise.defaultSections, setEditSection]
     );
 
     return (

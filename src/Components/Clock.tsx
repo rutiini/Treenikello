@@ -1,5 +1,5 @@
 import { createStyles, Theme, WithStyles, withStyles } from "@material-ui/core";
-import React, { FunctionComponent, useContext, useEffect, useState } from "react";
+import React, { FunctionComponent, useContext, useState, useMemo } from "react";
 import { IExercise, ISection } from "../DataInterfaces";
 import ExerciseContext from "./AppReducer/ExerciseContext";
 import ClockFace from "./ClockFace";
@@ -59,8 +59,16 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
     // use the context to get the shared state and dispatch instace
     const [state] = useContext(ExerciseContext); // state gets reassigned this way. -> Do we need context to actually share the state?
 
+    /**
+     * Increases the stopWatchSeconds in state by one.
+     */
+    const updateStopwatch = React.useCallback(() => {
+        setStopWatchSeconds(seconds => seconds + 1);
+    }, [setStopWatchSeconds]);
+
     // stopwatch should react to the timermode
-    useEffect(() => {
+    // TODO: refactor this to a use-effect which handles the stopwatch outside state.
+    useMemo(() => {
         if (timerMode === TimerMode.Running && stopWatchSeconds === 0) {
             setStopWatch(setInterval(updateStopwatch, 500));
         } else if (timerMode === TimerMode.Finished) {
@@ -70,21 +78,14 @@ const Clock: FunctionComponent<IProps> = (props: IProps) => {
         } else if (timerMode === TimerMode.Hidden) {
             setStopWatchSeconds(0);
         }
-    }, [timerMode, stopWatchSeconds]);
-
-    /**
-     * Increases the stopWatchSeconds in state by one.
-     */
-    const updateStopwatch = React.useCallback(() => {
-        setStopWatchSeconds(seconds => seconds + 1);
-    }, [setStopWatch]);
+    }, [timerMode]);
 
     /** cycle on tap -> make visible -> start -> stop -> hide and reset */
     const cycleTimerFunctions = React.useCallback(() => {
         // case hidden set to visible and reset position to 0
         const newMode = CycleTimerMode(timerMode);
         setTimerMode(newMode);
-    }, [setTimerMode, timerMode, CycleTimerMode]);
+    }, [setTimerMode, timerMode]);
 
     const sectionItems: ReadonlyArray<JSX.Element> = React.useMemo(
         () => updateFaceElements(state.activeExercise, state.activeSection, props.classes),
@@ -131,7 +132,7 @@ function updateFaceElements(
     if (defaultSections) {
         // calculate from start time
         let cumulativeAngle = startPosition;
-        defaultSections.map((sectionItem: ISection) => {
+        defaultSections.forEach((sectionItem: ISection) => {
             const setupStartAngle = cumulativeAngle;
             const setupStopAngle = cumulativeAngle + sectionItem.setupTime * MinuteInDegrees;
 

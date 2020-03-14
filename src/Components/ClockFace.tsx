@@ -82,7 +82,7 @@ const ClockFace: React.FC<IClockFaceProps & WithStyles> = (props: IClockFaceProp
             }
         }
         return mjrs;
-    }, []);
+    }, [classes.bigHourMarker, classes.hourMarker, classes.minuteMarker]);
 
     return (
         <svg id="clock" className={classes.clock} viewBox="0 0 100 100">

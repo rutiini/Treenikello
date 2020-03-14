@@ -90,7 +90,7 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
     const [activeTab, setActiveTab] = useState<number>(0);
 
     const handleTabChange = React.useCallback(
-        (event: React.ChangeEvent, value: number) => {
+        (event: React.ChangeEvent<{}>, value: number) => {
             setActiveTab(value);
         },
         [setActiveTab]
@@ -111,21 +111,7 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
         (section: ISection) => dispatch({ type: ActionType.SetEditSection, payload: section }),
         [dispatch]
     );
-    const updateSectionOrder = React.useCallback(
-        (sections: ReadonlyArray<ISection>) => dispatch({ type: ActionType.UpdateAllSections, payload: sections }),
-        [dispatch]
-    );
-    const setEditExercise = React.useCallback(
-        (exercise: IExercise) => dispatch({ type: ActionType.SetEditExercise, payload: exercise }),
-        [dispatch]
-    );
-    const deleteExercise = React.useCallback(
-        (exercise: IExercise) => {
-            dispatch({ type: ActionType.DeleteExercise, payload: exercise });
-            return true;
-        },
-        [dispatch]
-    );
+
     const selectExercise = React.useCallback(
         (exercise: IExercise) => dispatch({ type: ActionType.SetActiveExercise, payload: exercise }),
         [dispatch]

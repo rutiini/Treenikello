@@ -47,7 +47,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
         if (activeSection !== currentSection) {
             dispatch({ type: ActionType.UpdateActiveSection, payload: time });
         }
-    }, [GetActiveSectionIndex, activeSection, exercise]);
+    }, [activeSection, exercise, dispatch, time]);
 
     useInterval(() => {
         setTime(new Date());

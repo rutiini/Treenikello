@@ -1,4 +1,4 @@
-﻿import { IExercise, ISection } from "src/DataInterfaces";
+﻿import { IExercise, ISection } from "../../DataInterfaces";
 import { TimerMode } from "../Clock";
 import { useEffect, useRef } from "react";
 

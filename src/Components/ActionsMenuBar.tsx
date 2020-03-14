@@ -33,15 +33,15 @@ interface IProps {
 }
 
 const ActionsMenuBar: React.FC<IProps> = props => {
-    const { classes, title } = props;
+    const { classes, title, setTime, saveExercises } = props;
 
     const setTimeNow = React.useCallback(() => {
-        props.setTime(new Date());
-    }, [props.setTime]);
+        setTime(new Date());
+    }, [setTime]);
 
     const saveAllExercises = React.useCallback(() => {
-        props.saveExercises();
-    }, [props.saveExercises]);
+        saveExercises();
+    }, [saveExercises]);
 
     return (
         <div className={classes.root}>

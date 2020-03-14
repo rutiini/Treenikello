@@ -17,7 +17,7 @@ export default class Store{
         return [];
       }
 
-      customs.map( (customExercise : IExercise) => {
+      customs.forEach( (customExercise : IExercise) => {
         customExercise.startTime = new Date(customExercise.startTime);
       })
 
@@ -58,7 +58,7 @@ export default class Store{
         return null;
       }
       
-      customs.map( (customExercise : IExercise) => {
+      customs.forEach( (customExercise : IExercise) => {
         customExercise.startTime = new Date(customExercise.startTime);
       })
 

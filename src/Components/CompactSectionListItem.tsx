@@ -1,7 +1,7 @@
 ﻿import { createStyles, IconButton, WithStyles, withStyles } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import React from "react";
-import { ISection } from "src/DataInterfaces";
+import { ISection } from "../DataInterfaces";
 
 const styles = createStyles({
     content: {

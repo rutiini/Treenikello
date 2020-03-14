@@ -8,7 +8,7 @@
 export function getExerciseDuration(exercise: IExercise): number {
     if(exercise.defaultSections.length) {
         let duration = 0;
-        exercise.defaultSections.map(section => {
+        exercise.defaultSections.forEach(section => {
             duration += section.setupTime + section.duration;
         });
         return duration;

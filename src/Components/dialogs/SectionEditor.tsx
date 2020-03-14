@@ -38,49 +38,60 @@ const styles = createStyles({
 });
 
 const SectionEditor: React.FC<ISectionEditorProps> = props => {
-    const addingNew = props.section === emptySection;
-    const initialSection = props.section ? props.section : emptySection;
-    const [section, setSection] = useState(initialSection);
+    const {section, updateSection, deleteSection} = props;
+    const addingNew = section === emptySection;
+    const initialSection = section ?? emptySection;
+    const [currentSection, setSection] = useState(initialSection);
 
     React.useEffect(() => {
         setSection(initialSection);
-    }, [props.section]);
+    }, [props.section, initialSection]);
 
     /** updates a property with string value that matches the name of the sender element */
     const updateStringProp = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
-                ...section,
+                ...currentSection,
                 [event.target.name]: event.target.value
             });
         },
-        [setSection, section]
+        [setSection, currentSection]
     );
 
     /** updates a property with numeric value that matches the name of the sender element */
     const updateNumberProp = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
-                ...section,
+                ...currentSection,
                 [event.target.name]: parseInt(event.target.value, 10)
             });
         },
-        [setSection, section]
+        [setSection, currentSection]
     );
 
-    const apply = React.useCallback(() => {
-        props.updateSection(section);
-    }, [props.updateSection, section]);
+    const updateColor = React.useCallback(
+        (event: ChangeEvent<{value: unknown}>) => {
+            setSection({
+                ...currentSection,
+                color: event.target.value as string
+            });
+        },
+        [setSection, currentSection]
+    );
 
-    const deleteSection = React.useCallback(() => {
-        props.deleteSection(section);
-    }, [props.deleteSection, section]);
+    const handleUpdate = React.useCallback(() => {
+        updateSection(currentSection);
+    }, [updateSection, currentSection]);
+
+    const handleDelete = React.useCallback(() => {
+        deleteSection(currentSection);
+    }, [deleteSection, currentSection]);
 
     return (
         <div className={props.classes.inputContainer}>
             <TextField
                 autoFocus={!!props.section}
-                value={section.name}
+                value={currentSection.name}
                 label="Nimi"
                 name="name"
                 type="text"
@@ -88,7 +99,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
                 className={props.classes.input}
             />
             <TextField
-                value={section.description}
+                value={currentSection.description}
                 label="Sisältö"
                 name="description"
                 type="text"
@@ -99,7 +110,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
             />
             <div className={props.classes.inputGroup}>
                 <TextField
-                    value={section.setupTime}
+                    value={currentSection.setupTime}
                     label="Tauko/alustus"
                     name="setupTime"
                     type="number"
@@ -107,7 +118,7 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
                     className={props.classes.numericInput}
                 />
                 <TextField
-                    value={section.duration}
+                    value={currentSection.duration}
                     label="Kesto"
                     name="duration"
                     type="number"
@@ -116,9 +127,9 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
                 />
                 {/* add a label for this control */}
                 <Select
-                    style={{ backgroundColor: section.color }}
-                    value={section.color}
-                    onChange={updateStringProp}
+                    style={{ backgroundColor: currentSection.color }}
+                    value={currentSection.color}
+                    onChange={updateColor}
                     name="color"
                 >
                     {colorOptions.map((o, index) => {
@@ -127,14 +138,14 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
                 </Select>
             </div>
             <div className={props.classes.inputGroup}>
-                <Button size="large" color="primary" onClick={apply}>
+                <Button size="large" color="primary" onClick={handleUpdate}>
                     {addingNew ? "Lisää" : "Päivitä"}
                 </Button>
                 <Button size="large" onClick={props.cancel}>
                     Peruuta
                 </Button>
                 {!addingNew && (
-                    <Button size="large" onClick={deleteSection}>
+                    <Button size="large" onClick={handleDelete}>
                         Poista
                     </Button>
                 )}

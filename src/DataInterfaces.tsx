@@ -7,7 +7,7 @@ export type NavTab = "Treeni" | "Osiot" | "Harjoitukset";
  * Section is the basic part of an exercise. It holds information used to draw a segment on the clock face
  * as well as instructions and description what kind of exercise this section is.
  */
-interface ISection {
+export interface ISection {
   color: string;
   description: string;
   setupTime: number;
@@ -20,7 +20,7 @@ interface ISection {
  * Exercise is the container object for sections, it is used to manage which sections belong to which exercise
  * and when the exercise is planned to start.
  */
-interface IExercise {
+export interface IExercise {
   defaultSections: ReadonlyArray<ISection>;
   name: string;
   preset: boolean;
@@ -33,7 +33,7 @@ interface IExercise {
  * components in the app which are dependend on the same state variables.
  * TODO: refactor to state / data and dispatch / actions (could do a hooks intermediate with [data, setter] structure?), move to the context.ts?
  */
-interface IExerciseContext {
+export interface IExerciseContext {
   exercises: IExercise[];
   activeSectionIndex: number;
   selectedExerciseIndex: number;
@@ -60,5 +60,3 @@ interface IExerciseContext {
   selectExercise(exercise: string): void;
   acceptDeleteExercise(): void;
 }
-
-export { ISection, IExercise, IExerciseContext}

@@ -6,7 +6,7 @@ import  { Dialog,
   DialogTitle,
 } from '@material-ui/core';
 import React, { PureComponent } from 'react'
-import { IExercise } from 'src/DataInterfaces';
+import { IExercise } from '../../DataInterfaces';
 
 interface IProps{
   open: boolean,

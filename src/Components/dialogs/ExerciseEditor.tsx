@@ -1,5 +1,5 @@
 ﻿import React, { useState, ChangeEvent } from "react";
-import { IExercise } from "src/DataInterfaces";
+import { IExercise } from "../../DataInterfaces";
 import { TextField, createStyles, WithStyles, withStyles, Button } from "@material-ui/core";
 import { GetTimeAsHHmmString } from "../Utils/ClockUtilities";
 import { emptyExercise } from "../Utils";
@@ -39,13 +39,14 @@ const styles = createStyles({
 });
 
 const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
-    const addingNew = props.exercise === emptyExercise;
+    const {exercise, updateExercise, deleteExercise} = props;
+    const addingNew = exercise === emptyExercise;
     const initialExercise = props.exercise ? props.exercise : emptyExercise;
-    const [exercise, setExercise] = useState(initialExercise);
+    const [currentExercise, setExercise] = useState(initialExercise);
 
     React.useEffect(() => {
         setExercise(initialExercise);
-    }, [props.exercise]);
+    }, [props.exercise, initialExercise]);
 
     const setStartTime = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -53,31 +54,31 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
             const newStartTime = new Date();
             newStartTime.setHours(parseInt(newStart[0], 10), parseInt(newStart[1], 10));
             setExercise({
-                ...exercise,
+                ...currentExercise,
                 startTime: newStartTime
             });
         },
-        [setExercise, exercise]
+        [setExercise, currentExercise]
     );
 
     const updateName = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>): void => {
             const name = event.target.value;
             setExercise({
-                ...exercise,
+                ...currentExercise,
                 name
             });
         },
-        [setExercise, exercise]
+        [setExercise, currentExercise]
     );
 
-    const apply = React.useCallback(() => {
-        props.updateExercise(exercise);
-    }, [props.updateExercise, exercise]);
+    const handleUpdate = React.useCallback(() => {
+        updateExercise(currentExercise);
+    }, [updateExercise, currentExercise]);
 
-    const deleteExercise = React.useCallback(() => {
-        props.deleteExercise(exercise);
-    }, [props.deleteExercise, exercise]);
+    const handleDelete = React.useCallback(() => {
+        deleteExercise(currentExercise);
+    }, [deleteExercise, currentExercise]);
 
     return (
         <div className={props.classes.inputContainer}>
@@ -86,7 +87,7 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
                 name="name"
                 label="Nimi"
                 type="text"
-                value={exercise.name}
+                value={currentExercise.name}
                 onChange={updateName}
                 error={!!validateName}
                 className={props.classes.input}
@@ -95,7 +96,7 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
                 name="time"
                 label="start"
                 type="time"
-                defaultValue={GetTimeAsHHmmString(exercise.startTime)}
+                defaultValue={GetTimeAsHHmmString(currentExercise.startTime)}
                 onChange={setStartTime}
                 InputLabelProps={{
                     shrink: true
@@ -105,14 +106,14 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
                 }}
             />
             <div className={props.classes.inputGroup}>
-                <Button size="large" color="primary" onClick={apply}>
+                <Button size="large" color="primary" onClick={handleUpdate}>
                     {addingNew ? "Lisää" : "Päivitä"}
                 </Button>
                 <Button size="large" onClick={props.cancel}>
                     Peruuta
                 </Button>
                 {!addingNew && (
-                    <Button size="large" onClick={deleteExercise}>
+                    <Button size="large" onClick={handleDelete}>
                         Poista
                     </Button>
                 )}
