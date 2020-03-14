@@ -24,10 +24,9 @@ steps:
 - script: |
     npm install
     npm run build
-    npm test -- --coverage
   displayName: 'npm install and build'
 
-- script: npm run test-coverage
+- script: npm test -- --coverage
   displayName: 'run tests and check coverage'
 
 - task: CopyFiles@2
