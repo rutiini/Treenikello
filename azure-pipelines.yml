@@ -13,6 +13,7 @@ variables:
   appname: 'hajimeapp'
   configuration: 'release'
   package: $(appname)-$(configuration)-$(Build.BuildId)
+  CI: true
 
 steps:
 - task: NodeTool@0
