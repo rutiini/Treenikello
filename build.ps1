@@ -1,0 +1,1 @@
+($env:CI = "true") -and (npm run build)

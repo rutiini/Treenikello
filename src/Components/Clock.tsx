@@ -171,11 +171,11 @@ function updateFaceElements(
                 }
                 // setup arc
                 sectionItems.push(
-                    getSectionItem(setupArcProps, sectionClassName, "#d3d0da"),
+                    getSectionItem(setupArcProps, `${setupStartAngle}`, sectionClassName, "#d3d0da"),
                 );
                 // section arc
                 sectionItems.push(
-                    getSectionItem(sectionArcProps, sectionClassName, sectionItem.color),
+                    getSectionItem(sectionArcProps, `${sectionStartAngle}`, sectionClassName, sectionItem.color),
                 );
                 // just check whether there is an active item set.
             }
@@ -184,11 +184,11 @@ function updateFaceElements(
     return sectionItems;
 }
 
-function getSectionItem(sectionPathProps: IPathProps, className: string, color: string): JSX.Element {
+function getSectionItem(sectionPathProps: IPathProps, key: string, className: string, color: string): JSX.Element {
 
     const pathString: string = getPath(sectionPathProps);
 
-    return <path id="arc" className={className} fill={color} fillRule="evenodd" d={pathString} />;
+    return <path id={`arc-${key}`} key={key} className={className} fill={color} fillRule="evenodd" d={pathString} />;
 }
 
 export default withStyles(styles)(Clock);

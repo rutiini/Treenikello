@@ -36,6 +36,7 @@
       "!<rootDir>/node_modules/",
       "!<rootDir>/path/to/dir/",
       "!**/registerServiceWorker.ts",
+      "!**/serviceWorker.ts",
       "!**/index.tsx"
     ],
     "coverageThreshold": {
