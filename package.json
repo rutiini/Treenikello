@@ -40,10 +40,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 5,
-        "functions": 10,
-        "lines": 22,
-        "statements": 24
+        "branches": 4,
+        "functions": 7,
+        "lines": 21,
+        "statements": 21
       },
       "./src/Components/": {
         "branches": 41,

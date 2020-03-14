@@ -14,6 +14,10 @@ interface IProps extends IPathProps{
     color: string
 }
 
+/** 
+ * section item as a component TODO: refactor back to clock because path should always be a part of SVG 
+ * and is not usable as a generic component.
+ * */
 const SectionItem: React.FC<IProps> = (props) => {
         const {className, color, ...others} = props;
         const pathString: string = getPath(others);
