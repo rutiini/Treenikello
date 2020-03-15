@@ -41,16 +41,16 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 4,
-        "functions": 7,
-        "lines": 21,
-        "statements": 21
+        "branches": 85,
+        "functions": 83.3,
+        "lines": 92.7,
+        "statements": 92.2
       },
       "./src/Components/": {
-        "branches": 41,
-        "functions": 37,
-        "lines": 54,
-        "statements": 55
+        "branches": 47.2,
+        "functions": 44.2,
+        "lines": 70.7,
+        "statements": 69.7
       }
     },
     "coverageReporters": [

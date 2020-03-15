@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import WorkoutMonitorTab from "../tabs/WorkoutMonitorTab";
+import WorkoutMonitorTab from "../Components/tabs/WorkoutMonitorTab";
 import { emptyExercise, emptySection } from "../Utils";
 
 it("WorkoutMonitorTab renders without crashing when there is no active section", () => {

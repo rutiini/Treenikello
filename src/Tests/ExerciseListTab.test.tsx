@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import ExerciseListTab from "../tabs/ExerciseListTab";
+import ExerciseListTab from "../Components/tabs/ExerciseListTab";
 import { emptyExercise } from "../Utils";
 
 function mock() {

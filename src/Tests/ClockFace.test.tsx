@@ -1,12 +1,12 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import { TimerMode } from "../Clock";
-import ClockFace from "../ClockFace";
+import { TimerMode } from "../Components/Clock";
+import ClockFace from "../Components/ClockFace";
 import { ClockData } from "../Utils/ClockUtilities";
 
 const testProps = {
     centerCoordinate: 10,
-    clockData: new ClockData(new Date),
+    clockData: new ClockData(new Date()),
     sectionItems: [],
     stopWatchRotation: 230,
     timerMode: TimerMode.Hidden,

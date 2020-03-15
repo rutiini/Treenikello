@@ -1,8 +1,8 @@
 ﻿import React, { useState, ChangeEvent } from "react";
 import { IExercise } from "../../DataInterfaces";
 import { TextField, createStyles, WithStyles, withStyles, Button } from "@material-ui/core";
-import { GetTimeAsHHmmString } from "../Utils/ClockUtilities";
-import { emptyExercise } from "../Utils";
+import { GetTimeAsHHmmString } from "../../Utils/ClockUtilities";
+import { emptyExercise } from "../../Utils";
 
 interface IExerciseEditorProps extends WithStyles<typeof styles> {
     readonly exercise: IExercise | null;

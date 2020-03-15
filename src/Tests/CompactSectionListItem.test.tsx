@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import CompactSectionListItem from "../CompactSectionListItem";
+import CompactSectionListItem from "../Components/CompactSectionListItem";
 import { emptySection } from "../Utils";
 
 function mock(): void {

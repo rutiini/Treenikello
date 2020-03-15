@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from "react";
 import { ISection } from "../../DataInterfaces";
 import { TextField, createStyles, WithStyles, withStyles, Button, Select, MenuItem } from "@material-ui/core";
 import { colorOptions } from "../../Store";
-import { emptySection } from "../Utils";
+import { emptySection } from "../../Utils";
 
 interface ISectionEditorProps extends WithStyles<typeof styles> {
     readonly section: ISection | null;

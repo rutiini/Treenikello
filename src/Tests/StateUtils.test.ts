@@ -1,5 +1,5 @@
-﻿import { IExercise, ISection } from "../../DataInterfaces";
-import { exercises } from "../../Store";
+﻿import { IExercise, ISection } from "../DataInterfaces";
+import { exercises } from "../Store";
 import { DefaultAppState, IAppState } from "../AppReducer/ExerciseReducer";
 import {
     addSectionToActiveExercise,

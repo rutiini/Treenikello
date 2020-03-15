@@ -2,10 +2,10 @@ import { createStyles, Fab, Theme, withStyles, WithStyles } from "@material-ui/c
 import { IconButton, List, ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText } from "@material-ui/core";
 import React, { FunctionComponent, useContext, useState } from "react";
 import { IExercise } from "../../DataInterfaces";
-import ExerciseContext from "../AppReducer/ExerciseContext";
-import { ActionType } from "../AppReducer/ExerciseReducer";
+import ExerciseContext from "../../AppReducer/ExerciseContext";
+import { ActionType } from "../../AppReducer/ExerciseReducer";
 import ExerciseEditor from "../dialogs/ExerciseEditor";
-import { getExerciseDuration, emptyExercise } from "../Utils";
+import { getExerciseDuration, emptyExercise } from "../../Utils";
 
 /** component props */
 interface IProps extends WithStyles {

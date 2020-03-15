@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
-import { IExercise, ISection, ExerciseStatus } from "../../DataInterfaces";
-import Store, { exercises } from "../../Store";
+import { IExercise, ISection, ExerciseStatus } from "../DataInterfaces";
+import Store, { exercises } from "../Store";
 import {
     addSectionToActiveExercise,
     deleteExercise,

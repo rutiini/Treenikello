@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import ExerciseEditor from "../dialogs/ExerciseEditor";
+import ExerciseEditor from "../Components/dialogs/ExerciseEditor";
 import { emptyExercise } from "../Utils";
 
 function mock() {

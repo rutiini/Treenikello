@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import ConfirmationDialog from "../dialogs/ConfirmationDialog";
+import ConfirmationDialog from "../Components/dialogs/ConfirmationDialog";
 
 it("ConfirmationDialog renders without crashing", () => {
   const testProps = {

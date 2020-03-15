@@ -1,7 +1,7 @@
 import { createStyles, Theme, WithStyles, withStyles } from "@material-ui/core";
 import React, { FunctionComponent, useContext, useState, useEffect } from "react";
 import { IExercise, ISection } from "../DataInterfaces";
-import ExerciseContext from "./AppReducer/ExerciseContext";
+import ExerciseContext from "../AppReducer/ExerciseContext";
 import ClockFace from "./ClockFace";
 import {
     CircleInDegrees,
@@ -12,7 +12,7 @@ import {
     useInterval,
     getPath,
     IPathProps,
-} from "./Utils/ClockUtilities";
+} from "../Utils/ClockUtilities";
 
 interface IProps extends WithStyles<typeof styles> {
     canvasSide: number;

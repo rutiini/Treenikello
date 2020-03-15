@@ -1,5 +1,5 @@
-﻿import { IExercise, ISection } from "../../DataInterfaces";
-import { exercises } from "../../Store";
+﻿import { IExercise, ISection } from "../DataInterfaces";
+import { exercises } from "../Store";
 import { IAppState } from "./ExerciseReducer";
 
 // TODO: redo to more exact methods instead of manipulating the whole state to optimize logic and improve reusability

@@ -1,7 +1,7 @@
 import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 import React, { FunctionComponent, useReducer, useState } from "react";
-import ExerciseContext from "./Components/AppReducer/ExerciseContext";
-import { ActionType, DefaultAppState, ExerciseReducer } from "./Components/AppReducer/ExerciseReducer";
+import ExerciseContext from "./AppReducer/ExerciseContext";
+import { ActionType, DefaultAppState, ExerciseReducer } from "./AppReducer/ExerciseReducer";
 import Clock from "./Components/Clock";
 import ConfirmationDialog from "./Components/dialogs/ConfirmationDialog";
 import NotificationSnackBar from "./Components/NotificationSnackBar";

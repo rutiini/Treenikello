@@ -1,5 +1,5 @@
-﻿import { IExercise } from "../../DataInterfaces";
-import { TimerMode } from "../Clock";
+﻿import { IExercise } from "../DataInterfaces";
+import { TimerMode } from "../Components/Clock";
 import { CycleTimerMode, GetActiveSectionIndex, GetTimeAsHHmmString, TimeToDegrees } from "../Utils/ClockUtilities";
 
 /**

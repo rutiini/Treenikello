@@ -2,7 +2,7 @@
 import React from "react";
 import { TimerMode } from "./Clock";
 import StopWatchHand from "./StopWatchHand";
-import { ClockData } from "./Utils/ClockUtilities";
+import { ClockData } from "../Utils/ClockUtilities";
 
 interface IClockFaceProps {
     classes: {

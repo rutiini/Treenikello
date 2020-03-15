@@ -1,6 +1,6 @@
 ﻿import { ExerciseReducer, DefaultAppState, ActionType, IAction, IAppState } from "../AppReducer/ExerciseReducer";
 import { emptySection, emptyExercise, getExerciseDuration } from "../Utils";
-import { IExercise, ISection } from "../../DataInterfaces";
+import { IExercise, ISection } from "../DataInterfaces";
 
 const initialState = DefaultAppState;
 const reducer = ExerciseReducer;
@@ -277,5 +277,18 @@ test("Update active section when time is 1 minute past exercise last section", (
         ...initialState,
         activeSection: null,
         exerciseStatus: "PostExercise"
+    });
+});
+
+test("Close snackbar updates snackbar open status", () => {
+    const CloseSnackbar: IAction = { type: ActionType.CloseSnackbar };
+    const initialStateWithSnackbarOpen: IAppState = {
+        ...initialState,
+        snackBarOpen: true
+    };
+
+    expect(reducer(initialStateWithSnackbarOpen, CloseSnackbar)).toEqual({
+        ...initialState,
+        snackBarOpen: false
     });
 });

@@ -1,7 +1,7 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import { ISection } from "../../DataInterfaces";
-import SectionListTab from "../tabs/SectionListTab";
+import { ISection } from "../DataInterfaces";
+import SectionListTab from "../Components/tabs/SectionListTab";
 
 const sectionTabProps = {
   deleteSection: (section: ISection) => void 0,

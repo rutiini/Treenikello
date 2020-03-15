@@ -1,6 +1,6 @@
 ﻿import * as React from "react";
 import ReactDOM from "react-dom";
-import SectionEditor from "../dialogs/SectionEditor";
+import SectionEditor from "../Components/dialogs/SectionEditor";
 import { emptySection } from "../Utils";
 
 function mock() {

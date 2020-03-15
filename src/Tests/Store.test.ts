@@ -1,5 +1,5 @@
-import Store, { exercises } from "../../Store";
-import { IExercise } from "../../DataInterfaces";
+import Store from "../Store";
+import { IExercise } from "../DataInterfaces";
 
 test("no locally stored exercises", () => {
     expect(Store.getSavedExercises()).toEqual([]);

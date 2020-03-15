@@ -1,5 +1,5 @@
-﻿import { IExercise, ISection, ExerciseStatus } from "../../DataInterfaces";
-import { TimerMode } from "../Clock";
+﻿import { IExercise, ISection, ExerciseStatus } from "../DataInterfaces";
+import { TimerMode } from "../Components/Clock";
 import { useEffect, useRef } from "react";
 
 export interface IPathProps {

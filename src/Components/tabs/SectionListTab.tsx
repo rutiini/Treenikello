@@ -3,10 +3,10 @@ import React, { FunctionComponent, useContext, useState } from "react";
 import { arrayMove, SortableContainer, SortableElement } from "react-sortable-hoc";
 import { IExercise, ISection } from "../../DataInterfaces";
 import CompactSectionListItem from "../CompactSectionListItem";
-import ExerciseContext from "../AppReducer/ExerciseContext";
+import ExerciseContext from "../../AppReducer/ExerciseContext";
 import SectionEditor from "../dialogs/SectionEditor";
-import { ActionType } from "../AppReducer/ExerciseReducer";
-import { emptySection } from "../Utils";
+import { ActionType } from "../../AppReducer/ExerciseReducer";
+import { emptySection } from "../../Utils";
 
 const styles = createStyles({
     listItem: {

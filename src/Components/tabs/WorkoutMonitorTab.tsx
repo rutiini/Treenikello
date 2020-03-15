@@ -1,9 +1,9 @@
 import { createStyles, Icon, Step, StepContent, StepLabel, Stepper, Typography, withStyles } from "@material-ui/core";
 import React, { FunctionComponent, useState, useContext } from "react";
 import { IExercise, ISection } from "../../DataInterfaces";
-import { useInterval, GetActiveSectionIndex } from "../Utils/ClockUtilities";
-import ExerciseContext from "../AppReducer/ExerciseContext";
-import { ActionType } from "../AppReducer/ExerciseReducer";
+import { useInterval, GetActiveSectionIndex } from "../../Utils/ClockUtilities";
+import ExerciseContext from "../../AppReducer/ExerciseContext";
+import { ActionType } from "../../AppReducer/ExerciseReducer";
 
 const styles = createStyles({
     root: {
