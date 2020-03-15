@@ -25,39 +25,39 @@ const styles = (theme: Theme) =>
     createStyles({
         bigHourMarker: {
             stroke: theme.palette.action.active,
-            strokeWidth: 2
+            strokeWidth: 2,
         },
         clock: {
             height: "45vh",
             [theme.breakpoints.between("md", "xl")]: {
                 height: "99vh",
-                width: "49vw"
-            }
+                width: "49vw",
+            },
         },
         face: {
             fill: "#000000",
             stroke: "#bebebe",
-            strokeWidth: 2
+            strokeWidth: 2,
         },
         faceCover: {
-            fill: "#000000"
+            fill: "#000000",
         },
         hourMarker: {
             stroke: theme.palette.action.active,
-            strokeWidth: 1
+            strokeWidth: 1,
         },
         hourMin: {
             fill: theme.palette.secondary.main,
             stroke: theme.palette.action.active,
-            strokeWidth: 1
+            strokeWidth: 1,
         },
         midPoint: {
-            fill: theme.palette.action.active
+            fill: theme.palette.action.active,
         },
         minuteMarker: {
             stroke: theme.palette.action.active,
-            strokeWidth: 1
-        }
+            strokeWidth: 1,
+        },
     });
 
 /** this is basically a static svg after inital render since the props should not change. */
@@ -71,13 +71,9 @@ const ClockFace: React.FC<IClockFaceProps & WithStyles> = (props: IClockFaceProp
             // the "big hours"
             if (i % 15 === 0) {
                 mjrs.push(createMarker(i, 5, classes.bigHourMarker));
-            }
-            // lesser markers
-            else if (i % 5 === 0) {
+            } else if (i % 5 === 0) {
                 mjrs.push(createMarker(i, 5, classes.hourMarker));
-            }
-            // minutes
-            else {
+            } else {
                 mjrs.push(createMarker(i, 3, classes.minuteMarker));
             }
         }

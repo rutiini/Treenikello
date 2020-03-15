@@ -15,9 +15,9 @@ const exerciseWithSection = {
         {
             ...emptySection,
             name: "testing",
-            duration: 10
-        }
-    ]
+            duration: 10,
+        },
+    ],
 };
 
 it("WorkoutMonitorTab renders without crashing when there an active section", () => {
@@ -27,7 +27,7 @@ it("WorkoutMonitorTab renders without crashing when there an active section", ()
 });
 
 it("WorkoutMonitorTab renders without crashing when time has passed the exercise duration", () => {
-    exerciseWithSection.startTime= new Date(Date.now() - 900000); // 15 mins in the past
+    exerciseWithSection.startTime = new Date(Date.now() - 900000); // 15 mins in the past
     const div = document.createElement("div");
     ReactDOM.render(<WorkoutMonitorTab exercise={exerciseWithSection} activeSection={emptySection} />, div);
     ReactDOM.unmountComponentAtNode(div);

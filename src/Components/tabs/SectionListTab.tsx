@@ -11,30 +11,30 @@ import { emptySection } from "../Utils";
 const styles = createStyles({
     listItem: {
         justifyContent: "center",
-        textAlign: "center"
+        textAlign: "center",
     },
     root: {
         overflow: "hidden",
         userSelect: "none",
-        height: "100%"
+        height: "100%",
     },
     list: {
-        height: "100%",
-        overflow: "auto",
-        transition: "transform 300ms ease-in-out",
+        "height": "100%",
+        "overflow": "auto",
+        "transition": "transform 300ms ease-in-out",
         "$root.expanded>&": {
             transform: "translateY(-100%)",
-            overflow: "hidden"
-        }
+            overflow: "hidden",
+        },
     },
     editor: {
-        height: "100%",
-        overflow: "auto",
-        transition: "transform 300ms ease-in-out",
+        "height": "100%",
+        "overflow": "auto",
+        "transition": "transform 300ms ease-in-out",
         "$root.expanded>&": {
-            transform: "translateY(-100%)"
-        }
-    }
+            transform: "translateY(-100%)",
+        },
+    },
 });
 
 interface IProps extends WithStyles {
@@ -59,7 +59,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             const rearranged: ReadonlyArray<ISection> = arrayMove([...exercise.defaultSections], oldIndex, newIndex);
             dispatch({ type: ActionType.UpdateAllSections, payload: rearranged });
         },
-        [dispatch, exercise.defaultSections]
+        [dispatch, exercise.defaultSections],
     );
 
     const updateSection = React.useCallback(
@@ -73,7 +73,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             dispatch({ type: ActionType.SetEditSection, payload: null });
             setAddingNewSection(false);
         },
-        [dispatch, addingNewSection, setAddingNewSection]
+        [dispatch, addingNewSection, setAddingNewSection],
     );
 
     const deleteSection = React.useCallback(
@@ -81,7 +81,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             dispatch({ type: ActionType.DeleteSection, payload: section });
             dispatch({ type: ActionType.SetEditSection, payload: null });
         },
-        [dispatch]
+        [dispatch],
     );
 
     const closeEditor = React.useCallback(() => {
@@ -102,7 +102,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
                     />
                 );
             }),
-        [exercise.defaultSections, setEditSection]
+        [exercise.defaultSections, setEditSection],
     );
 
     return (

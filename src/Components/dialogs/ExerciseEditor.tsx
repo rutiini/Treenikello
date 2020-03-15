@@ -14,31 +14,31 @@ interface IExerciseEditorProps extends WithStyles<typeof styles> {
 
 const styles = createStyles({
     input: {
-        display: "inline-block",
-        width: "80%",
-        marginTop: 10,
-        marginBottom: 10,
+        "display": "inline-block",
+        "width": "80%",
+        "marginTop": 10,
+        "marginBottom": 10,
         "& div": {
-            width: "100%"
-        }
+            width: "100%",
+        },
     },
     inputContainer: {
         padding: 20,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
     },
     inputGroup: {
-        margin: 10
+        margin: 10,
     },
     numericInput: {
         marginLeft: 10,
         marginRight: 10,
-        width: 80
-    }
+        width: 80,
+    },
 });
 
-const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
+const ExerciseEditor: React.FC<IExerciseEditorProps> = (props) => {
     const {exercise, updateExercise, deleteExercise} = props;
     const addingNew = exercise === emptyExercise;
     const initialExercise = props.exercise ? props.exercise : emptyExercise;
@@ -55,10 +55,10 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
             newStartTime.setHours(parseInt(newStart[0], 10), parseInt(newStart[1], 10));
             setExercise({
                 ...currentExercise,
-                startTime: newStartTime
+                startTime: newStartTime,
             });
         },
-        [setExercise, currentExercise]
+        [setExercise, currentExercise],
     );
 
     const updateName = React.useCallback(
@@ -66,10 +66,10 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
             const name = event.target.value;
             setExercise({
                 ...currentExercise,
-                name
+                name,
             });
         },
-        [setExercise, currentExercise]
+        [setExercise, currentExercise],
     );
 
     const handleUpdate = React.useCallback(() => {
@@ -99,10 +99,10 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
                 defaultValue={GetTimeAsHHmmString(currentExercise.startTime)}
                 onChange={setStartTime}
                 InputLabelProps={{
-                    shrink: true
+                    shrink: true,
                 }}
                 inputProps={{
-                    step: 300 // 5 min
+                    step: 300, // 5 min
                 }}
             />
             <div className={props.classes.inputGroup}>
@@ -123,7 +123,7 @@ const ExerciseEditor: React.FC<IExerciseEditorProps> = props => {
 };
 
 function validateName(name: string, usedNames: ReadonlyArray<string>): string | null {
-    const index = usedNames.findIndex(n => n === name);
+    const index = usedNames.findIndex((n) => n === name);
     return index !== -1 ? null : `nimi käytetty: ${usedNames[index]}`;
 }
 

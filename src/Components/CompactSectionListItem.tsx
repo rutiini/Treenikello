@@ -14,17 +14,17 @@ const styles = createStyles({
         overflow: "hidden",
         justifyContent: "center",
         textAlign: "center",
-        cursor: "grab"
+        cursor: "grab",
     },
     rightContainer: {
-        width: "15%"
+        width: "15%",
     },
     leftContainer: {
-        width: "15%"
+        width: "15%",
     },
     middleContainer: {
-        width: "70%"
-    }
+        width: "70%",
+    },
 });
 
 interface IProps extends WithStyles {
@@ -46,7 +46,7 @@ const CompactSectionListItem: React.FC<IProps & WithStyles> = (props: IProps) =>
         (e: never) => {
             editSection(section);
         },
-        [editSection, section]
+        [editSection, section],
     );
 
     const text = `${name} | ${setupTime} | ${duration}`;

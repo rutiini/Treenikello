@@ -1,8 +1,8 @@
-﻿import * as React from 'react';
-import ReactDOM from 'react-dom';
-import ConfirmationDialog from '../dialogs/ConfirmationDialog';
+﻿import * as React from "react";
+import ReactDOM from "react-dom";
+import ConfirmationDialog from "../dialogs/ConfirmationDialog";
 
-it('ConfirmationDialog renders without crashing', () => {
+it("ConfirmationDialog renders without crashing", () => {
   const testProps = {
     deleteExercise: () => true,
     exercise: {
@@ -12,13 +12,13 @@ it('ConfirmationDialog renders without crashing', () => {
       name: "a",
       preset: false,
       setupTime: 1,
-      startTime: new Date()
+      startTime: new Date(),
     },
     open: true,
-    setConfirmOpen: () => true
-  }
+    setConfirmOpen: () => true,
+  };
 
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   ReactDOM.render(
   <ConfirmationDialog {...testProps} />
   , div);

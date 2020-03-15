@@ -7,7 +7,7 @@ import {
     deleteSectionFromActiveExercise,
     updateActiveExercise,
     updateSectionInActiveExercise,
-    updateSectionsInActiveExercise
+    updateSectionsInActiveExercise,
 } from "../AppReducer/StateUtils";
 
 const section: ISection = {
@@ -16,18 +16,18 @@ const section: ISection = {
     duration: 5,
     key: `1`,
     name: `test`,
-    setupTime: 0
+    setupTime: 0,
 };
 
 test(`update active exercise successfully`, () => {
     // select the and modify an exercise
     const modifiedExercise: IExercise = {
         ...DefaultAppState.activeExercise,
-        defaultSections: [...DefaultAppState.activeExercise.defaultSections, section]
+        defaultSections: [...DefaultAppState.activeExercise.defaultSections, section],
     };
     const editableState: IAppState = {
         ...DefaultAppState,
-        editExercise: DefaultAppState.activeExercise
+        editExercise: DefaultAppState.activeExercise,
     };
     const resultState = updateActiveExercise(editableState, modifiedExercise, DefaultAppState.activeExercise);
     expect(resultState.activeExercise).toEqual(modifiedExercise);
@@ -42,7 +42,7 @@ test(`when an edit section exists all the related places are also updated`, () =
     const editSection = DefaultAppState.activeExercise.defaultSections[0];
     const initialState: IAppState = {
         ...DefaultAppState,
-        editSection
+        editSection,
     };
     // section gets updated in the active exercise
     expect(updateSectionInActiveExercise(initialState, section).activeExercise.defaultSections[0]).toEqual(section);
@@ -51,11 +51,11 @@ test(`when an edit section exists all the related places are also updated`, () =
 test(`deleting an exercise sets another as active and removes the target from exercise`, () => {
     const customExercise: IExercise = {
         ...DefaultAppState.activeExercise,
-        name: `coostom!`
+        name: `coostom!`,
     };
     const stateWithCustomExercise: IAppState = {
         ...DefaultAppState,
-        exercises: [...exercises, customExercise]
+        exercises: [...exercises, customExercise],
     };
     expect(deleteExercise(stateWithCustomExercise, customExercise)).toEqual(DefaultAppState);
 });
@@ -74,7 +74,7 @@ test(`deleting a section from active exercise successfully`, () => {
     const deleteTarget = DefaultAppState.activeExercise.defaultSections[0];
     // section gets updated in the active exercise
     expect(
-        deleteSectionFromActiveExercise(DefaultAppState, deleteTarget).activeExercise.defaultSections.indexOf(section)
+        deleteSectionFromActiveExercise(DefaultAppState, deleteTarget).activeExercise.defaultSections.indexOf(section),
     ).toBe(-1);
 });
 
@@ -83,6 +83,6 @@ test(`updating all the sections for exercise successfully`, () => {
     const updatedSections = [...DefaultAppState.activeExercise.defaultSections, section];
     // section gets updated in the active exercise
     expect(updateSectionsInActiveExercise(DefaultAppState, updatedSections).activeExercise.defaultSections).toEqual(
-        updatedSections
+        updatedSections,
     );
 });

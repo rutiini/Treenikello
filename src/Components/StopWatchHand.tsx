@@ -15,14 +15,14 @@ interface IProps extends WithStyles<typeof styles> {
 
 const styles = createStyles({
     timerHand: {
-        stroke: "yellow"
+        stroke: "yellow",
     },
     timerHandTip: {
-        stroke: "red"
-    }
+        stroke: "red",
+    },
 });
 
-const StopWatchHand: React.FC<IProps> = props => {
+const StopWatchHand: React.FC<IProps> = (props) => {
     return props.visible ? (
         <g id="timerHand" transform={`rotate(${props.rotation} 50 50)`}>
             <line

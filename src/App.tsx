@@ -10,18 +10,18 @@ import { IExercise } from "./DataInterfaces";
 
 const styles = createStyles({
     App: {
-        textAlign: "center"
-    }
+        textAlign: "center",
+    },
 });
 
-const App: FunctionComponent<WithStyles> = props => {
+const App: FunctionComponent<WithStyles> = (props) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [state, dispatch] = useReducer(ExerciseReducer, DefaultAppState);
     const { classes } = props;
 
     const deleteExercise = React.useCallback(
         (exercise: IExercise) => dispatch({ type: ActionType.DeleteExercise, payload: exercise }),
-        [dispatch]
+        [dispatch],
     );
 
     const handleSnackBarClose = React.useCallback(() => {

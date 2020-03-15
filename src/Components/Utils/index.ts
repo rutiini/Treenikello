@@ -3,12 +3,12 @@
 /**
  * function returns the sum of all sections setup times and durations.
  * @param IExercise target exercise
- * @param exercise 
+ * @param exercise
  */
 export function getExerciseDuration(exercise: IExercise): number {
-    if(exercise.defaultSections.length) {
+    if (exercise.defaultSections.length) {
         let duration = 0;
-        exercise.defaultSections.forEach(section => {
+        exercise.defaultSections.forEach((section) => {
             duration += section.setupTime + section.duration;
         });
         return duration;
@@ -22,7 +22,7 @@ export const emptyExercise: IExercise = {
     defaultSections: [],
     name: "",
     preset: false,
-    startTime: new Date()
+    startTime: new Date(),
 };
 
 /** empty section for creating new instances */
@@ -32,5 +32,5 @@ export const emptySection: ISection = {
     duration: 0,
     key: "",
     name: "",
-    setupTime: 0
+    setupTime: 0,
 };

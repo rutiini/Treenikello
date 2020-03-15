@@ -13,31 +13,31 @@ interface ISectionEditorProps extends WithStyles<typeof styles> {
 
 const styles = createStyles({
     input: {
-        display: "inline-block",
-        width: "80%",
-        marginTop: 10,
-        marginBottom: 10,
+        "display": "inline-block",
+        "width": "80%",
+        "marginTop": 10,
+        "marginBottom": 10,
         "& div": {
-            width: "100%"
-        }
+            width: "100%",
+        },
     },
     inputContainer: {
         padding: 20,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
     },
     inputGroup: {
-        margin: 10
+        margin: 10,
     },
     numericInput: {
         marginLeft: 10,
         marginRight: 10,
-        width: 80
-    }
+        width: 80,
+    },
 });
 
-const SectionEditor: React.FC<ISectionEditorProps> = props => {
+const SectionEditor: React.FC<ISectionEditorProps> = (props) => {
     const {section, updateSection, deleteSection} = props;
     const addingNew = section === emptySection;
     const initialSection = section ?? emptySection;
@@ -52,10 +52,10 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
         (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
                 ...currentSection,
-                [event.target.name]: event.target.value
+                [event.target.name]: event.target.value,
             });
         },
-        [setSection, currentSection]
+        [setSection, currentSection],
     );
 
     /** updates a property with numeric value that matches the name of the sender element */
@@ -63,20 +63,20 @@ const SectionEditor: React.FC<ISectionEditorProps> = props => {
         (event: ChangeEvent<HTMLInputElement>) => {
             setSection({
                 ...currentSection,
-                [event.target.name]: parseInt(event.target.value, 10)
+                [event.target.name]: parseInt(event.target.value, 10),
             });
         },
-        [setSection, currentSection]
+        [setSection, currentSection],
     );
 
     const updateColor = React.useCallback(
         (event: ChangeEvent<{value: unknown}>) => {
             setSection({
                 ...currentSection,
-                color: event.target.value as string
+                color: event.target.value as string,
             });
         },
-        [setSection, currentSection]
+        [setSection, currentSection],
     );
 
     const handleUpdate = React.useCallback(() => {

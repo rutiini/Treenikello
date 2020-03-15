@@ -1,22 +1,22 @@
-import { Button } from '@material-ui/core';
-import  { Dialog,
+import { Button } from "@material-ui/core";
+import { Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core';
-import React, { PureComponent } from 'react'
-import { IExercise } from '../../DataInterfaces';
+} from "@material-ui/core";
+import React, { PureComponent } from "react";
+import { IExercise } from "../../DataInterfaces";
 
-interface IProps{
-  open: boolean,
-  exercise: IExercise,
-  deleteExercise: (exercise: IExercise) => void,
-  setConfirmOpen: (open: boolean) => void
+interface IProps {
+  open: boolean;
+  exercise: IExercise;
+  deleteExercise: (exercise: IExercise) => void;
+  setConfirmOpen: (open: boolean) => void;
 }
 
 class ConfirmationDialog extends PureComponent<IProps, {}> {
-  
+
   public render() {
     const {exercise} = this.props;
     return (
@@ -28,7 +28,7 @@ class ConfirmationDialog extends PureComponent<IProps, {}> {
       <DialogTitle id="alert-dialog-title">Vahvista</DialogTitle>
       <DialogContent>
       <DialogContentText id="alert-dialog-description">
-      {`Haluatko varmasti poistaa valitun harjoituksen ${exercise ? exercise.name : ''}?`}
+      {`Haluatko varmasti poistaa valitun harjoituksen ${exercise ? exercise.name : ""}?`}
       </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -42,7 +42,7 @@ class ConfirmationDialog extends PureComponent<IProps, {}> {
       </Dialog>
       );
     }
-    
+
     private accept = () => {
       this.props.deleteExercise(this.props.exercise); // this could be done internally?
     }
@@ -50,5 +50,5 @@ class ConfirmationDialog extends PureComponent<IProps, {}> {
       this.props.setConfirmOpen(false);
     }
   }
-  
-  export default ConfirmationDialog;
+
+export default ConfirmationDialog;

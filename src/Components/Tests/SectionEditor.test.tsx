@@ -1,15 +1,15 @@
-﻿import * as React from 'react';
-import ReactDOM from 'react-dom';
-import SectionEditor from '../dialogs/SectionEditor';
-import { emptySection } from '../Utils';
+﻿import * as React from "react";
+import ReactDOM from "react-dom";
+import SectionEditor from "../dialogs/SectionEditor";
+import { emptySection } from "../Utils";
 
-function mock(){
+function mock() {
     // mock function
 }
-it('SectionEditor renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<SectionEditor 
-        section={emptySection} 
+it("SectionEditor renders without crashing", () => {
+    const div = document.createElement("div");
+    ReactDOM.render(<SectionEditor
+        section={emptySection}
         updateSection={mock}
         deleteSection={mock}
         cancel={mock}

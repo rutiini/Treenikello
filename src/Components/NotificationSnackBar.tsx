@@ -6,13 +6,13 @@ interface IProps {
     open: boolean;
 }
 
-const NotificationSnackBar: React.FC<IProps> = props => {
+const NotificationSnackBar: React.FC<IProps> = (props) => {
     const { handleHide, open } = props;
     return (
         <Snackbar
             anchorOrigin={{
                 horizontal: "left",
-                vertical: "top"
+                vertical: "top",
             }}
             open={open}
             autoHideDuration={4000}
@@ -21,7 +21,7 @@ const NotificationSnackBar: React.FC<IProps> = props => {
             action={[
                 <IconButton key="close" aria-label="Close" color="inherit" onClick={handleHide}>
                     <i className="material-icons">close</i>
-                </IconButton>
+                </IconButton>,
             ]}
         />
     );

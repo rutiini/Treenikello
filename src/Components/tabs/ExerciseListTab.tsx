@@ -20,36 +20,36 @@ const styles = (theme: Theme) =>
             backgroundColor: theme.palette.primary.main[400],
             justifyContent: "center",
             textAlign: "center",
-            width: "100%"
+            width: "100%",
         },
         selectedListItem: {
             backgroundColor: theme.palette.action.selected,
             justifyContent: "center",
             textAlign: "center",
-            width: "100%"
+            width: "100%",
         },
         root: {
             overflow: "hidden",
             userSelect: "none",
-            height: "100%"
+            height: "100%",
         },
         list: {
-            height: "100%",
-            overflow: "auto",
-            transition: "transform 300ms ease-in-out",
+            "height": "100%",
+            "overflow": "auto",
+            "transition": "transform 300ms ease-in-out",
             "$root.expanded>&": {
                 transform: "translateY(-100%)",
-                overflow: "hidden"
-            }
+                overflow: "hidden",
+            },
         },
         editor: {
-            height: "100%",
-            overflow: "hidden",
-            transition: "transform 300ms ease-in-out",
+            "height": "100%",
+            "overflow": "hidden",
+            "transition": "transform 300ms ease-in-out",
             "$root.expanded>&": {
-                transform: "translateY(-100%)"
-            }
-        }
+                transform: "translateY(-100%)",
+            },
+        },
     });
 
 const MS_IN_M: number = 60000;
@@ -70,7 +70,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
         (exercise: IExercise) => {
             selectExercise(exercise);
         },
-        [selectExercise]
+        [selectExercise],
     );
 
     const addClicked = React.useCallback(() => {
@@ -82,7 +82,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
         (exercise: IExercise) => {
             setExerciseInEdit(exercise);
         },
-        [setExerciseInEdit]
+        [setExerciseInEdit],
     );
 
     const updateExercise = React.useCallback(
@@ -93,15 +93,15 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
                     type: ActionType.UpdateExercise,
                     payload: {
                         updatedExercise: exercise,
-                        targetExercise: exerciseInEdit
-                    }
+                        targetExercise: exerciseInEdit,
+                    },
                 });
             } else {
                 dispatch({ type: ActionType.AddExercise, payload: exercise });
             }
             setExerciseInEdit(null);
         },
-        [exerciseInEdit, dispatch, setExerciseInEdit]
+        [exerciseInEdit, dispatch, setExerciseInEdit],
     );
 
     const deleteExercise = React.useCallback(
@@ -109,7 +109,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
             dispatch({ type: ActionType.DeleteExercise, payload: exercise });
             setExerciseInEdit(null);
         },
-        [dispatch, setExerciseInEdit]
+        [dispatch, setExerciseInEdit],
     );
 
     const closeEditor = React.useCallback((): void => {
@@ -127,7 +127,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
                     onEditClick={editClicked}
                 />
             )),
-        [exercises, selected, onClick, editClicked]
+        [exercises, selected, onClick, editClicked],
     );
 
     return (
@@ -145,7 +145,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
             <div className={props.classes.editor}>
                 <ExerciseEditor
                     exercise={exerciseInEdit}
-                    usedNames={state.exercises.map(e => e.name)}
+                    usedNames={state.exercises.map((e) => e.name)}
                     updateExercise={updateExercise}
                     deleteExercise={deleteExercise}
                     cancel={closeEditor}
@@ -162,7 +162,7 @@ interface IExerciseListElementProps extends WithStyles {
     onEditClick(exercise: IExercise): void;
 }
 
-const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = props => {
+const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = (props) => {
     const { exercise, selected, onClick, onEditClick, classes } = props;
 
     const duration: number = getExerciseDuration(exercise);
@@ -177,13 +177,13 @@ const ExerciseListElement: React.FunctionComponent<IExerciseListElementProps> = 
     // parse timestamps for start and stop
     const starts = `${exercise.startTime.toLocaleTimeString("FI", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
     })}`;
 
     const stopTime = new Date(exercise.startTime.getTime() + duration * MS_IN_M);
     const stops = `${stopTime.toLocaleTimeString("FI", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
     })}`;
 
     const exerciseKey = exercise.name;

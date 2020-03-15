@@ -152,7 +152,8 @@ function updateFaceElements(
                     cumulativeAngle = stopDrawAngle + startPosition;
                 }
 
-                const sectionClassName = sectionItem === activeSection ? classes.activeSection : classes.inactiveSection;
+                const sectionClassName =
+                    sectionItem === activeSection ? classes.activeSection : classes.inactiveSection;
                 const setupArcProps: IPathProps = {
                     cx: centerCoordinate,
                     cy: centerCoordinate,
@@ -160,7 +161,7 @@ function updateFaceElements(
                     startAngle: setupStartAngle,
                     endAngle: setupStopAngle,
                     thickness: 2,
-                }
+                };
                 const sectionArcProps: IPathProps = {
                     cx: centerCoordinate,
                     cy: centerCoordinate,
@@ -168,11 +169,9 @@ function updateFaceElements(
                     startAngle: sectionStartAngle,
                     endAngle: cumulativeAngle,
                     thickness: 3,
-                }
+                };
                 // setup arc
-                sectionItems.push(
-                    getSectionItem(setupArcProps, `${setupStartAngle}`, sectionClassName, "#d3d0da"),
-                );
+                sectionItems.push(getSectionItem(setupArcProps, `${setupStartAngle}`, sectionClassName, "#d3d0da"));
                 // section arc
                 sectionItems.push(
                     getSectionItem(sectionArcProps, `${sectionStartAngle}`, sectionClassName, sectionItem.color),
@@ -185,7 +184,6 @@ function updateFaceElements(
 }
 
 function getSectionItem(sectionPathProps: IPathProps, key: string, className: string, color: string): JSX.Element {
-
     const pathString: string = getPath(sectionPathProps);
 
     return <path id={`arc-${key}`} key={key} className={className} fill={color} fillRule="evenodd" d={pathString} />;

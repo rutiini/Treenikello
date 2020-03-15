@@ -2,7 +2,7 @@
 import { TimerMode } from "../Clock";
 import { useEffect, useRef } from "react";
 
-export interface IPathProps{
+export interface IPathProps {
   cx: number;
   cy: number;
   radius: number;
@@ -14,7 +14,7 @@ export interface IPathProps{
 /** Custom hook from an example blog post to handle intervals */
 export function useInterval(
   callback: (params?: object[]) => unknown,
-  delay: number
+  delay: number,
 ) {
   const savedCallback = useRef(callback);
 
@@ -50,7 +50,7 @@ export const MinuteInDegrees = CircleInDegrees / HourInMinutes;
  */
 export function GetActiveSectionIndex(
   exercise: IExercise,
-  currentTime: Date
+  currentTime: Date,
 ): number {
   const { startTime, defaultSections: sectionItems } = exercise;
   const currentPosition = TimeToDegrees(currentTime); // "absolute minute position"
@@ -159,17 +159,17 @@ export class ClockData {
   }
 }
 
-export function getPath(props: IPathProps){
+export function getPath(props: IPathProps) {
   const {cx, cy, radius, startAngle, endAngle, thickness} = props;
-const start = polarToCartesian( cx,  cy,  radius,  endAngle);
-const end = polarToCartesian( cx,  cy,  radius,  startAngle);
-const largeArcFlag =  endAngle -  startAngle <= 180 ? "0" : "1";
+  const start = polarToCartesian( cx,  cy,  radius,  endAngle);
+  const end = polarToCartesian( cx,  cy,  radius,  startAngle);
+  const largeArcFlag =  endAngle -  startAngle <= 180 ? "0" : "1";
 
-const cutoutRadius =  radius -  thickness
-const start2 = polarToCartesian( cx, cy, cutoutRadius,  endAngle)
-const end2 = polarToCartesian( cx,  cy, cutoutRadius,  startAngle)
+  const cutoutRadius =  radius -  thickness;
+  const start2 = polarToCartesian( cx, cy, cutoutRadius,  endAngle);
+  const end2 = polarToCartesian( cx,  cy, cutoutRadius,  startAngle);
 
-return [
+  return [
   "M", start.x, start.y,
   "A",  radius,  radius, 0, largeArcFlag, 0, end.x, end.y,
   "L",  cx,  cy,
@@ -177,16 +177,16 @@ return [
   "M", start2.x, start2.y,
   "A", cutoutRadius, cutoutRadius, 0, largeArcFlag, 0, end2.x, end2.y,
   "L",  cx,  cy,
-  "Z"
+  "Z",
 ].join(" ");
 }
 
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
-  
+
 const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
 
 return {
   x: Number(centerX) + (radius * Math.cos(angleInRadians)),
-  y: Number(centerY) + (radius * Math.sin(angleInRadians))
+  y: Number(centerY) + (radius * Math.sin(angleInRadians)),
 };
 }

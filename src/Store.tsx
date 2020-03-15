@@ -12,14 +12,14 @@ export default class Store {
         return [];
       }
       if (customs === undefined) {
-        console.log(`local storage value was ${customs}. clearing cached data.`)
+        console.log(`local storage value was ${customs}. clearing cached data.`);
         localStorage.clear();
         return [];
       }
 
       customs.forEach((customExercise: IExercise) => {
         customExercise.startTime = new Date(customExercise.startTime);
-      })
+      });
 
       return customs;
     }
@@ -30,8 +30,8 @@ export default class Store {
   // save users custom exercises to browser cache
   public static saveExercises = (modifiedExercises: ReadonlyArray<IExercise>) => {
 
-    const nonPresets = modifiedExercises.filter((x: IExercise) => x.preset !== true)
-    console.debug(`saving ${nonPresets.length} exercises`)
+    const nonPresets = modifiedExercises.filter((x: IExercise) => x.preset !== true);
+    console.debug(`saving ${nonPresets.length} exercises`);
     localStorage.setItem("customExercises", JSON.stringify(nonPresets));
   }
 
@@ -42,111 +42,111 @@ export const exercises: IExercise[] = [
     defaultSections: [
       {
         color: "#1b85b8",
-        description: 'nilkat lämpimiksi, käsipallo',
+        description: "nilkat lämpimiksi, käsipallo",
         duration: 10,
         key: "unassigned",
-        name: 'Alkulämmittely',
-        setupTime: 2
+        name: "Alkulämmittely",
+        setupTime: 2,
       },
       {
         color: "#559e83",
-        description: 'erityisesti jalat vetreiksi',
+        description: "erityisesti jalat vetreiksi",
         duration: 5,
         key: "unassigned",
-        name: 'Alkuvenyttely',
-        setupTime: 2
+        name: "Alkuvenyttely",
+        setupTime: 2,
       },
       {
         color: "#ae5a41",
-        description: 'kokeilkaa uutta korkeaa',
+        description: "kokeilkaa uutta korkeaa",
         duration: 10,
         key: "unassigned",
-        name: 'Tengi',
-        setupTime: 2
+        name: "Tengi",
+        setupTime: 2,
       },
       {
         color: "#c3cb71",
-        description: 'perustekniikkaa',
+        description: "perustekniikkaa",
         duration: 20,
         key: "unassigned",
-        name: 'Päivän aihe',
-        setupTime: 2
+        name: "Päivän aihe",
+        setupTime: 2,
       },
       {
         color: "#5a5255",
-        description: 'intervallit mitseihin täysillä',
+        description: "intervallit mitseihin täysillä",
         duration: 15,
         key: "unassigned",
-        name: 'Loppujumppa',
-        setupTime: 2
-      }
+        name: "Loppujumppa",
+        setupTime: 2,
+      },
     ],
     name: "Taidotreenit",
     preset: true,
-    startTime: new Date(0, 0, 0, 18, 30)
+    startTime: new Date(0, 0, 0, 18, 30),
   },
   {
     defaultSections: [
       {
         color: "#ae5a41",
-        description: 'kyykyt',
+        description: "kyykyt",
         duration: 5,
         key: "unassigned",
-        name: 'Sarja',
-        setupTime: 2
+        name: "Sarja",
+        setupTime: 2,
       },
       {
         color: "#559e83",
-        description: 'lepoa',
+        description: "lepoa",
         duration: 5,
         key: "unassigned",
-        name: 'tauko',
-        setupTime: 2
+        name: "tauko",
+        setupTime: 2,
       },
       {
         color: "#ae5a41",
-        description: 'vatsat',
+        description: "vatsat",
         duration: 5,
         key: "unassigned",
-        name: 'Sarja',
-        setupTime: 2
+        name: "Sarja",
+        setupTime: 2,
       },
       {
         color: "#559e83",
-        description: 'lepoa',
+        description: "lepoa",
         duration: 5,
         key: "unassigned",
-        name: 'tauko',
-        setupTime: 2
+        name: "tauko",
+        setupTime: 2,
       },
       {
         color: "#ae5a41",
-        description: 'punnerrukset',
+        description: "punnerrukset",
         duration: 5,
         key: "unassigned",
-        name: 'Sarja',
-        setupTime: 2
+        name: "Sarja",
+        setupTime: 2,
       },
       {
         color: "#559e83",
-        description: 'lepoa',
+        description: "lepoa",
         duration: 5,
         key: "unassigned",
-        name: 'tauko',
-        setupTime: 2
+        name: "tauko",
+        setupTime: 2,
       },
     ],
     name: "Intervallitreeni",
     preset: true,
-    startTime: new Date(0, 0, 0, 17, 30)
-  }
-]
+    startTime: new Date(0, 0, 0, 17, 30),
+  },
+];
 // TODO: if possible, include the colors in the theme for easier usage
 export const colorOptions =
   [
-    { "colorName": "red", "colorValue": "#ee4035" },
-    { "colorName": "orange", "colorValue": "#f37736" },
-    { "colorName": "yellow", "colorValue": "#fdf498" },
-    { "colorName": "green", "colorValue": "#7bc043" },
-    { "colorName": "blue", "colorValue": "#0392cf" },
-  ]
+    { colorName: "red", colorValue: "#ee4035" },
+    { colorName: "orange", colorValue: "#f37736" },
+    { colorName: "yellow", colorValue: "#fdf498" },
+    { colorName: "green", colorValue: "#7bc043" },
+    { colorName: "blue", colorValue: "#0392cf" },
+  ];

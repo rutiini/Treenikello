@@ -10,7 +10,7 @@ test("save exercise to localStorage", () => {
         name: "new",
         startTime: new Date(),
         defaultSections: [],
-        preset: false
+        preset: false,
     };
     Store.saveExercises([newExercise]);
     expect(Store.getSavedExercises()).toEqual([newExercise]);

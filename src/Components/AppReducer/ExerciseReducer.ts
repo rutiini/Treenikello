@@ -7,7 +7,7 @@ import {
     deleteSectionFromActiveExercise,
     updateActiveExercise,
     updateSectionInActiveExercise,
-    updateSectionsInActiveExercise
+    updateSectionsInActiveExercise,
 } from "./StateUtils";
 import { GetActiveSectionIndex } from "../Utils/ClockUtilities";
 
@@ -29,7 +29,7 @@ export enum ActionType {
     UpdateStartTime = "UPDATE_START_TIME",
     SetToastMessage = "SET_TOAST_MESSAGE",
     UpdateActiveSection = "UPDATE_ACTIVE_SECTION",
-    CloseSnackbar = "CLOSE_SNACKBAR"
+    CloseSnackbar = "CLOSE_SNACKBAR",
 }
 
 /** All possible actions */
@@ -72,7 +72,7 @@ export const DefaultAppState: IAppState = {
     editSection: null,
     exercises: [...exercises, ...Store.getSavedExercises()],
     selectedSection: null,
-    snackBarOpen: false
+    snackBarOpen: false,
 };
 
 /** reducer for app state */
@@ -91,7 +91,7 @@ function stateController(state: IAppState, action: IAction): IAppState {
             return {
                 ...state,
                 activeExercise: action.payload,
-                exercises: [...state.exercises, action.payload]
+                exercises: [...state.exercises, action.payload],
             };
         }
         case ActionType.UpdateExercise: {
@@ -103,13 +103,13 @@ function stateController(state: IAppState, action: IAction): IAppState {
         case ActionType.SetActiveExercise: {
             return {
                 ...state,
-                activeExercise: action.payload
+                activeExercise: action.payload,
             };
         }
         case ActionType.SetEditExercise: {
             return {
                 ...state,
-                editExercise: action.payload
+                editExercise: action.payload,
             };
         }
         case ActionType.AddSection: {
@@ -127,13 +127,13 @@ function stateController(state: IAppState, action: IAction): IAppState {
         case ActionType.SetActiveSection: {
             return {
                 ...state,
-                activeSection: action.payload
+                activeSection: action.payload,
             };
         }
         case ActionType.SetEditSection: {
             return {
                 ...state,
-                editSection: action.payload
+                editSection: action.payload,
             };
         }
         case ActionType.SaveExercises: {
@@ -146,8 +146,8 @@ function stateController(state: IAppState, action: IAction): IAppState {
                 ...state,
                 activeExercise: {
                     ...state.activeExercise,
-                    startTime: action.payload
-                }
+                    startTime: action.payload,
+                },
             };
         }
         case ActionType.UpdateActiveSection: {
@@ -158,7 +158,7 @@ function stateController(state: IAppState, action: IAction): IAppState {
             if (currentActive !== activeIndex && activeIndex !== state.activeExercise.defaultSections.length) {
                 return {
                     ...state,
-                    activeSection: state.activeExercise.defaultSections[activeIndex]
+                    activeSection: state.activeExercise.defaultSections[activeIndex],
                 };
             }
             return state;
@@ -166,7 +166,7 @@ function stateController(state: IAppState, action: IAction): IAppState {
         case ActionType.CloseSnackbar: {
             return {
                 ...state,
-                snackBarOpen: false
+                snackBarOpen: false,
             };
         }
         default: {

@@ -4,24 +4,24 @@ import { IExercise } from "../DataInterfaces";
 
 const styles = createStyles({
     button: {
-        marginRight: 10
+        marginRight: 10,
     },
     flex: {
-        flex: 1
+        flex: 1,
     },
     menuButton: {
         marginLeft: -12,
-        marginRight: 20
+        marginRight: 20,
     },
     root: {
         alignContent: "center",
         flexGrow: 1,
-        userSelect: "none"
+        userSelect: "none",
     },
     timeInput: {
         fontSize: 20,
-        textColor: "#ffffff"
-    }
+        textColor: "#ffffff",
+    },
 });
 
 interface IProps {
@@ -32,7 +32,7 @@ interface IProps {
     saveExercises: () => void;
 }
 
-const ActionsMenuBar: React.FC<IProps> = props => {
+const ActionsMenuBar: React.FC<IProps> = (props) => {
     const { classes, title, setTime, saveExercises } = props;
 
     const setTimeNow = React.useCallback(() => {

@@ -8,16 +8,16 @@ import { getExerciseDuration } from "../Utils";
 
 const styles = createStyles({
     root: {
-        overflow: "auto"
+        overflow: "auto",
     },
     textContainer: {
-        height: "calc(100% - 50px)"
+        height: "calc(100% - 50px)",
     },
     textContent: {
         position: "relative",
         top: "50%",
-        transform: "translateY(-50%)"
-    }
+        transform: "translateY(-50%)",
+    },
 });
 
 interface IProps {
@@ -54,7 +54,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
         updateActiveSection();
     }, 1000);
 
-    const steps = React.useMemo(() => exercise.defaultSections.map(section => section.name), [exercise]);
+    const steps = React.useMemo(() => exercise.defaultSections.map((section) => section.name), [exercise]);
     // render different content based on the time
     const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
 
@@ -146,7 +146,7 @@ function checkExerciseEnded(exercise: IExercise, comparedTime: Date): boolean {
     startTime.setDate(comparedTime.getDate());
     startTime.setHours(exercise.startTime.getHours());
     startTime.setMinutes(exercise.startTime.getMinutes());
-    
+
     const exerciseEnd: number = startTime.getTime() + duration * 60000; // minutes to ticks
     console.debug(
         "ex start: ",
@@ -154,7 +154,7 @@ function checkExerciseEnded(exercise: IExercise, comparedTime: Date): boolean {
         "ex end: ",
         new Date(exerciseEnd),
         "current: ",
-        comparedTime
+        comparedTime,
     );
 
     return exerciseEnd < comparedTime.getTime();

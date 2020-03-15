@@ -15,47 +15,47 @@ interface IProps extends WithStyles<typeof styles> {}
 const styles = (theme: Theme) =>
     createStyles({
         buttonRight: {
-            flex: 1
+            flex: 1,
         },
         controlsContainer: {
             height: "100%",
             [theme.breakpoints.between("md", "xl")]: {
                 borderLeftStyle: "solid",
-                borderLeftWidth: 2
-            }
+                borderLeftWidth: 2,
+            },
         },
         menuBlock: {
             [theme.breakpoints.up("sm")]: {
-                height: "calc(55vh - 64px - 72px)"
+                height: "calc(55vh - 64px - 72px)",
             },
             [theme.breakpoints.down("xs")]: {
-                height: "calc(55vh - 56px - 72px)"
+                height: "calc(55vh - 56px - 72px)",
             },
             [theme.breakpoints.between("md", "xl")]: {
                 float: "right",
                 height: "calc(100vh - 64px - 72px)",
-                width: "49vw"
-            }
+                width: "49vw",
+            },
         },
         root: {
             // backgroundColor: theme.palette.background.paper,
         },
         tabContent: {
-            alignContent: "center"
+            alignContent: "center",
         },
         // check which of these properties are necessary
         tabRoot: {
             "&$tabSelected": {
-                color: theme.palette.primary.main
+                color: theme.palette.primary.main,
             },
             "&:focus": {
-                color: theme.palette.primary.main
+                color: theme.palette.primary.main,
             },
             "&:hover": {
                 color: theme.palette.primary.main,
-                opacity: 1
+                opacity: 1,
             },
-            fontFamily: [
+            "fontFamily": [
                 "-apple-system",
                 "BlinkMacSystemFont",
                 '"Segoe UI"',
@@ -65,19 +65,19 @@ const styles = (theme: Theme) =>
                 "sans-serif",
                 '"Apple Color Emoji"',
                 '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"'
-            ].join(",")
+                '"Segoe UI Symbol"',
+            ].join(","),
         },
         tabSelected: {},
         tabsIndicator: {
-            backgroundColor: theme.palette.primary.main
+            backgroundColor: theme.palette.primary.main,
         },
         tabsRoot: {
-            borderBottom: "1px solid #e8e8e8"
+            borderBottom: "1px solid #e8e8e8",
         },
         typography: {
-            padding: theme.spacing.length * 3
-        }
+            padding: theme.spacing.length * 3,
+        },
     });
 
 const tabLabels: ReadonlyArray<NavTab> = ["Treeni", "Osiot", "Harjoitukset"];
@@ -93,7 +93,7 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
         (event: React.ChangeEvent<{}>, value: number) => {
             setActiveTab(value);
         },
-        [setActiveTab]
+        [setActiveTab],
     );
 
     // app state
@@ -104,17 +104,17 @@ const BottomNavTabs: FunctionComponent<IProps> = (props: IProps) => {
 
     // dispatch functions: TODO: move to reducer in order to offer a more convenient API?
     const setTime = React.useCallback((time: Date) => dispatch({ type: ActionType.UpdateStartTime, payload: time }), [
-        dispatch
+        dispatch,
     ]);
     const save = React.useCallback(() => dispatch({ type: ActionType.SaveExercises }), [dispatch]);
     const setEditSection = React.useCallback(
         (section: ISection) => dispatch({ type: ActionType.SetEditSection, payload: section }),
-        [dispatch]
+        [dispatch],
     );
 
     const selectExercise = React.useCallback(
         (exercise: IExercise) => dispatch({ type: ActionType.SetActiveExercise, payload: exercise }),
-        [dispatch]
+        [dispatch],
     );
 
     const { classes } = props;
