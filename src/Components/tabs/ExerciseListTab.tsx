@@ -6,6 +6,7 @@ import ExerciseContext from "../../AppReducer/ExerciseContext";
 import { ActionType } from "../../AppReducer/ExerciseReducer";
 import ExerciseEditor from "../dialogs/ExerciseEditor";
 import { getExerciseDuration, emptyExercise } from "../../Utils";
+import SlideInContainer from "../SlideInContainer";
 
 /** component props */
 interface IProps extends WithStyles {
@@ -32,23 +33,6 @@ const styles = (theme: Theme) =>
             overflow: "hidden",
             userSelect: "none",
             height: "100%",
-        },
-        list: {
-            "height": "100%",
-            "overflow": "auto",
-            "transition": "transform 300ms ease-in-out",
-            "$root.expanded>&": {
-                transform: "translateY(-100%)",
-                overflow: "hidden",
-            },
-        },
-        editor: {
-            "height": "100%",
-            "overflow": "hidden",
-            "transition": "transform 300ms ease-in-out",
-            "$root.expanded>&": {
-                transform: "translateY(-100%)",
-            },
         },
     });
 
@@ -131,8 +115,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
     );
 
     return (
-        <div className={`${props.classes.root} ${exerciseInEdit ? "expanded" : "collapsed"}`}>
-            <div className={props.classes.list}>
+        <SlideInContainer open={Boolean(exerciseInEdit)}>
                 <List>
                     {exerciseItems}
                     <ListItem className={classes.listItem} key="add-exercise-btn">
@@ -141,8 +124,6 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
                         </Fab>
                     </ListItem>
                 </List>
-            </div>
-            <div className={props.classes.editor}>
                 <ExerciseEditor
                     exercise={exerciseInEdit}
                     usedNames={state.exercises.map((e) => e.name)}
@@ -150,8 +131,7 @@ const ExerciseListTab: FunctionComponent<IProps> = (props: IProps) => {
                     deleteExercise={deleteExercise}
                     cancel={closeEditor}
                 />
-            </div>
-        </div>
+                </SlideInContainer>
     );
 };
 

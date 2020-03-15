@@ -7,33 +7,12 @@ import ExerciseContext from "../../AppReducer/ExerciseContext";
 import SectionEditor from "../dialogs/SectionEditor";
 import { ActionType } from "../../AppReducer/ExerciseReducer";
 import { emptySection } from "../../Utils";
+import SlideInContainer from "../SlideInContainer";
 
 const styles = createStyles({
     listItem: {
         justifyContent: "center",
-        textAlign: "center",
-    },
-    root: {
-        overflow: "hidden",
-        userSelect: "none",
-        height: "100%",
-    },
-    list: {
-        "height": "100%",
-        "overflow": "auto",
-        "transition": "transform 300ms ease-in-out",
-        "$root.expanded>&": {
-            transform: "translateY(-100%)",
-            overflow: "hidden",
-        },
-    },
-    editor: {
-        "height": "100%",
-        "overflow": "auto",
-        "transition": "transform 300ms ease-in-out",
-        "$root.expanded>&": {
-            transform: "translateY(-100%)",
-        },
+        textAlign: "center"
     },
 });
 
@@ -59,7 +38,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             const rearranged: ReadonlyArray<ISection> = arrayMove([...exercise.defaultSections], oldIndex, newIndex);
             dispatch({ type: ActionType.UpdateAllSections, payload: rearranged });
         },
-        [dispatch, exercise.defaultSections],
+        [dispatch, exercise.defaultSections]
     );
 
     const updateSection = React.useCallback(
@@ -73,7 +52,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             dispatch({ type: ActionType.SetEditSection, payload: null });
             setAddingNewSection(false);
         },
-        [dispatch, addingNewSection, setAddingNewSection],
+        [dispatch, addingNewSection, setAddingNewSection]
     );
 
     const deleteSection = React.useCallback(
@@ -81,7 +60,7 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
             dispatch({ type: ActionType.DeleteSection, payload: section });
             dispatch({ type: ActionType.SetEditSection, payload: null });
         },
-        [dispatch],
+        [dispatch]
     );
 
     const closeEditor = React.useCallback(() => {
@@ -102,41 +81,31 @@ const SectionListTab: FunctionComponent<IProps> = (props: IProps) => {
                     />
                 );
             }),
-        [exercise.defaultSections, setEditSection],
+        [exercise.defaultSections, setEditSection]
     );
 
     return (
-        <div className={`${classes.root} ${state.editSection ? "expanded" : "collapsed"}`}>
-            <div className={classes.list}>
-                <SortableList
-                    items={sections}
-                    onSortEnd={sorted}
-                    lockAxis={"y"}
-                    pressDelay={100}
-                    // useDragHandle={true}
-                />
+        <SlideInContainer open={Boolean(state.editSection)}>
+            <div>
+                <SortableList items={sections} onSortEnd={sorted} lockAxis={"y"} pressDelay={100} />
                 <ListItem className={classes.listItem} key="add-section-button">
                     <Fab size="medium" color="primary" aria-label="add" onClick={addNewSection}>
                         <i className="material-icons">add</i>
                     </Fab>
                 </ListItem>
             </div>
-            <div className={classes.editor}>
-                <SectionEditor
-                    section={state.editSection}
-                    updateSection={updateSection}
-                    deleteSection={deleteSection}
-                    cancel={closeEditor}
-                />
-            </div>
-        </div>
+            <SectionEditor
+                section={state.editSection}
+                updateSection={updateSection}
+                deleteSection={deleteSection}
+                cancel={closeEditor}
+            />
+        </SlideInContainer>
     );
 };
 
 /** TODO: extract these to own components? */
-const SortableItem = SortableElement(({ value }: { value: JSX.Element }) => (
-    <ListItem>{value}</ListItem>
-));
+const SortableItem = SortableElement(({ value }: { value: JSX.Element }) => <ListItem>{value}</ListItem>);
 
 const SortableList = SortableContainer(({ items }: { items: JSX.Element[] }) => (
     <List component="nav" style={{ paddingTop: 0, paddingBottom: 0 }}>
