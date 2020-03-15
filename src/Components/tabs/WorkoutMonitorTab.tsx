@@ -4,20 +4,19 @@ import { IExercise, ISection } from "../../DataInterfaces";
 import { useInterval, GetActiveSectionIndex } from "../Utils/ClockUtilities";
 import ExerciseContext from "../AppReducer/ExerciseContext";
 import { ActionType } from "../AppReducer/ExerciseReducer";
-import { getExerciseDuration } from "../Utils";
 
 const styles = createStyles({
     root: {
-        overflow: "auto",
+        overflow: "auto"
     },
     textContainer: {
-        height: "calc(100% - 50px)",
+        height: "calc(100% - 50px)"
     },
     textContent: {
         position: "relative",
         top: "50%",
-        transform: "translateY(-50%)",
-    },
+        transform: "translateY(-50%)"
+    }
 });
 
 interface IProps {
@@ -34,16 +33,19 @@ const temporalConstant: number = 60;
  */
 const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
     const { classes, exercise, activeSection } = props;
-    const [, dispatch] = useContext(ExerciseContext);
+    const [state, dispatch] = useContext(ExerciseContext);
 
     const [time, setTime] = useState<Date>(new Date());
 
     const updateActiveSection = React.useCallback(() => {
         const currentIndex = GetActiveSectionIndex(exercise, time);
-        const currentSection =
-            currentIndex >= 0 && currentIndex < exercise.defaultSections.length
-                ? exercise.defaultSections[currentIndex]
-                : null;
+        let currentSection = null;
+        if (typeof currentIndex === "number") {
+            currentSection =
+                currentIndex >= 0 && currentIndex < exercise.defaultSections.length
+                    ? exercise.defaultSections[currentIndex]
+                    : null;
+        }
         if (activeSection !== currentSection) {
             dispatch({ type: ActionType.UpdateActiveSection, payload: time });
         }
@@ -59,7 +61,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
     const sectionIndex = activeSection ? exercise.defaultSections.indexOf(activeSection) : -1;
 
     // let tabContent: JSX.Element;
-    if (!activeSection) {
+    if (state.exerciseStatus === "PreExercise") {
         const ticks: number = timeToSeconds(exercise.startTime) - timeToSeconds(time);
         const hours: number = (ticks / temporalConstant) * temporalConstant;
         const minutes: number = ticks % temporalConstant;
@@ -75,7 +77,7 @@ const WorkoutMonitorTab: FunctionComponent<IProps> = (props: IProps) => {
                 >{`Treenin alkuun: ${countDownTime}`}</Typography>
             </div>
         );
-    } else if (checkExerciseEnded(exercise, new Date())) {
+    } else if (state.exerciseStatus === "PostExercise") {
         return (
             <div className={classes.textContainer}>
                 <Typography variant="h2" className={classes.textContent}>
@@ -136,28 +138,6 @@ function timeToSeconds(time: Date) {
     return (
         time.getHours() * temporalConstant * temporalConstant + time.getMinutes() * temporalConstant + time.getSeconds()
     );
-}
-
-function checkExerciseEnded(exercise: IExercise, comparedTime: Date): boolean {
-    const duration = getExerciseDuration(exercise);
-    const startTime = new Date();
-    startTime.setFullYear(comparedTime.getFullYear());
-    startTime.setMonth(comparedTime.getMonth());
-    startTime.setDate(comparedTime.getDate());
-    startTime.setHours(exercise.startTime.getHours());
-    startTime.setMinutes(exercise.startTime.getMinutes());
-
-    const exerciseEnd: number = startTime.getTime() + duration * 60000; // minutes to ticks
-    console.debug(
-        "ex start: ",
-        startTime,
-        "ex end: ",
-        new Date(exerciseEnd),
-        "current: ",
-        comparedTime,
-    );
-
-    return exerciseEnd < comparedTime.getTime();
 }
 
 export default withStyles(styles)(WorkoutMonitorTab);

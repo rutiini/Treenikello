@@ -129,7 +129,7 @@ test(`transform time to degrees`,
 test(`current time is before the exercise (< 18:30)`,
   () =>
     expect(GetActiveSectionIndex(testExercise, new Date(0, 0, 0, 18, 0)))
-      .toEqual(-1));
+      .toEqual("PreExercise"));
 
 test(`current time is during the exercise, returns correct section`,
   () => {
@@ -158,10 +158,10 @@ test(`test another exercise which turned out to be problematic`,
   () => {
     // exercise start is at 21:30
     expect(GetActiveSectionIndex(testExercise2, new Date(0, 0, 0, 18, 35)))
-      .toEqual(-1);
+      .toEqual("PreExercise");
 
     expect(GetActiveSectionIndex(testExercise2, new Date(0, 0, 0, 21, 29)))
-      .toEqual(-1);
+      .toEqual("PreExercise");
     // section duration 3,current time is during the first section of the exercise (21:30 - 21:33)
     expect(GetActiveSectionIndex(testExercise2, new Date(0, 0, 0, 21, 30)))
       .toEqual(0);
@@ -194,7 +194,7 @@ test(`test another exercise which turned out to be problematic`,
 test(`current time is after the end of the last minute of the last section of the exercise`,
   () =>
     expect(GetActiveSectionIndex(testExercise, new Date(0, 0, 0, 20, 45)))
-      .toEqual(5));
+      .toEqual("PostExercise"));
 
 test(`test for date to HH:mm transformation`,
   () => {

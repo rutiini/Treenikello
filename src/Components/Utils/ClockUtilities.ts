@@ -1,4 +1,4 @@
-﻿import { IExercise, ISection } from "../../DataInterfaces";
+﻿import { IExercise, ISection, ExerciseStatus } from "../../DataInterfaces";
 import { TimerMode } from "../Clock";
 import { useEffect, useRef } from "react";
 
@@ -51,7 +51,7 @@ export const MinuteInDegrees = CircleInDegrees / HourInMinutes;
 export function GetActiveSectionIndex(
   exercise: IExercise,
   currentTime: Date,
-): number {
+): ExerciseStatus {
   const { startTime, defaultSections: sectionItems } = exercise;
   const currentPosition = TimeToDegrees(currentTime); // "absolute minute position"
   const startPosition = TimeToDegrees(startTime);
@@ -67,9 +67,9 @@ export function GetActiveSectionIndex(
   let index = -1;
 
   if (startPosition > currentPosition) {
-    return index;
+    return "PreExercise"; // index;
   } else if (endPosition < currentPosition) {
-    return sectionItems.length;
+    return "PostExercise"; // sectionItems.length;
   } else {
     for (let i = 0; i < sectionItems.length; i++) {
       const sectionAngle =
@@ -81,6 +81,7 @@ export function GetActiveSectionIndex(
       }
       angle = angle + sectionAngle;
     }
+    // TODO: find out what this is.. --> post-exercise?
     if (
       length &&
       currentPosition >=

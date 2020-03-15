@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { IExercise, ISection } from "../../DataInterfaces";
+import { IExercise, ISection, ExerciseStatus } from "../../DataInterfaces";
 import Store, { exercises } from "../../Store";
 import {
     addSectionToActiveExercise,
@@ -7,7 +7,7 @@ import {
     deleteSectionFromActiveExercise,
     updateActiveExercise,
     updateSectionInActiveExercise,
-    updateSectionsInActiveExercise,
+    updateSectionsInActiveExercise
 } from "./StateUtils";
 import { GetActiveSectionIndex } from "../Utils/ClockUtilities";
 
@@ -29,13 +29,13 @@ export enum ActionType {
     UpdateStartTime = "UPDATE_START_TIME",
     SetToastMessage = "SET_TOAST_MESSAGE",
     UpdateActiveSection = "UPDATE_ACTIVE_SECTION",
-    CloseSnackbar = "CLOSE_SNACKBAR",
+    CloseSnackbar = "CLOSE_SNACKBAR"
 }
 
 /** All possible actions */
 export type IAction =
     | { type: ActionType.AddExercise; payload: IExercise }
-    | { type: ActionType.UpdateExercise; payload: {updatedExercise: IExercise, targetExercise: IExercise} }
+    | { type: ActionType.UpdateExercise; payload: { updatedExercise: IExercise; targetExercise: IExercise } }
     | { type: ActionType.DeleteExercise; payload: IExercise }
     | { type: ActionType.SetEditExercise; payload: IExercise | null }
     | { type: ActionType.SetActiveExercise; payload: IExercise }
@@ -62,6 +62,7 @@ export interface IAppState {
     readonly activeExercise: IExercise;
     readonly selectedSection: ISection | null; // -> activeSection / unnecessary due to editSection?
     readonly snackBarOpen: boolean;
+    readonly exerciseStatus: ExerciseStatus;
 }
 
 export const DefaultAppState: IAppState = {
@@ -73,6 +74,7 @@ export const DefaultAppState: IAppState = {
     exercises: [...exercises, ...Store.getSavedExercises()],
     selectedSection: null,
     snackBarOpen: false,
+    exerciseStatus: "PreExercise"
 };
 
 /** reducer for app state */
@@ -91,7 +93,7 @@ function stateController(state: IAppState, action: IAction): IAppState {
             return {
                 ...state,
                 activeExercise: action.payload,
-                exercises: [...state.exercises, action.payload],
+                exercises: [...state.exercises, action.payload]
             };
         }
         case ActionType.UpdateExercise: {
@@ -104,12 +106,13 @@ function stateController(state: IAppState, action: IAction): IAppState {
             return {
                 ...state,
                 activeExercise: action.payload,
+                exerciseStatus: "PreExercise"
             };
         }
         case ActionType.SetEditExercise: {
             return {
                 ...state,
-                editExercise: action.payload,
+                editExercise: action.payload
             };
         }
         case ActionType.AddSection: {
@@ -127,13 +130,13 @@ function stateController(state: IAppState, action: IAction): IAppState {
         case ActionType.SetActiveSection: {
             return {
                 ...state,
-                activeSection: action.payload,
+                activeSection: action.payload
             };
         }
         case ActionType.SetEditSection: {
             return {
                 ...state,
-                editSection: action.payload,
+                editSection: action.payload
             };
         }
         case ActionType.SaveExercises: {
@@ -146,8 +149,8 @@ function stateController(state: IAppState, action: IAction): IAppState {
                 ...state,
                 activeExercise: {
                     ...state.activeExercise,
-                    startTime: action.payload,
-                },
+                    startTime: action.payload
+                }
             };
         }
         case ActionType.UpdateActiveSection: {
@@ -155,10 +158,21 @@ function stateController(state: IAppState, action: IAction): IAppState {
             const currentActive = state.activeSection
                 ? state.activeExercise.defaultSections.indexOf(state.activeSection)
                 : -1;
+
+            // return value is not an index number, use special conditions
+            if (typeof activeIndex !== "number") {
+                return {
+                    ...state,
+                    exerciseStatus: activeIndex,
+                    activeSection: null
+                };
+            }
+
             if (currentActive !== activeIndex && activeIndex !== state.activeExercise.defaultSections.length) {
                 return {
                     ...state,
                     activeSection: state.activeExercise.defaultSections[activeIndex],
+                    exerciseStatus: activeIndex
                 };
             }
             return state;
@@ -166,7 +180,7 @@ function stateController(state: IAppState, action: IAction): IAppState {
         case ActionType.CloseSnackbar: {
             return {
                 ...state,
-                snackBarOpen: false,
+                snackBarOpen: false
             };
         }
         default: {

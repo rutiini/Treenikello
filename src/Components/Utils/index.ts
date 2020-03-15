@@ -1,7 +1,7 @@
 ﻿import {IExercise, ISection} from "../../DataInterfaces";
 
 /**
- * function returns the sum of all sections setup times and durations.
+ * function returns the sum of all sections setup times and durations (in minutes).
  * @param IExercise target exercise
  * @param exercise
  */

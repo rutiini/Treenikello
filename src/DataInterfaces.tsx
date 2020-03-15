@@ -3,6 +3,9 @@
 // TODO: internationalize at some point?
 export type NavTab = "Treeni" | "Osiot" | "Harjoitukset";
 
+/** A type to describe the status of exercise */
+export type ExerciseStatus = "PreExercise" | number | "PostExercise";
+
 /**
  * Section is the basic part of an exercise. It holds information used to draw a segment on the clock face
  * as well as instructions and description what kind of exercise this section is.
