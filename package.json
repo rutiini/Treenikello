@@ -15,7 +15,7 @@
     "date-fns": "^2.11.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0",
+    "react-scripts": "5.0.1",
     "react-sortable-hoc": "^1.11.0",
     "react-swipeable-views": "^0.13.9",
     "react-time-picker": "^3.9.0",
